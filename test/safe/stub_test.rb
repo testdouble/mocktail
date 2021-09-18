@@ -19,6 +19,17 @@ class StubTest < Minitest::Test
     assert_raises(ArgumentError) { gets_reminders.get(4, 2) }
   end
 
+  def test_non_dsl_is_also_fine
+    gets_reminders = Mocktail.of(GetsReminders)
+
+    Mocktail.stubs { gets_reminders.get(42) }.with { [:r1, :r2] }
+
+    assert_equal [:r1, :r2], gets_reminders.get(42)
+    assert_nil gets_reminders.get(41)
+    assert_raises(ArgumentError) { gets_reminders.get }
+    assert_raises(ArgumentError) { gets_reminders.get(4, 2) }
+  end
+
   def test_multiple_calls_per_stub
     gets_reminders = Mocktail.of(GetsReminders)
 

@@ -1,3 +1,5 @@
+require_relative "fulfills_stubbing/finds_satisfaction"
+
 module Mocktail
   class FulfillsStubbing
     def initialize

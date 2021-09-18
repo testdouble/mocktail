@@ -53,15 +53,12 @@ module Mocktail
 
     def instance_methods_on(type)
       type.instance_methods.reject { |m|
-        common_ancestors.include?(type.instance_method(m).owner)
+        ignored_ancestors.include?(type.instance_method(m).owner)
       }
     end
 
-    def common_ancestors
-      @common_ancestors ||= begin
-        _, *ancestors = Class.new.ancestors
-        ancestors
-      end
+    def ignored_ancestors
+      Object.ancestors
     end
   end
 end

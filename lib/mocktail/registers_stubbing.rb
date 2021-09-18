@@ -1,3 +1,5 @@
+require_relative "registers_stubbing/records_demonstration"
+
 module Mocktail
   class RegistersStubbing
     def self.instance

@@ -1,3 +1,5 @@
+require_relative "makes_double/declares_dry_class"
+
 module Mocktail
   class MakesDouble
     def initialize

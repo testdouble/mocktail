@@ -1,5 +1,5 @@
 module Mocktail
-  class StoresMocktails
+  class Cabinet
     attr_writer :demonstration_in_progress
     attr_reader :calls, :stubbings
 

@@ -1,7 +1,14 @@
 module Mocktail
   class FulfillsStubbing
+    def initialize
+      @finds_satisfaction = FindsSatisfaction.new
+    end
+
     def fulfill(dry_call)
-      puts "todo - fulfills stubbing"
+      return if Mocktail.cabinet.demonstration_in_progress?
+      if (stubbing = @finds_satisfaction.find(dry_call))
+        stubbing.effect.call
+      end
     end
   end
 end

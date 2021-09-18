@@ -1,0 +1,15 @@
+module Mocktail
+  class ImitatesType
+    def initialize
+      @ensures_imitation_support = EnsuresImitationSupport.new
+      @makes_double = MakesDouble.new
+    end
+
+    def imitate(type)
+      @ensures_imitation_support.ensure(type)
+      @makes_double.make(type).tap do |double|
+        Mocktail.cabinet.store_double(double)
+      end.dry_instance
+    end
+  end
+end

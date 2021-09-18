@@ -1,7 +1,7 @@
 module Mocktail
   class LogsCall
     def log(dry_call)
-      puts "todo - logs call"
+      Mocktail.cabinet.store_call(dry_call)
     end
   end
 end

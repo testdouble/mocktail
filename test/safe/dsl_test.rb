@@ -9,7 +9,8 @@ class DslTest < Minitest::Test
   # just do a quick test to make sure they don't fall out of date
   def test_ensure_implementation_matches_between_main_and_dsl
     [
-      :stubs
+      :stubs,
+      :verify
     ].each do |method_name|
       mocktail_method = Mocktail.method(:stubs)
       dsl_method = Mocktail::DSL.instance_method(:stubs)

@@ -58,6 +58,14 @@ class StubTest < Minitest::Test
     MSG
   end
 
+  def test_forgets_the_with
+    gets_reminders = Mocktail.of(GetsReminders)
+
+    stubs { gets_reminders.get(42) }
+
+    assert_nil gets_reminders.get(42)
+  end
+
   class DoesTooMuch
     def do(this, that = nil, and:, also: "this", &blk)
       raise "LOL"

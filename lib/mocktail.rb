@@ -5,8 +5,12 @@ module Mocktail
     ImitatesType.new.imitate(type)
   end
 
-  def self.stubs(&demo) # .with {}
+  def self.stubs(&demo)
     RegistersStubbing.instance.register(demo)
+  end
+
+  def self.verify(&demo)
+    VerifiesCall.instance.verify(demo)
   end
 
   def self.cabinet
@@ -15,8 +19,9 @@ module Mocktail
 end
 
 require_relative "mocktail/dsl"
+require_relative "mocktail/handles_dry_call"
 require_relative "mocktail/imitates_type"
 require_relative "mocktail/registers_stubbing"
 require_relative "mocktail/value"
-require_relative "mocktail/handles_dry_call"
+require_relative "mocktail/verifies_call"
 require_relative "mocktail/version"

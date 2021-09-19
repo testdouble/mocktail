@@ -3,40 +3,66 @@ require "test_helper"
 class StubTest < Minitest::Test
   include Mocktail::DSL
 
-  class GetsReminders
-    def get(user_id)
+  class Thing
+    def lol(an_arg)
     end
   end
 
-  def test_gets_reminders
-    gets_reminders = Mocktail.of(GetsReminders)
+  def test_thing
+    thing = Mocktail.of(Thing)
 
-    stubs { gets_reminders.get(42) }.with { [:r1, :r2] }
+    stubs { thing.lol(42) }.with { [:r1, :r2] }
 
-    assert_equal [:r1, :r2], gets_reminders.get(42)
-    assert_nil gets_reminders.get(41)
-    assert_raises(ArgumentError) { gets_reminders.get }
-    assert_raises(ArgumentError) { gets_reminders.get(4, 2) }
+    assert_equal [:r1, :r2], thing.lol(42)
+    assert_nil thing.lol(41)
+    assert_raises(ArgumentError) { thing.lol }
+    assert_raises(ArgumentError) { thing.lol(4, 2) }
   end
 
   def test_non_dsl_is_also_fine
-    gets_reminders = Mocktail.of(GetsReminders)
+    thing = Mocktail.of(Thing)
 
-    Mocktail.stubs { gets_reminders.get(42) }.with { [:r1, :r2] }
+    Mocktail.stubs { thing.lol(42) }.with { [:r1, :r2] }
 
-    assert_equal [:r1, :r2], gets_reminders.get(42)
-    assert_nil gets_reminders.get(41)
-    assert_raises(ArgumentError) { gets_reminders.get }
-    assert_raises(ArgumentError) { gets_reminders.get(4, 2) }
+    assert_equal [:r1, :r2], thing.lol(42)
+    assert_nil thing.lol(41)
+    assert_raises(ArgumentError) { thing.lol }
+    assert_raises(ArgumentError) { thing.lol(4, 2) }
+  end
+
+  require "bigdecimal"
+  class Reminder
+  end
+
+  def test_stub_with_matchers
+    thing = Mocktail.of(Thing)
+
+    stubs { |m| thing.lol(m.any) }.with { :a }
+    stubs { |m| thing.lol(m.numeric) }.with { :b }
+    stubs { |m| thing.lol(m.is_a(Reminder)) }.with { :c }
+    stubs { |m| thing.lol(m.matches(/^foo/)) }.with { :d }
+    stubs { |m| thing.lol(m.includes(:apple)) }.with { :e }
+    stubs { |m| thing.lol(m.includes("pants")) }.with { :f }
+
+    assert_equal :a, thing.lol(:trololol)
+    assert_equal :b, thing.lol(42)
+    assert_equal :b, thing.lol(42.0)
+    assert_equal :b, thing.lol(BigDecimal("42"))
+    assert_equal :c, thing.lol(Reminder.new)
+    assert_equal :a, thing.lol(Reminder) # <- Reminder is a class!
+    assert_equal :d, thing.lol("foobar")
+    assert_equal :a, thing.lol("bazfoo") # <- doesn't match!
+    assert_equal :e, thing.lol([:orange, :apple])
+    assert_equal :f, thing.lol("my pants!")
   end
 
   def test_multiple_calls_per_stub
-    gets_reminders = Mocktail.of(GetsReminders)
+    thing = Mocktail.of(Thing)
 
     e = assert_raises(Mocktail::AmbiguousDemonstrationError) do
       stubs {
-        gets_reminders.get(1)
-        gets_reminders.get(2)
+        thing.lol(1)
+        thing.lol(2)
       }.with { [:r1, :r2] }
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
@@ -47,10 +73,10 @@ class StubTest < Minitest::Test
   end
 
   def test_zero_calls_per_stub
-    gets_reminders = Mocktail.of(GetsReminders)
+    thing = Mocktail.of(Thing)
 
     e = assert_raises(Mocktail::MissingDemonstrationError) do
-      stubs { gets_reminders }.with { [:r1, :r2] }
+      stubs { thing }.with { [:r1, :r2] }
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
       `stubs` & `verify` expect an invocation of a mocked method by a passed
@@ -58,12 +84,12 @@ class StubTest < Minitest::Test
     MSG
   end
 
-  def test_forgets_the_with
-    gets_reminders = Mocktail.of(GetsReminders)
+  def test_forlols_the_with
+    thing = Mocktail.of(Thing)
 
-    stubs { gets_reminders.get(42) }
+    stubs { thing.lol(42) }
 
-    assert_nil gets_reminders.get(42)
+    assert_nil thing.lol(42)
   end
 
   class DoesTooMuch

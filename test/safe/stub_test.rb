@@ -43,6 +43,7 @@ class StubTest < Minitest::Test
     stubs { |m| thing.lol(m.matches(/^foo/)) }.with { :d }
     stubs { |m| thing.lol(m.includes(:apple)) }.with { :e }
     stubs { |m| thing.lol(m.includes("pants")) }.with { :f }
+    stubs { |m| thing.lol(m.that { |i| i.odd? }) }.with { :g }
 
     assert_equal :a, thing.lol(:trololol)
     assert_equal :b, thing.lol(42)
@@ -54,6 +55,7 @@ class StubTest < Minitest::Test
     assert_equal :a, thing.lol("bazfoo") # <- doesn't match!
     assert_equal :e, thing.lol([:orange, :apple])
     assert_equal :f, thing.lol("my pants!")
+    assert_equal :g, thing.lol(43)
   end
 
   def test_multiple_calls_per_stub

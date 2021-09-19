@@ -10,7 +10,7 @@ module Mocktail
 
       begin
         cabinet.demonstration_in_progress = true
-        demonstration.call
+        demonstration.call(Mocktail.matchers)
       ensure
         cabinet.demonstration_in_progress = false
       end

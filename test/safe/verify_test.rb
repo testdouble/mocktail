@@ -25,16 +25,17 @@ class VerifyTest < Minitest::Test
     e = assert_raises(Mocktail::VerificationError) {
       verify { sends_email.send(to: "jenn@example.com") }
     }
-    assert_equal <<~MSG.tr("\n", " "), e.message
-      Expected mocktail of VerifyTest::SendsEmail#send to be called with:
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::SendsEmail#send to be called like:
 
         send(to: "jenn@example.com")
 
-      The method was called 2 times:
+      But it was called differently 2 times:
 
         send(to: "becky@example.com")
 
         send(to: "jerry@example.com")
+
     MSG
 
     assert_raises(Mocktail::VerificationError) {
@@ -48,8 +49,8 @@ class VerifyTest < Minitest::Test
     e = assert_raises(Mocktail::VerificationError) {
       verify { sends_email.dont_send! }
     }
-    assert_equal <<~MSG.tr("\n", " "), e.message
-      Expected mocktail of VerifyTest::SendsEmail#dont_send! to be called with:
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::SendsEmail#dont_send! to be called like:
 
         dont_send!
 

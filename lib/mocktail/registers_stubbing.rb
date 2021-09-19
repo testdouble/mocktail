@@ -1,4 +1,4 @@
-require_relative "registers_stubbing/records_demonstration"
+require_relative "records_demonstration"
 
 module Mocktail
   class RegistersStubbing

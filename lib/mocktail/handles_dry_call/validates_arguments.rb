@@ -14,9 +14,10 @@ module Mocktail
           kwargs_match?(kwarg_params, dry_call.kwargs)
 
         original_method.bind_call(dry_call.double, *dry_call.args, **dry_call.kwargs)
-        raise UnexpectedError.new <<~MSG.tr("\n", " ")
+        raise UnexpectedError.new <<~MSG
           Expected an ArgumentError but none was raised. If you're seeing this,
           please file an issue with reproduction steps [ID #1]:
+
           https://github.com/testdouble/mocktail/issues/new
         MSG
       end

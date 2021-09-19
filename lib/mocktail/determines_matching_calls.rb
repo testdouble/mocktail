@@ -7,7 +7,7 @@ module Mocktail
         # Matcher implementation will replace this:
         call.args == other.args &&
         call.kwargs == other.kwargs &&
-        call.blk == other.blk
+        call.block == other.block
     end
   end
 end

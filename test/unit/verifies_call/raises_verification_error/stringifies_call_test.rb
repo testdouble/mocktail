@@ -42,7 +42,7 @@ module Mocktail
     private
 
     def invoke(args: nil, kwargs: nil, &block)
-      @subject.stringify(DryCall.new(method: "hi", args: args, kwargs: kwargs, blk: block))
+      @subject.stringify(DryCall.new(method: "hi", args: args, kwargs: kwargs, block: block))
     end
   end
 end

@@ -1,7 +1,7 @@
 module Mocktail
   class StringifiesCall
     def stringify(call)
-      "#{call.method}#{args_to_s(call)}#{blockify(call.blk)}"
+      "#{call.method}#{args_to_s(call)}#{blockify(call.block)}"
     end
 
     private
@@ -10,7 +10,7 @@ module Mocktail
       unless (args_lists = [
         argify(call.args),
         kwargify(call.kwargs),
-        lambdafy(call.blk)
+        lambdafy(call.block)
       ].compact).empty?
         "(#{args_lists.join(", ")})"
       end
@@ -26,18 +26,18 @@ module Mocktail
       kwargs.map { |key, val| "#{key}: #{val.inspect}" }.join(", ")
     end
 
-    def lambdafy(blk)
-      return unless blk&.lambda?
-      "&lambda[#{source_locationify(blk)}]"
+    def lambdafy(block)
+      return unless block&.lambda?
+      "&lambda[#{source_locationify(block)}]"
     end
 
-    def blockify(blk)
-      return unless blk && !blk.lambda?
-      " { Proc at #{source_locationify(blk)} }"
+    def blockify(block)
+      return unless block && !block.lambda?
+      " { Proc at #{source_locationify(block)} }"
     end
 
-    def source_locationify(blk)
-      "#{strip_pwd(blk.source_location[0])}:#{blk.source_location[1]}"
+    def source_locationify(block)
+      "#{strip_pwd(block.source_location[0])}:#{block.source_location[1]}"
     end
 
     def strip_pwd(path)

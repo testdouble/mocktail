@@ -67,7 +67,7 @@ class StubTest < Minitest::Test
   end
 
   class DoesTooMuch
-    def do(this, that = nil, and:, also: "this", &blk)
+    def do(this, that = nil, and:, also: "this", &block)
       raise "LOL"
     end
   end

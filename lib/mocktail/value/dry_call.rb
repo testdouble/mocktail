@@ -6,7 +6,7 @@ module Mocktail
     :method,
     :args,
     :kwargs,
-    :blk,
+    :block,
     keyword_init: true
   )
   end

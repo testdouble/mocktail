@@ -6,8 +6,8 @@ module Mocktail
     keyword_init: true
   )
 
-    def with(&blk)
-      self.effect = blk
+    def with(&block)
+      self.effect = block
     end
   end
 end

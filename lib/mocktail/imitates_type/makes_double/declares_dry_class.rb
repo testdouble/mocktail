@@ -27,7 +27,7 @@ module Mocktail
 
         instance_methods.each do |method|
           define_method method, ->(*args, **kwargs, &block) {
-            HandlesDryCall.instance.handle(DryCall.new(
+            HandlesDryCall.instance.handle(Call.new(
               double: self,
               original_type: type,
               dry_type: self.class,

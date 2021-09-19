@@ -1,5 +1,5 @@
 module Mocktail
-  class DryCall < Struct.new(
+  class Call < Struct.new(
     :double,
     :original_type,
     :dry_type,

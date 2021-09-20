@@ -29,9 +29,11 @@ module Mocktail
     def blocks_match?(real_block, demo_block)
       (real_block.nil? && demo_block.nil?) ||
         (
-          real_block &&
-          demo_block &&
-          demo_block.call(real_block)
+          real_block && demo_block &&
+          (
+            demo_block == real_block ||
+            demo_block.call(real_block)
+          )
         )
     end
 

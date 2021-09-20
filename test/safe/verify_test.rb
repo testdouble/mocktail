@@ -57,4 +57,87 @@ class VerifyTest < Minitest::Test
       But it was never called.
     MSG
   end
+
+  class Syn
+    def ack(a = nil, b: nil, &c)
+      raise "not real"
+    end
+  end
+
+  def test_matchers_and_kwargs
+    syn = Mocktail.of(Syn)
+
+    syn.ack(42, b: 1337)
+
+    # Satisfied
+    verify { |m| syn.ack(m.that { |a| a.even? }, b: m.that { |b| b.odd? }) }
+    e = assert_raises(Mocktail::VerificationError) {
+      verify { |m| syn.ack(m.that { |a| a.odd? }, b: m.that { |b| b.even? }) }
+    }
+    # It's a bummer we can't easily print the proc source inline, but important
+    # to note that verifications blow up at verify()-time, so it won't be a
+    # mystery for very long when the user looks at the error's line number
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack(that {…}, b: that {…})
+
+      But it was called differently 1 time:
+
+        ack(42, b: 1337)
+
+    MSG
+  end
+
+  def test_blocks
+    syn = Mocktail.of(Syn)
+
+    syn.ack(:apple, b: :banana) { :orange }
+    syn.ack(:apple, b: :banana) { :grape }
+
+    # Satisfied
+    verify { |m| syn.ack(:apple, b: :banana) { true } }
+    verify { |m| syn.ack(:apple, b: :banana) { |real_blk| real_blk.call == :orange } }
+
+    e = assert_raises(Mocktail::VerificationError) {
+      verify { |m| syn.ack(:apple, b: :banana) { |real_blk| real_blk.call == :papaya } }
+    }
+    # It is indeed very frustrating how little introspection I can do of these blocks…
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:103 }
+
+      But it was called differently 2 times:
+
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:95 }
+
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:96 }
+
+    MSG
+  end
+
+  def test_block_is_literally_an_identical_reference
+    syn = Mocktail.of(Syn)
+    a_lambda = lambda { raise "lol" }
+
+    syn.ack(&a_lambda)
+
+    # Should pass b/c it's the exact same lambda
+    verify { syn.ack(&a_lambda) }
+  end
+
+  def test_uses_a_captor_for_a_complex_arg
+    syn = Mocktail.of(Syn)
+    # imagine we don't care about b, c, or d
+    complex_arg = {a: 1, b: 2, c: 3, d: 4}
+
+    syn.ack(complex_arg)
+
+    captor = Mocktail.captor
+    refute captor.captured?
+    verify { syn.ack(captor.capture) }
+    assert_equal 1, captor.value[:a]
+    assert captor.captured?
+  end
 end

@@ -28,7 +28,7 @@ module Mocktail
         "But it was never called."
       else
         <<~MSG
-          But it was called differently #{calls_of_method.size} times:
+          But it was called differently #{calls_of_method.size} time#{"s" if calls_of_method.size > 1}:
 
           #{calls_of_method.map { |call| "  " + @stringifies_call.stringify(call) }.join("\n\n")}
         MSG

@@ -13,6 +13,10 @@ module Mocktail
     VerifiesCall.instance.verify(demo)
   end
 
+  def self.captor
+    Matchers::Captor.new
+  end
+
   def self.matchers
     MatcherPresentation.instance
   end

@@ -58,6 +58,30 @@ class StubTest < Minitest::Test
     assert_equal :g, thing.lol(43)
   end
 
+  class ArgyDoo
+    def boo(a = nil, b: nil, c: nil, &blk)
+      raise "Boo!"
+    end
+  end
+
+  def test_stub_with_lotsa_matchers
+    doo = Mocktail.of(ArgyDoo)
+
+    stubs { |m| doo.boo }.with { :a }
+    stubs { |m| doo.boo(m.any) }.with { :b }
+    stubs { |m| doo.boo(m.numeric, b: m.is_a(Symbol)) }.with { :c }
+    stubs { |m| doo.boo(m.includes("🤔"), b: m.that { |b| b < 10 }, c: 1) }.with { :d }
+
+    assert_equal :a, doo.boo
+    assert_equal :b, doo.boo(:lol)
+    assert_equal :c, doo.boo(42, b: :kek)
+    assert_nil doo.boo(42, b: :kek, c: nil)
+    assert_nil doo.boo("42", b: :kek)
+    assert_nil doo.boo(42, b: nil)
+    assert_nil doo.boo(nil, b: 42)
+    assert_equal :d, doo.boo("hmm 🤔", b: 5, c: 1)
+  end
+
   def test_multiple_calls_per_stub
     thing = Mocktail.of(Thing)
 

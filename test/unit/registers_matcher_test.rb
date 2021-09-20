@@ -21,6 +21,10 @@ class RegistersMatcherTest < Minitest::Test
     def inspect
       "m.is_pants(#{@expected.inspect})"
     end
+
+    def is_mocktail_matcher?
+      true
+    end
   end
 
   def test_works_fine_if_the_matcher_is_legit
@@ -42,6 +46,10 @@ class RegistersMatcherTest < Minitest::Test
     def match?
       false
     end
+
+    def is_mocktail_matcher?
+      true
+    end
   end
 
   class InvalidNameMatcher
@@ -51,6 +59,10 @@ class RegistersMatcherTest < Minitest::Test
 
     def match?
       false
+    end
+
+    def is_mocktail_matcher?
+      true
     end
   end
 
@@ -69,6 +81,10 @@ class RegistersMatcherTest < Minitest::Test
     def self.matcher_name
       :no_match
     end
+
+    def is_mocktail_matcher?
+      true
+    end
   end
 
   class BadMatchMatcher
@@ -77,6 +93,10 @@ class RegistersMatcherTest < Minitest::Test
     end
 
     def match?
+    end
+
+    def is_mocktail_matcher?
+      true
     end
   end
 
@@ -99,6 +119,10 @@ class RegistersMatcherTest < Minitest::Test
     def match?
       false
     end
+
+    def is_mocktail_matcher?
+      true
+    end
   end
 
   def test_blows_up_when_not_a_class
@@ -107,6 +131,25 @@ class RegistersMatcherTest < Minitest::Test
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
       Matchers must be Ruby classes
+    MSG
+  end
+
+  class MissingFlagMatcher
+    def self.matcher_name
+      :missing_flag
+    end
+
+    def match?(actual)
+      false
+    end
+  end
+
+  def test_blows_up_without_flag
+    e = assert_raises(Mocktail::InvalidMatcherError) do
+      @subject.register(MissingFlagMatcher)
+    end
+    assert_equal <<~MSG.tr("\n", " "), e.message
+      RegistersMatcherTest::MissingFlagMatcher#is_mocktail_matcher? must be defined
     MSG
   end
 end

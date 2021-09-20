@@ -8,7 +8,7 @@ module Mocktail::Matchers
     end
 
     def match?(actual)
-      [Integer, Float, (BigDecimal if defined?(BigDecimal))].include?(actual)
+      [Integer, Float, (BigDecimal if defined?(BigDecimal))].include?(actual.class)
     end
 
     def inspect

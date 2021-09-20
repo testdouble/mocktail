@@ -5,7 +5,9 @@ module Mocktail::Matchers
     end
 
     def match?(actual)
-      actual.includes?(@expected)
+      actual.respond_to?(:include?) && actual.include?(@expected)
+    rescue
+      false
     end
   end
 end

@@ -17,5 +17,9 @@ module Mocktail::Matchers
     def inspect
       "#{self.class.matcher_name}(#{@expected.inspect})"
     end
+
+    def is_mocktail_matcher?
+      true
+    end
   end
 end

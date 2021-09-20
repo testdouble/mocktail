@@ -1,4 +1,4 @@
-require_relative "../../determines_matching_calls"
+require_relative "../../share/determines_matching_calls"
 
 module Mocktail
   class FindsSatisfaction

@@ -13,6 +13,8 @@ module Mocktail::Matchers
 
     def match?(actual)
       @blk.call(actual)
+    rescue
+      false
     end
 
     def inspect

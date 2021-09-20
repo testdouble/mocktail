@@ -19,6 +19,10 @@ module Mocktail
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")
           #{matcher_type.name}#match? must be defined as a one-argument method
         MSG
+      elsif invalid_flag?(matcher_type)
+        raise InvalidMatcherError.new <<~MSG.tr("\n", " ")
+          #{matcher_type.name}#is_mocktail_matcher? must be defined
+        MSG
       else
         MatcherRegistry.instance.add(matcher_type)
       end
@@ -41,6 +45,12 @@ module Mocktail
     def invalid_match?(matcher_type)
       params = matcher_type.instance_method(:match?).parameters
       params.size > 1 || ![:req, :opt].include?(params.first[0])
+    rescue NameError
+      true
+    end
+
+    def invalid_flag?(matcher_type)
+      !matcher_type.instance_method(:is_mocktail_matcher?)
     rescue NameError
       true
     end

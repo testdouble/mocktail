@@ -7,7 +7,7 @@ module Mocktail
         # Matcher implementation will replace this:
         args_match?(real_call.args, demo_call.args) &&
         kwargs_match?(real_call.kwargs, demo_call.kwargs) &&
-        real_call.block == demo_call.block
+        blocks_match?(real_call.block, demo_call.block)
     end
 
     private
@@ -24,6 +24,15 @@ module Mocktail
         demo_kwargs.all? { |key, demo_val|
           real_kwargs.key?(key) && match?(real_kwargs[key], demo_val)
         }
+    end
+
+    def blocks_match?(real_block, demo_block)
+      (real_block.nil? && demo_block.nil?) ||
+        (
+          real_block &&
+          demo_block &&
+          demo_block.call(real_block)
+        )
     end
 
     def match?(real_arg, demo_arg)

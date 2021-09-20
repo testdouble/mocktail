@@ -58,6 +58,15 @@ class StubTest < Minitest::Test
     assert_equal :g, thing.lol(43)
   end
 
+  def test_stub_with_not_matcher
+    thing = Mocktail.of(Thing)
+
+    stubs { |m| thing.lol(m.not(:banana)) }.with { :a }
+
+    assert_equal :a, thing.lol(:orange)
+    assert_nil thing.lol(:banana)
+  end
+
   class ArgyDoo
     def boo(a = nil, b: nil, c: nil, &blk)
       raise "Boo!"
@@ -96,6 +105,130 @@ class StubTest < Minitest::Test
       but 2 were detected. As a result, Mocktail doesn't know which invocation
       to stub or verify.
     MSG
+  end
+
+  class Fttp
+    def get(route, &action)
+      raise "real call made"
+    end
+  end
+
+  class Fouter
+    def initialize(fttp)
+      @fttp = fttp
+    end
+
+    def draw
+      routes = []
+      routes << @fttp.get("/foo") do |req, res|
+        res.write("neat")
+      end
+
+      routes << @fttp.get("/bar") do |req, res|
+        next if req.head_only?
+        res.write "gee whiz"
+      end
+
+      routes << @fttp.get("/baz") do
+        raise "wups"
+      end
+
+      routes << @fttp.get("/baz")
+
+      routes
+    end
+  end
+
+  class Freq
+    def initialize(head_only: false)
+      @head_only = head_only
+    end
+
+    def head_only?
+      @head_only
+    end
+  end
+
+  class Fres
+    def initialize
+      @written = []
+    end
+
+    def write(content)
+      @written << content
+    end
+
+    def flush
+      @written.join
+    end
+  end
+
+  def test_block_stubbing
+    fttp = Mocktail.of(Fttp)
+    fouter = Fouter.new(fttp)
+
+    # satisfied when block is sent (and the demo here returns truthy)
+    stubs { fttp.get("/baz") { true } }.with { :a }
+    # satisfied when no block is provided by subject
+    stubs { fttp.get("/baz") }.with { :b }
+    # unsatisfied when block is sent because demo block returns false
+    stubs { fttp.get("/baz") { false } }.with { :c }
+
+    # Super verbose, but also v complex! Stubbing based on observable
+    # behavior of passed block
+    #
+    # unsatisifed because it writes neat
+    stubs {
+      fttp.get("/foo") { |real_blk|
+        real_blk.call(nil, fres = Fres.new)
+        fres.flush.end_with?("cool")
+      }
+    }.with { :d }
+    # satsfied because it writes neat
+    stubs {
+      fttp.get("/foo") { |real_blk|
+        real_blk.call(nil, fres = Fres.new)
+        fres.flush.end_with?("neat")
+      }
+    }.with { :e }
+    # not satisfied because it writes neat
+    stubs {
+      fttp.get("/foo") { |real_blk|
+        real_blk.call(nil, fres = Fres.new)
+        fres.flush.end_with?("slick")
+      }
+    }.with { :f }
+
+    # You can call the block as much as you want to fully exercise it, if you're
+    # into that kind of thing. Beyond a trivial point, extracting this to a
+    # real method makes a lot more sense because, like, this is ridiculous
+    # looking to be encoding 6 layers deep in an isolated unit test. SRP etc
+    stubs {
+      fttp.get("/bar") { |real_blk|
+        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
+        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+        fres1.flush == "" && fres2.flush == ""
+      }
+    }.with { :g }
+    # This is the matching one:
+    stubs {
+      fttp.get("/bar") { |real_blk|
+        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
+        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+        fres1.flush == "" && fres2.flush == "gee whiz"
+      }
+    }.with { :h }
+    stubs {
+      fttp.get("/bar") { |real_blk|
+        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
+        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+        fres1.flush == "" && fres2.flush == "golly gee"
+      }
+    }.with { :i }
+
+    result = fouter.draw
+
+    assert_equal [:e, :h, :a, :b], result
   end
 
   def test_zero_calls_per_stub

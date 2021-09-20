@@ -14,10 +14,10 @@ module Mocktail
       @raises_verification_error = RaisesVerificationError.new
     end
 
-    def verify(demo)
+    def verify(demo, demo_config)
       recording = @records_demonstration.record(demo)
-      unless @finds_matching_call.find(recording)
-        @raises_verification_error.raise(recording)
+      unless @finds_matching_call.find(recording, demo_config)
+        @raises_verification_error.raise(recording, demo_config)
       end
     end
   end

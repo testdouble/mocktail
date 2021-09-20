@@ -179,22 +179,22 @@ class StubTest < Minitest::Test
     #
     # unsatisifed because it writes neat
     stubs {
-      fttp.get("/foo") { |real_blk|
-        real_blk.call(nil, fres = Fres.new)
+      fttp.get("/foo") { |actual_block|
+        actual_block.call(nil, fres = Fres.new)
         fres.flush.end_with?("cool")
       }
     }.with { :d }
     # satsfied because it writes neat
     stubs {
-      fttp.get("/foo") { |real_blk|
-        real_blk.call(nil, fres = Fres.new)
+      fttp.get("/foo") { |actual_block|
+        actual_block.call(nil, fres = Fres.new)
         fres.flush.end_with?("neat")
       }
     }.with { :e }
     # not satisfied because it writes neat
     stubs {
-      fttp.get("/foo") { |real_blk|
-        real_blk.call(nil, fres = Fres.new)
+      fttp.get("/foo") { |actual_block|
+        actual_block.call(nil, fres = Fres.new)
         fres.flush.end_with?("slick")
       }
     }.with { :f }
@@ -204,24 +204,24 @@ class StubTest < Minitest::Test
     # real method makes a lot more sense because, like, this is ridiculous
     # looking to be encoding 6 layers deep in an isolated unit test. SRP etc
     stubs {
-      fttp.get("/bar") { |real_blk|
-        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
-        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+      fttp.get("/bar") { |actual_block|
+        actual_block.call(Freq.new(head_only: true), fres1 = Fres.new)
+        actual_block.call(Freq.new(head_only: false), fres2 = Fres.new)
         fres1.flush == "" && fres2.flush == ""
       }
     }.with { :g }
     # This is the matching one:
     stubs {
-      fttp.get("/bar") { |real_blk|
-        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
-        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+      fttp.get("/bar") { |actual_block|
+        actual_block.call(Freq.new(head_only: true), fres1 = Fres.new)
+        actual_block.call(Freq.new(head_only: false), fres2 = Fres.new)
         fres1.flush == "" && fres2.flush == "gee whiz"
       }
     }.with { :h }
     stubs {
-      fttp.get("/bar") { |real_blk|
-        real_blk.call(Freq.new(head_only: true), fres1 = Fres.new)
-        real_blk.call(Freq.new(head_only: false), fres2 = Fres.new)
+      fttp.get("/bar") { |actual_block|
+        actual_block.call(Freq.new(head_only: true), fres1 = Fres.new)
+        actual_block.call(Freq.new(head_only: false), fres2 = Fres.new)
         fres1.flush == "" && fres2.flush == "golly gee"
       }
     }.with { :i }
@@ -276,5 +276,38 @@ class StubTest < Minitest::Test
     does_too_much.do(1, 2, and: 3)
     does_too_much.do(1, 2, and: 3, also: 4)
     does_too_much.do(1, 2, and: 3, also: 4) { 5 }
+  end
+
+  def test_stub_with_is_passed_the_real_call_upon_satisfaction
+    does_too_much = Mocktail.of(DoesTooMuch)
+
+    stubs { |m| does_too_much.do(m.numeric, and: true) }.with { |call| call.args[0] + 13 }
+
+    assert_nil does_too_much.do(:not_a_match, and: true)
+    assert_equal 25, does_too_much.do(12, and: true)
+  end
+
+  def test_stub_that_ignores_unspecified_blocks
+    skip
+    doo = Mocktail.of(ArgyDoo)
+
+    stubs(ignore_blocks: true) { |m| doo.boo(m.numeric) }.with { "✅" }
+
+    assert_equal "✅", doo.boo(42)
+    assert_equal "✅", doo.boo(256) { :lol_a_block }
+    assert_nil doo.boo("42")
+  end
+
+  def test_stub_that_ignores_unspecified_args
+    skip
+    doo = Mocktail.of(ArgyDoo)
+
+    stubs(ignore_extra_args: true) { |m| doo.boo { |real| real.call.is_a?(Integer) } }.with { "✅" }
+
+    assert_equal "✅", doo.boo(42, b: :neat) { 1337 }
+    assert_equal "✅", doo.boo(b: "cool") { 1 }
+    assert_equal "✅", doo.boo { 2 }
+    assert_nil doo.boo
+    assert_nil doo.boo { "string" }
   end
 end

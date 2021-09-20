@@ -1,6 +1,7 @@
 module Mocktail
   class Stubbing < Struct.new(
     :demonstration,
+    :demo_config,
     :recording,
     :effect,
     keyword_init: true

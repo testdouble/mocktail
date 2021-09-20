@@ -6,7 +6,7 @@ module Mocktail
       @determines_matching_calls = DeterminesMatchingCalls.new
     end
 
-    def find(recording)
+    def find(recording, demo_config)
       Mocktail.cabinet.calls.reverse.find { |call|
         @determines_matching_calls.determine(call, recording)
       }

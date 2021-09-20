@@ -1,8 +1,4 @@
 module Mocktail
-  class MissingDemonstrationError < Error; end
-
-  class AmbiguousDemonstrationError < Error; end
-
   class RecordsDemonstration
     def record(demonstration)
       cabinet = Mocktail.cabinet

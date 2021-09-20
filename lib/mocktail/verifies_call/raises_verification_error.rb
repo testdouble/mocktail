@@ -2,15 +2,13 @@ require_relative "raises_verification_error/gathers_calls_of_method"
 require_relative "raises_verification_error/stringifies_call"
 
 module Mocktail
-  class VerificationError < Error; end
-
   class RaisesVerificationError
     def initialize
       @gathers_calls_of_method = GathersCallsOfMethod.new
       @stringifies_call = StringifiesCall.new
     end
 
-    def raise(recording)
+    def raise(recording, demo_config)
       Kernel.raise VerificationError.new <<~MSG
         Expected mocktail of #{recording.original_type.name}##{recording.method} to be called like:
 

@@ -10,9 +10,10 @@ module Mocktail
       @records_demonstration = RecordsDemonstration.new
     end
 
-    def register(demonstration)
+    def register(demonstration, demo_config)
       Stubbing.new(
         demonstration: demonstration,
+        demo_config: demo_config,
         recording: @records_demonstration.record(demonstration)
       ).tap do |stubbing|
         Mocktail.cabinet.store_stubbing(stubbing)

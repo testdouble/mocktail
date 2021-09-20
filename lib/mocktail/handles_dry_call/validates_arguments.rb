@@ -1,6 +1,4 @@
 module Mocktail
-  class UnexpectedError < Error; end
-
   class ValidatesArguments
     def validate(dry_call)
       original_method = dry_call.original_type.instance_method(dry_call.method)

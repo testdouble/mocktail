@@ -1,6 +1,4 @@
 module Mocktail
-  class InvalidMatcherError < Error; end
-
   class RegistersMatcher
     def self.instance
       @registers_matcher ||= new

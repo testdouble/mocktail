@@ -12,7 +12,11 @@ module Mocktail
       Kernel.raise VerificationError.new <<~MSG
         Expected mocktail of #{recording.original_type.name}##{recording.method} to be called like:
 
-          #{@stringifies_call.stringify(recording)}#{" [#{demo_config.times} #{pl("time", demo_config.times)}]" unless demo_config.times.nil?}#{" [ignoring extra args]" if demo_config.ignore_extra_args}#{" [ignoring blocks]" if demo_config.ignore_blocks}
+          #{@stringifies_call.stringify(recording)}#{[
+            (" [#{demo_config.times} #{pl("time", demo_config.times)}]" unless demo_config.times.nil?),
+            (" [ignoring extra args]" if demo_config.ignore_extra_args),
+            (" [ignoring blocks]" if demo_config.ignore_blocks)
+          ].compact.join(" ")}
 
         #{[
           describe_verifiable_times_called(demo_config, verifiable_calls.size),

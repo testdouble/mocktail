@@ -4,10 +4,6 @@ require_relative "verifies_call/raises_verification_error"
 
 module Mocktail
   class VerifiesCall
-    def self.instance
-      @verifies_call ||= new
-    end
-
     def initialize
       @records_demonstration = RecordsDemonstration.new
       @finds_matching_call = FindsMatchingCall.new

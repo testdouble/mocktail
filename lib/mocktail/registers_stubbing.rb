@@ -2,10 +2,6 @@ require_relative "records_demonstration"
 
 module Mocktail
   class RegistersStubbing
-    def self.instance
-      @self ||= new
-    end
-
     def initialize
       @records_demonstration = RecordsDemonstration.new
     end

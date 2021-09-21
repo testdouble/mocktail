@@ -66,4 +66,16 @@ class OfTest < Minitest::Test
       Mocktail.of() can only mix mocktail instances of modules and classes.
     MSG
   end
+
+  def test_of_next
+    skip
+    neato_mocktail = Mocktail.of_next(Neato)
+    next_neato = Neato.new
+    third_neato = Neato.new
+
+    # Next time someone calls new on the thing, they get the exact same mocktail
+    assert_equal neato_mocktail, next_neato
+    # And it's unwound
+    assert_equal Neato, third_neato.class
+  end
 end

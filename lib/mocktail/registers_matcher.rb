@@ -1,9 +1,5 @@
 module Mocktail
   class RegistersMatcher
-    def self.instance
-      @registers_matcher ||= new
-    end
-
     def register(matcher_type)
       if invalid_type?(matcher_type)
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")

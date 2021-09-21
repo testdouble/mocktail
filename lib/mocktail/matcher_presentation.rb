@@ -1,9 +1,5 @@
 module Mocktail
   class MatcherPresentation
-    def self.instance
-      @matcher_presentation ||= new
-    end
-
     def respond_to_missing?(name, include_private = false)
       !!MatcherRegistry.instance.get(name) || super
     end

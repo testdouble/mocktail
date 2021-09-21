@@ -10,7 +10,7 @@ module Mocktail
       Stubbing.new(
         demonstration: demonstration,
         demo_config: demo_config,
-        recording: @records_demonstration.record(demonstration)
+        recording: @records_demonstration.record(demonstration, demo_config)
       ).tap do |stubbing|
         Mocktail.cabinet.store_stubbing(stubbing)
       end

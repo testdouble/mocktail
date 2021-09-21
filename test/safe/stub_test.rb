@@ -255,6 +255,9 @@ class StubTest < Minitest::Test
     def do(this, that = nil, and:, also: "this", &block)
       raise "LOL"
     end
+
+    def splats(a, *this, b:, **that)
+    end
   end
 
   def test_param_checking
@@ -269,6 +272,8 @@ class StubTest < Minitest::Test
     assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) }
     assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
     assert_raises(ArgumentError) { does_too_much.do(1, also: 3) }
+    assert_raises(ArgumentError) { does_too_much.splats(12) }
+    assert_raises(ArgumentError) { does_too_much.splats(b: 4) }
 
     # Make sure it doesn't raise:
     does_too_much.do(1, and: 2)
@@ -276,6 +281,11 @@ class StubTest < Minitest::Test
     does_too_much.do(1, 2, and: 3)
     does_too_much.do(1, 2, and: 3, also: 4)
     does_too_much.do(1, 2, and: 3, also: 4) { 5 }
+
+    does_too_much.splats(2, b: 4)
+    does_too_much.splats(2, 3, b: 4)
+    does_too_much.splats(2, b: 4, c: 5)
+    does_too_much.splats(2, 3, b: 4, c: 5)
   end
 
   def test_stub_with_is_passed_the_real_call_upon_satisfaction
@@ -328,5 +338,26 @@ class StubTest < Minitest::Test
     2.times { |i| assert_equal :front, doo.boo(i) }
     5.times { |i| assert_equal :back, doo.boo(i) }
     3.times { |i| assert_equal :fallback, doo.boo(i) }
+  end
+
+  def test_stub_ignoring_arity_restrictions
+    does_too_much = Mocktail.of(DoesTooMuch)
+
+    stubs(ignore_extra_args: true, ignore_arity: true) { does_too_much.do }.with { "yahtzee" }
+
+    assert_equal "yahtzee", does_too_much.do(1, and: 2)
+  end
+
+  def test_stub_calls_a_stub_in_effect
+    thing_1 = Mocktail.of(Thing)
+    thing_2 = Mocktail.of(Thing)
+
+    stubs { thing_1.lol(4) }.with { 5 }
+    stubs { thing_2.lol(4) }.with { thing_1.lol(4) + 1 }
+    stubs { thing_1.lol(5) }.with { thing_1.lol(4) + 2 }
+    stubs { thing_1.lol(6) }.with { thing_1.lol(6) }
+
+    assert_equal 6, thing_2.lol(4)
+    assert_equal 7, thing_1.lol(5)
   end
 end

@@ -1,12 +1,14 @@
 module Mocktail
   class RecordsDemonstration
-    def record(demonstration)
+    def record(demonstration, demo_config)
       cabinet = Mocktail.cabinet
       prior_call_count = Mocktail.cabinet.calls.dup.size
 
       begin
         cabinet.demonstration_in_progress = true
-        demonstration.call(Mocktail.matchers)
+        ValidatesArguments.optional(demo_config.ignore_arity) do
+          demonstration.call(Mocktail.matchers)
+        end
       ensure
         cabinet.demonstration_in_progress = false
       end

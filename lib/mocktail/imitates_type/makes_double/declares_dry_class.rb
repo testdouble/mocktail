@@ -7,10 +7,17 @@ module Mocktail
     def declare(type)
       type_type = type_of(type)
       instance_methods = instance_methods_on(type)
-      dry_class = Class.new(type_type == :class ? type : Object) {
+      dry_class = Class.new(Object) {
         include type if type_type == :module
 
         def initialize(*args, **kwargs, &blk)
+        end
+
+        if type_type == :class
+          define_method :is_a?, ->(thing) {
+            type.ancestors.include?(thing)
+          }
+          alias_method :kind_of?, :is_a?
         end
       }
 
@@ -29,10 +36,12 @@ module Mocktail
       instance_methods.each do |method|
         dry_class.define_method method, ->(*args, **kwargs, &block) {
           handles_dry_call.handle(Call.new(
+            singleton: false,
             double: self,
             original_type: type,
             dry_type: self.class,
             method: method,
+            original_method: type.instance_method(method),
             args: args,
             kwargs: kwargs,
             block: block
@@ -44,7 +53,7 @@ module Mocktail
     def add_stringify_methods!(dry_class, method_name, type, type_type, instance_methods)
       dry_class.define_singleton_method method_name, -> {
         if (id_matches = super().match(/:([0-9a-fx]+)>$/))
-          "#<Class #{"including module " if type_type == :module}for mocktail of #{type.name}:#{id_matches[1]}>"
+          "#<Class #{"including module " if type.instance_of?(Module)}for mocktail of #{type.name}:#{id_matches[1]}>"
         else
           super()
         end

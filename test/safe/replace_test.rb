@@ -28,7 +28,9 @@ class ReplaceTest < Minitest::Test
   end
 
   def test_replace_class
-    Mocktail.replace(House)
+    return_value = Mocktail.replace(House)
+
+    assert_nil return_value
 
     # None of these call through, so none blow up
     House.room("living")
@@ -43,7 +45,7 @@ class ReplaceTest < Minitest::Test
     # verification works
     verify { House.room("living") }
     verify { |m| House.size(uom: m.is_a(String)) }
-    verify { House.summarize("Madiera", features: m.includes(:walls, :floor)) { |real| real.call == "🆒" } }
+    verify { |m| House.summarize("Madiera", features: m.includes(:walls, :floor)) { |real| real.call == "🆒" } }
 
     # stubbing works
     stubs { House.room("dining") }.with { "🍽" }
@@ -59,7 +61,6 @@ class ReplaceTest < Minitest::Test
     house = House.new(:some_latlong)
 
     verify { House.new(:some_latlong) }
-    verify { house.send(:initialize, :some_latlong) }
 
     other_house = House.new(:a_map)
     refute_same other_house, house

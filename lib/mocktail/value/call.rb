@@ -5,6 +5,7 @@ module Mocktail
     :original_type,
     :dry_type,
     :method,
+    :original_method,
     :args,
     :kwargs,
     :block,

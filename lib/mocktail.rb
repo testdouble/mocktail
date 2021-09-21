@@ -29,6 +29,7 @@ module Mocktail
   # or included will also fake instance methods
   def self.replace(type)
     ReplacesType.new.replace(type)
+    nil
   end
 
   define_singleton_method :stubs, DSL.instance_method(:stubs)

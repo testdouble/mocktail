@@ -11,7 +11,7 @@ module Mocktail
     end
 
     def verify(demo, demo_config)
-      recording = @records_demonstration.record(demo)
+      recording = @records_demonstration.record(demo, demo_config)
       verifiable_calls = @finds_verifiable_calls.find(recording, demo_config)
 
       unless verification_satisfied?(verifiable_calls.size, demo_config)

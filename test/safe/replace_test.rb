@@ -71,4 +71,70 @@ class ReplaceTest < Minitest::Test
     assert_equal 4, house.id
     assert_equal 8, other_house.id
   end
+
+  module Home
+    def self.is_cozy?
+      raise "Nope"
+    end
+
+    def self.family=(family)
+      raise "unimplemented"
+    end
+  end
+
+  def test_replace_module
+    Mocktail.replace(Home)
+
+    stubs { Home.is_cozy? }.with { true }
+
+    Home.family = [:person, :cat]
+
+    verify { |m| Home.family = m.is_a(Array) }
+  end
+
+  def test_multiple_threads
+    [
+      thread do
+        Mocktail.replace(House)
+        sleep 0.001
+        stubs { |m| House.room(m.any) }.with { :ldk }
+        sleep 0.001
+        assert_equal :ldk, House.room(:lol)
+      end,
+      thread do
+        Mocktail.replace(House)
+        sleep 0.001
+        assert_nil House.room(:lol)
+        sleep 0.01
+        assert_nil House.room(:lol)
+      end,
+      thread do
+        Mocktail.replace(House)
+        sleep 0.01
+        assert_raises(Mocktail::VerificationError) { verify { |m| House.room(m.any) } }
+      end,
+      thread do
+        Mocktail.replace(House)
+        sleep 0.001
+        stubs { |m| House.room(m.any) }.with { :kitchen }
+        sleep 0.001
+        assert_equal :kitchen, House.room(:lol)
+      end,
+      10.times.map { |i|
+        thread do
+          sleep 0.001 * i
+          e = assert_raises { House.room("name") }
+          assert_equal "Unimplemented", e.message
+        end
+      }
+    ].flatten.shuffle.each(&:join)
+  end
+
+  private
+
+  def thread(&blk)
+    Thread.new(&blk).tap do |t|
+      t.abort_on_exception = true
+    end
+  end
 end

@@ -140,4 +140,57 @@ class VerifyTest < Minitest::Test
     assert_equal 1, captor.value[:a]
     assert captor.captured?
   end
+
+  def test_verify_that_ignores_unspecified_blocks
+    syn = Mocktail.of(Syn)
+
+    syn.ack(42) { "i'm a block" }
+
+    assert_raises(Mocktail::VerificationError) { verify { |m| syn.ack(m.numeric) } }
+    verify(ignore_blocks: true) { |m| syn.ack(m.numeric) }
+    e = assert_raises(Mocktail::VerificationError) {
+      verify(ignore_blocks: true) { |m| syn.ack(1337) }
+    }
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack(1337) [ignoring blocks]
+
+      But it was called differently 1 time:
+
+        ack(42) { Proc at test/safe/verify_test.rb:147 }
+
+    MSG
+  end
+
+  def test_verify_that_ignores_unspecified_args
+    syn = Mocktail.of(Syn)
+
+    syn.ack(:a)
+
+    assert_raises(Mocktail::VerificationError) { verify { |m| syn.ack } }
+    verify(ignore_extra_args: true) { |m| syn.ack }
+
+    syn.ack(:pants, b: "cool")
+
+    verify(ignore_extra_args: true) { |m| syn.ack(:pants) }
+    e = assert_raises(Mocktail::VerificationError) {
+      verify(ignore_extra_args: true) { |m| syn.ack(:trousers) }
+    }
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack(:trousers) [ignoring extra args]
+
+      But it was called differently 2 times:
+
+        ack(:a)
+
+        ack(:pants, b: "cool")
+
+    MSG
+
+    syn.ack(:lol, b: :kek) { :heh }
+    verify(ignore_blocks: true, ignore_extra_args: true) { syn.ack }
+  end
 end

@@ -288,7 +288,6 @@ class StubTest < Minitest::Test
   end
 
   def test_stub_that_ignores_unspecified_blocks
-    skip
     doo = Mocktail.of(ArgyDoo)
 
     stubs(ignore_blocks: true) { |m| doo.boo(m.numeric) }.with { "✅" }
@@ -299,12 +298,12 @@ class StubTest < Minitest::Test
   end
 
   def test_stub_that_ignores_unspecified_args
-    skip
     doo = Mocktail.of(ArgyDoo)
 
     stubs(ignore_extra_args: true) { |m| doo.boo { |real| real.call.is_a?(Integer) } }.with { "✅" }
+    stubs(ignore_extra_args: true) { |m| doo.boo(m.that { |n| n < 50 }) { 1337 } }.with { "Cøøl" }
 
-    assert_equal "✅", doo.boo(42, b: :neat) { 1337 }
+    assert_equal "Cøøl", doo.boo(42, b: :neat) { 1337 }
     assert_equal "✅", doo.boo(b: "cool") { 1 }
     assert_equal "✅", doo.boo { 2 }
     assert_nil doo.boo

@@ -12,7 +12,7 @@ module Mocktail
       Kernel.raise VerificationError.new <<~MSG
         Expected mocktail of #{recording.original_type.name}##{recording.method} to be called like:
 
-          #{@stringifies_call.stringify(recording)}
+          #{@stringifies_call.stringify(recording)}#{" [ignoring extra args]" if demo_config.ignore_extra_args}#{" [ignoring blocks]" if demo_config.ignore_blocks}
 
         #{describe_other_calls(recording)}
       MSG

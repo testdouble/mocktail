@@ -1,33 +1,44 @@
 module Mocktail
   class DeterminesMatchingCalls
-    def determine(real_call, demo_call)
+    def determine(real_call, demo_call, demo_config)
       real_call.double == demo_call.double &&
         real_call.method == demo_call.method &&
 
         # Matcher implementation will replace this:
-        args_match?(real_call.args, demo_call.args) &&
-        kwargs_match?(real_call.kwargs, demo_call.kwargs) &&
-        blocks_match?(real_call.block, demo_call.block)
+        args_match?(real_call.args, demo_call.args, demo_config.ignore_extra_args) &&
+        kwargs_match?(real_call.kwargs, demo_call.kwargs, demo_config.ignore_extra_args) &&
+        blocks_match?(real_call.block, demo_call.block, demo_config.ignore_blocks)
     end
 
     private
 
-    def args_match?(real_args, demo_args)
-      real_args.size == demo_args.size &&
-        real_args.zip(demo_args).all? { |real_arg, demo_arg|
-          match?(real_arg, demo_arg)
+    def args_match?(real_args, demo_args, ignore_extra_args)
+      return true if ignore_extra_args && demo_args.empty?
+
+      (
+        real_args.size == demo_args.size ||
+        (ignore_extra_args && real_args.size >= demo_args.size)
+      ) &&
+        demo_args.each.with_index.all? { |demo_arg, i|
+          match?(real_args[i], demo_arg)
         }
     end
 
-    def kwargs_match?(real_kwargs, demo_kwargs)
-      real_kwargs.size == demo_kwargs.size &&
+    def kwargs_match?(real_kwargs, demo_kwargs, ignore_extra_args)
+      return true if ignore_extra_args && demo_kwargs.empty?
+
+      (
+        real_kwargs.size == demo_kwargs.size ||
+        (ignore_extra_args && real_kwargs.size >= demo_kwargs.size)
+      ) &&
         demo_kwargs.all? { |key, demo_val|
           real_kwargs.key?(key) && match?(real_kwargs[key], demo_val)
         }
     end
 
-    def blocks_match?(real_block, demo_block)
-      (real_block.nil? && demo_block.nil?) ||
+    def blocks_match?(real_block, demo_block, ignore_blocks)
+      ignore_blocks ||
+        (real_block.nil? && demo_block.nil?) ||
         (
           real_block && demo_block &&
           (

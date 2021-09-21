@@ -1,5 +1,6 @@
 module Mocktail
   class Call < Struct.new(
+    :singleton,
     :double,
     :original_type,
     :dry_type,

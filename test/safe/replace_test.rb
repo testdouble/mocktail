@@ -3,12 +3,14 @@ require "test_helper"
 class ReplaceTest < Minitest::Test
   include Mocktail::DSL
 
-  class House
-    def self.room(room_name)
+  class Building
+    def self.size(uom:)
       raise "Unimplemented"
     end
+  end
 
-    def self.size(uom:)
+  class House < Building
+    def self.room(room_name)
       raise "Unimplemented"
     end
 
@@ -26,7 +28,6 @@ class ReplaceTest < Minitest::Test
   end
 
   def test_replace_class
-    skip
     Mocktail.replace(House)
 
     # None of these call through, so none blow up

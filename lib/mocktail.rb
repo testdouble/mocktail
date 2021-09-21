@@ -8,17 +8,27 @@ require_relative "mocktail/matchers"
 require_relative "mocktail/registers_matcher"
 require_relative "mocktail/registers_stubbing"
 require_relative "mocktail/replaces_next"
+require_relative "mocktail/replaces_type"
 require_relative "mocktail/value"
 require_relative "mocktail/verifies_call"
 require_relative "mocktail/version"
 
 module Mocktail
+  # Returns an instance of `type` whose implementation is mocked out
   def self.of(type)
     ImitatesType.new.imitate(type)
   end
 
+  # Returns an instance of `klass` whose implementation is mocked out AND
+  # stubs its constructor to return that fake the next time klass.new is called
   def self.of_next(type)
-    ReplacesNext.new.stub(type)
+    ReplacesNext.new.replace(type)
+  end
+
+  # Replaces every singleton method on `type` with a fake, and when instantiated
+  # or included will also fake instance methods
+  def self.replace(type)
+    ReplacesType.new.replace(type)
   end
 
   define_singleton_method :stubs, DSL.instance_method(:stubs)

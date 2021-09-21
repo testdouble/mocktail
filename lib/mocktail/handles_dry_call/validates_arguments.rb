@@ -1,7 +1,12 @@
 module Mocktail
   class ValidatesArguments
     def validate(dry_call)
-      original_method = dry_call.original_type.instance_method(dry_call.method)
+      original_method = if dry_call.singleton
+        TopShelf.instance.type_replacement_for(dry_call.original_type).original_methods[dry_call.method]
+        dry_call.original_type.method(dry_call.method)
+      else
+        dry_call.original_type.instance_method(dry_call.method)
+      end
       arg_params, kwarg_params = original_method.parameters.reject { |type, _|
         type == :block
       }.partition { |type, _|
@@ -11,7 +16,11 @@ module Mocktail
       unless args_match?(arg_params, dry_call.args) &&
           kwargs_match?(kwarg_params, dry_call.kwargs)
 
-        original_method.bind_call(dry_call.double, *dry_call.args, **dry_call.kwargs)
+        if dry_call.singleton
+          original_method.call(*dry_call.args, **dry_call.kwargs)
+        else
+          original_method.bind_call(dry_call.double, *dry_call.args, **dry_call.kwargs)
+        end
         raise UnexpectedError.new <<~MSG
           Expected an ArgumentError but none was raised. If you're seeing this,
           please file an issue with reproduction steps [ID #1]:

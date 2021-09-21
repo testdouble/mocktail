@@ -80,11 +80,11 @@ class OfTest < Minitest::Test
   end
 
   def test_ensures_fake_constructors
-    Mocktail.of(Wip)
+    assert Mocktail.of(Wip)
   end
 
   def test_constructors_dont_require_args
-    Mocktail.of(Argz)
+    assert Mocktail.of(Argz)
   end
 
   def test_of_next

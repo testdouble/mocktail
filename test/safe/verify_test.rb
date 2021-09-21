@@ -30,7 +30,7 @@ class VerifyTest < Minitest::Test
 
         send(to: "jenn@example.com")
 
-      But it was called differently 2 times:
+      It was called differently 2 times:
 
         send(to: "becky@example.com")
 
@@ -82,7 +82,7 @@ class VerifyTest < Minitest::Test
 
         ack(that {…}, b: that {…})
 
-      But it was called differently 1 time:
+      It was called differently 1 time:
 
         ack(42, b: 1337)
 
@@ -108,7 +108,7 @@ class VerifyTest < Minitest::Test
 
         ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:103 }
 
-      But it was called differently 2 times:
+      It was called differently 2 times:
 
         ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:95 }
 
@@ -156,7 +156,7 @@ class VerifyTest < Minitest::Test
 
         ack(1337) [ignoring blocks]
 
-      But it was called differently 1 time:
+      It was called differently 1 time:
 
         ack(42) { Proc at test/safe/verify_test.rb:147 }
 
@@ -182,7 +182,7 @@ class VerifyTest < Minitest::Test
 
         ack(:trousers) [ignoring extra args]
 
-      But it was called differently 2 times:
+      It was called differently 2 times:
 
         ack(:a)
 
@@ -192,5 +192,54 @@ class VerifyTest < Minitest::Test
 
     syn.ack(:lol, b: :kek) { :heh }
     verify(ignore_blocks: true, ignore_extra_args: true) { syn.ack }
+  end
+
+  def test_verify_is_called_exactly_n_times
+    syn = Mocktail.of(Syn)
+
+    e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack [2 times]
+
+      But it was never called this way.
+    MSG
+
+    syn.ack
+
+    e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack [2 times]
+
+      But it was actually called this way 1 time.
+    MSG
+
+    syn.ack
+
+    # Finally satisfied
+    verify(times: 2) { syn.ack }
+
+    syn.ack(:a)
+    syn.ack(:c)
+    syn.ack
+
+    e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
+    assert_equal <<~MSG, e.message
+      Expected mocktail of VerifyTest::Syn#ack to be called like:
+
+        ack [2 times]
+
+      But it was actually called this way 3 times.
+
+      It was called differently 2 times:
+
+        ack(:a)
+
+        ack(:c)
+
+    MSG
   end
 end

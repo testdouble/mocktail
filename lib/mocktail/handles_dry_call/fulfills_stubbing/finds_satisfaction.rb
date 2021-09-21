@@ -8,7 +8,8 @@ module Mocktail
 
     def find(dry_call)
       Mocktail.cabinet.stubbings.reverse.find { |stubbing|
-        @determines_matching_calls.determine(dry_call, stubbing.recording, stubbing.demo_config)
+        @determines_matching_calls.determine(dry_call, stubbing.recording, stubbing.demo_config) &&
+          (stubbing.demo_config.times.nil? || stubbing.demo_config.times > stubbing.satisfaction_count)
       }
     end
   end

@@ -309,4 +309,24 @@ class StubTest < Minitest::Test
     assert_nil doo.boo
     assert_nil doo.boo { "string" }
   end
+
+  def test_stub_that_can_only_be_satisfied_so_many_times
+    doo = Mocktail.of(ArgyDoo)
+
+    stubs(times: 0) { doo.boo }.with { "hmm" }
+    assert_nil doo.boo
+
+    stubs(times: 1) { |m| doo.boo(m.numeric) }.with { :ok }
+    assert_nil doo.boo("hi")
+    assert_equal :ok, doo.boo(42)
+    assert_nil doo.boo(42)
+
+    stubs { |m| doo.boo(m.any) }.with { :fallback }
+    stubs(times: 5) { |m| doo.boo(m.any) }.with { :back }
+    stubs(times: 2) { |m| doo.boo(m.any) }.with { :front }
+
+    2.times { |i| assert_equal :front, doo.boo(i) }
+    5.times { |i| assert_equal :back, doo.boo(i) }
+    3.times { |i| assert_equal :fallback, doo.boo(i) }
+  end
 end

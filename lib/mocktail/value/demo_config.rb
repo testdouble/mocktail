@@ -1,6 +1,6 @@
 module Mocktail
   class DemoConfig < Struct.new(
-    :ignore_blocks,
+    :ignore_block,
     :ignore_extra_args,
     :ignore_arity,
     :times,

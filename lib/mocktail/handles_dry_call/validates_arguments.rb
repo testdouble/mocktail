@@ -16,8 +16,9 @@ module Mocktail
       return blk.call unless disable
 
       disable!
-      blk.call
-      enable!
+      blk.call.tap do
+        enable!
+      end
     end
 
     def validate(dry_call)

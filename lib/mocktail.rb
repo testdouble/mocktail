@@ -22,7 +22,16 @@ module Mocktail
   # Returns an instance of `klass` whose implementation is mocked out AND
   # stubs its constructor to return that fake the next time klass.new is called
   def self.of_next(type)
-    ReplacesNext.new.replace(type)
+    ReplacesType.new.replace(type)
+    one_timer = ValidatesArguments.optional(true) do
+      type.new
+    end
+    stubs(ignore_extra_args: true, ignore_block: true, ignore_arity: true, times: 1) {
+      type.new
+    }.with {
+      one_timer
+    }
+    one_timer
   end
 
   # Replaces every singleton method on `type` with a fake, and when instantiated

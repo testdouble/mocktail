@@ -147,9 +147,9 @@ class VerifyTest < Minitest::Test
     syn.ack(42) { "i'm a block" }
 
     assert_raises(Mocktail::VerificationError) { verify { |m| syn.ack(m.numeric) } }
-    verify(ignore_blocks: true) { |m| syn.ack(m.numeric) }
+    verify(ignore_block: true) { |m| syn.ack(m.numeric) }
     e = assert_raises(Mocktail::VerificationError) {
-      verify(ignore_blocks: true) { |m| syn.ack(1337) }
+      verify(ignore_block: true) { |m| syn.ack(1337) }
     }
     assert_equal <<~MSG, e.message
       Expected mocktail of VerifyTest::Syn#ack to be called like:
@@ -191,7 +191,7 @@ class VerifyTest < Minitest::Test
     MSG
 
     syn.ack(:lol, b: :kek) { :heh }
-    verify(ignore_blocks: true, ignore_extra_args: true) { syn.ack }
+    verify(ignore_block: true, ignore_extra_args: true) { syn.ack }
   end
 
   def test_verify_is_called_exactly_n_times

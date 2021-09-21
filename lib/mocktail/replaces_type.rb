@@ -8,6 +8,7 @@ module Mocktail
       @imitates_type = ImitatesType.new
       @validates_arguments = ValidatesArguments.new
       @logs_call = LogsCall.new
+      @fulfills_stubbing = FulfillsStubbing.new
     end
 
     def replace(type)
@@ -22,17 +23,13 @@ module Mocktail
         validates_arguments = @validates_arguments
         imitates_type = @imitates_type
         logs_call = @logs_call
+        fulfills_stubbing = @fulfills_stubbing
 
         if type.is_a?(Class)
           type.singleton_class.send(:undef_method, :new)
           new_new_method = type.define_singleton_method :new, ->(*args, **kwargs, &block) {
             if TopShelf.instance.replaced_on_current_thread?(type)
-              validates_arguments.validate(Call.new(
-                original_method: type.instance_method(:initialize),
-                args: args,
-                kwargs: kwargs
-              ))
-              logs_call.log(Call.new(
+              new_call = Call.new(
                 singleton: true,
                 double: type,
                 original_type: type,
@@ -42,8 +39,19 @@ module Mocktail
                 args: args,
                 kwargs: kwargs,
                 block: block
-              ))
-              imitates_type.imitate(type)
+              )
+              initialize_call = Call.new(
+                original_method: type.instance_method(:initialize),
+                args: args,
+                kwargs: kwargs
+              )
+              validates_arguments.validate(initialize_call)
+              logs_call.log(new_call)
+              if fulfills_stubbing.satisfaction(new_call)
+                fulfills_stubbing.fulfill(new_call)
+              else
+                imitates_type.imitate(type)
+              end
             else
               original_methods[:new].call(*args, **kwargs, &block)
             end

@@ -15,7 +15,7 @@ module Mocktail
           #{@stringifies_call.stringify(recording)}#{[
             (" [#{demo_config.times} #{pl("time", demo_config.times)}]" unless demo_config.times.nil?),
             (" [ignoring extra args]" if demo_config.ignore_extra_args),
-            (" [ignoring blocks]" if demo_config.ignore_blocks)
+            (" [ignoring blocks]" if demo_config.ignore_block)
           ].compact.join(" ")}
 
         #{[

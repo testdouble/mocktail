@@ -7,11 +7,15 @@ module Mocktail
     end
 
     def fulfill(dry_call)
-      return if Mocktail.cabinet.demonstration_in_progress?
-      if (stubbing = @finds_satisfaction.find(dry_call))
+      if (stubbing = satisfaction(dry_call))
         stubbing.satisfied!
         stubbing.effect&.call(dry_call)
       end
+    end
+
+    def satisfaction(dry_call)
+      return if Mocktail.cabinet.demonstration_in_progress?
+      @finds_satisfaction.find(dry_call)
     end
   end
 end

@@ -300,7 +300,7 @@ class StubTest < Minitest::Test
   def test_stub_that_ignores_unspecified_blocks
     doo = Mocktail.of(ArgyDoo)
 
-    stubs(ignore_blocks: true) { |m| doo.boo(m.numeric) }.with { "✅" }
+    stubs(ignore_block: true) { |m| doo.boo(m.numeric) }.with { "✅" }
 
     assert_equal "✅", doo.boo(42)
     assert_equal "✅", doo.boo(256) { :lol_a_block }

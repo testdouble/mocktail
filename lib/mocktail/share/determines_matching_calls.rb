@@ -7,7 +7,7 @@ module Mocktail
         # Matcher implementation will replace this:
         args_match?(real_call.args, demo_call.args, demo_config.ignore_extra_args) &&
         kwargs_match?(real_call.kwargs, demo_call.kwargs, demo_config.ignore_extra_args) &&
-        blocks_match?(real_call.block, demo_call.block, demo_config.ignore_blocks)
+        blocks_match?(real_call.block, demo_call.block, demo_config.ignore_block)
     end
 
     private
@@ -36,8 +36,8 @@ module Mocktail
         }
     end
 
-    def blocks_match?(real_block, demo_block, ignore_blocks)
-      ignore_blocks ||
+    def blocks_match?(real_block, demo_block, ignore_block)
+      ignore_block ||
         (real_block.nil? && demo_block.nil?) ||
         (
           real_block && demo_block &&

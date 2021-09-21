@@ -70,6 +70,10 @@ class ReplaceTest < Minitest::Test
 
     assert_equal 4, house.id
     assert_equal 8, other_house.id
+
+    stubs { House.new(:lol) }.with { :wat }
+
+    assert_equal :wat, House.new(:lol)
   end
 
   module Home

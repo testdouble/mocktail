@@ -94,7 +94,7 @@ class OfTest < Minitest::Test
     third_neato = Neato.new
 
     # Next time someone calls new on the thing, they get the exact same mocktail
-    assert_equal neato_mocktail, next_neato
+    assert_same neato_mocktail, next_neato
     # And it's unwound
     assert_equal Neato, third_neato.class
   end

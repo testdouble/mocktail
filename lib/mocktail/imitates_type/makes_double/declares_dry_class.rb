@@ -9,6 +9,9 @@ module Mocktail
       instance_methods = instance_methods_on(type)
       dry_class = Class.new(type_type == :class ? type : Object) {
         include type if type_type == :module
+
+        def initialize(*args, **kwargs, &blk)
+        end
       }
 
       add_stringify_methods!(dry_class, :to_s, type, type_type, instance_methods)

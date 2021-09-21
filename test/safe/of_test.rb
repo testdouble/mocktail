@@ -67,6 +67,26 @@ class OfTest < Minitest::Test
     MSG
   end
 
+  class Wip
+    def initialize
+      raise "unimplemented!"
+    end
+  end
+
+  class Argz
+    def initialize(a, b:)
+      raise "args required!"
+    end
+  end
+
+  def test_ensures_fake_constructors
+    Mocktail.of(Wip)
+  end
+
+  def test_constructors_dont_require_args
+    Mocktail.of(Argz)
+  end
+
   def test_of_next
     skip
     neato_mocktail = Mocktail.of_next(Neato)

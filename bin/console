@@ -29,6 +29,32 @@ class Auditor
   def record!(message, user:, action: nil); end
 end
 
+class Shaker
+  def combine(*args); end
+end
+class Glass
+  def pour!(drink); end
+end
+class Bar
+  def pass(glass, to:)
+  end
+end
+
+class Bartender
+  def initialize
+    @shaker = Shaker.new
+    @glass = Glass.new
+    @bar = Bar.new
+  end
+
+  def make_drink(name, customer:)
+    if name == :negroni
+      drink = @shaker.combine(:gin, :campari, :sweet_vermouth)
+      @glass.pour!(drink)
+      @bar.pass(@glass, to: customer)
+    end
+  end
+end
 
 # (If you use this, don't forget to add pry to your Gemfile!)
 require "pry"

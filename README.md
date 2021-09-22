@@ -6,71 +6,64 @@ width="90%"/>
 
 Mocktail is a [test
 double](https://github.com/testdouble/contributing-tests/wiki/Test-Double)
-library for Ruby. It offers a simple API and robust feature-set.
+library for Ruby. Mocktail provides a terse and robust API for creating mocks,
+getting them in the hands of the code you're testing, stub & verify behavior,
+and even safely override class methods.
 
 ## First, an aperitif
 
 Before getting into the details, let's demonstrate what Mocktail's API looks
-like. Suppose you have a class `Negroni`:
+like. Suppose you want to test a `Bartender` class:
 
 ```ruby
-class Negroni
-  def self.ingredients
-    [:gin, :campari, :sweet_vermouth]
+class Bartender
+  def initialize
+    @shaker = Shaker.new
+    @glass = Glass.new
+    @bar = Bar.new
   end
 
-  def shake!(shaker)
-    shaker.mix(self.class.ingredients)
-  end
-
-  def sip(amount)
-    raise "unimplemented"
+  def make_drink(name, customer:)
+    if name == :negroni
+      drink = @shaker.combine(:gin, :campari, :sweet_vermouth)
+      @glass.pour(drink)
+      @bar.pass(@glass, to: customer)
+    end
   end
 end
 ```
 
-1. Create a mocked instance: `negroni = Mocktail.of(Negroni)`
-2. Stub a response with `stubs { negroni.sip(4) }.with { :ahh }`
-    * Calling `negroni.sip(4)` will subsequently return `:ahh`
-    * Another example: `stubs { |m| negroni.sip(m.numeric) }.with { :nice }`
-3. Verify a call with `verify { negroni.shake!(:some_shaker) }`
-    * `verify` will raise an error unless `negroni.shake!(:some_shaker)` has
-      been called
-    * Another example: `verify { |m| negroni.shake!(m.that { |arg|
-      arg.respond_to?(:mix) }) }`
-4. Deliver a mock to your code under test with `negroni =
-Mocktail.of_next(Negroni)`
-    * `of_next` will return a fake `Negroni`
-    * The next call to `Negroni.new` will return _exactly the same_ fake
-      instance, allowing the code being tested to seamlessly instantiate and
-      interact with it
-    * This means no dependency injection is necessary, nor is a sweeping
-      override like
-      [any_instance](https://relishapp.com/rspec/rspec-mocks/docs/working-with-legacy-code/any-instance)
-    * `Negroni.new` will be unaffected on other threads and will continue
-      behaving like normal as soon as the next `new` call
+You could write an isolated unit test with Mocktail like this:
 
-Mocktail can do a whole lot more than this, and was also designed with
-descriptive error messages and common edge cases in mind:
+```ruby
+shaker = Mocktail.of_next(Shaker)
+glass = Mocktail.of_next(Glass)
+bar = Mocktail.of_next(Bar)
+subject = Bartender.new
+stubs { shaker.combine(:gin, :campari, :sweet_vermouth) }.with { :a_drink }
+stubs { bar.pass(glass, to: "Eileen") }.with { "🎉" }
 
-* Entire classes and modules can be replaced with `Mocktail.replace(type)` while
-  preserving thread safety
-* Arity of arguments and keyword arguments is enforced on faked methods to
-  prevent isolated unit tests from continuing to pass after an API contract
-  changes
-* For mocked methods that take a block, `stubs` & `verify` can inspect and
-  invoke the passed block to determine whether the call satisfies their
-  conditions
-* Dynamic stubbings that return a value based on how the mocked method was
-  called
-* Advanced stubbing and verification options like specifying the number of
-  `times` a stub can be satisfied or a call should be verified, allowing tests
-  to forego specifying arguments and blocks, and temporarily disabling arity
-  validation
-* Built-in matchers as well as custom matcher support
-* Argument captors for complex, multi-step call verifications
+result = subject.make_drink(:negroni, customer: "Eileen")
 
-## Getting started
+assert_equal "🎉", result
+# Oh yeah, and make sure the drink got poured! Silly side effects!
+verify { glass.pour!(:a_drink) }
+```
+
+# And the chaser
+
+Mocktail can do a whole lot more:
+
+* Singleton methods on classes and modules can be replaced with
+  `Mocktail.replace(type)` while still preserving thread safety
+* Arity of arguments and keyword arguments of faked methods is enforced—no more
+  tests that keep passing after an API changes
+* Really detailed error messages when verifications fail
+* Dynamic stubbings based on the actual call
+* Built-in argument matchers as well as custom matcher support
+* Argument captors for verifications of methods that take very complex arguments
+
+## Ready to order?
 
 ### Install
 
@@ -490,7 +483,7 @@ verify { big_api.send(payload_captor.capture) } # => nil!
 The `verify` above will pass because _a_ call did happen, but we haven't
 asserted anything beyond that yet. What really happened is that
 `payload_captor.capture` actually returned a matcher that will return true for
-any argument _while also sneakily storing a copy of the argument value_. 
+any argument _while also sneakily storing a copy of the argument value_.
 
 That's why we instantiated `payload_captor` with `Mocktail.captor` outside the
 demonstration block, so we can inspect its `value` after the `verify` call:

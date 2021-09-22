@@ -26,7 +26,7 @@ class Bartender
   def make_drink(name, customer:)
     if name == :negroni
       drink = @shaker.combine(:gin, :campari, :sweet_vermouth)
-      @glass.pour(drink)
+      @glass.pour!(drink)
       @bar.pass(@glass, to: customer)
     end
   end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mocktail (0.1.0)
+    mocktail (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -51,7 +51,6 @@ PLATFORMS
   arm64-darwin-20
 
 DEPENDENCIES
-  method_source
   minitest
   mocktail!
   pry

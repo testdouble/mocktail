@@ -52,16 +52,18 @@ verify { glass.pour!(:a_drink) }
 
 # The chaser
 
-Mocktail can do a whole lot more:
+And that's not all! Mocktail can do a whole lot more:
 
 * Singleton methods on classes and modules can be replaced with
-  `Mocktail.replace(type)` while still preserving thread safety
+  [Mocktail.replace(type)](#mocktailreplace) while still preserving thread
+  safety
 * Arity of arguments and keyword arguments of faked methods is enforced—no more
   tests that keep passing after an API changes
-* Really detailed error messages when verifications fail
-* Dynamic stubbings based on the actual call
-* Built-in argument matchers as well as custom matcher support
-* Argument captors for verifications of methods that take very complex arguments
+* Super-duper detailed error messages when verifications fail
+* Dynamic stubbings based on the arguments passed to the actual call
+* Built-in [argument matchers](#mocktailmatchers) and a simple API for adding
+  [custom matchers](#custom-matchers)
+* [Argument captors](#mocktailcaptor) for assertions of very complex arguments
 
 ## Ready to order?
 

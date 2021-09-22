@@ -3,12 +3,7 @@ module Mocktail
     def initialize
       @top_shelf = TopShelf.instance
       @handles_dry_call = HandlesDryCall.new
-
-      @registers_stubbing = RegistersStubbing.new
-      @imitates_type = ImitatesType.new
-      @validates_arguments = ValidatesArguments.new
-      @logs_call = LogsCall.new
-      @fulfills_stubbing = FulfillsStubbing.new
+      @handles_dry_new_call = HandlesDryNewCall.new
     end
 
     def replace(type)
@@ -20,38 +15,13 @@ module Mocktail
         ).compact.map { |name| [name, type.method(name)] }.to_h
 
         handles_dry_call = @handles_dry_call
-        validates_arguments = @validates_arguments
-        imitates_type = @imitates_type
-        logs_call = @logs_call
-        fulfills_stubbing = @fulfills_stubbing
+        handles_dry_new_call = @handles_dry_new_call
 
         if type.is_a?(Class)
           type.singleton_class.send(:undef_method, :new)
           new_new_method = type.define_singleton_method :new, ->(*args, **kwargs, &block) {
             if TopShelf.instance.replaced_on_current_thread?(type)
-              new_call = Call.new(
-                singleton: true,
-                double: type,
-                original_type: type,
-                dry_type: type,
-                method: :new,
-                original_method: original_methods[:new],
-                args: args,
-                kwargs: kwargs,
-                block: block
-              )
-              initialize_call = Call.new(
-                original_method: type.instance_method(:initialize),
-                args: args,
-                kwargs: kwargs
-              )
-              validates_arguments.validate(initialize_call)
-              logs_call.log(new_call)
-              if fulfills_stubbing.satisfaction(new_call)
-                fulfills_stubbing.fulfill(new_call)
-              else
-                imitates_type.imitate(type)
-              end
+              handles_dry_new_call.handle(type, args, kwargs, block)
             else
               original_methods[:new].call(*args, **kwargs, &block)
             end

@@ -1,6 +1,7 @@
 require_relative "mocktail/dsl"
 require_relative "mocktail/errors"
 require_relative "mocktail/handles_dry_call"
+require_relative "mocktail/handles_dry_new_call"
 require_relative "mocktail/imitates_type"
 require_relative "mocktail/initializes_mocktail"
 require_relative "mocktail/matcher_presentation"
@@ -21,17 +22,8 @@ module Mocktail
 
   # Returns an instance of `klass` whose implementation is mocked out AND
   # stubs its constructor to return that fake the next time klass.new is called
-  def self.of_next(type)
-    ReplacesType.new.replace(type)
-    one_timer = ValidatesArguments.optional(true) do
-      type.new
-    end
-    stubs(ignore_extra_args: true, ignore_block: true, ignore_arity: true, times: 1) {
-      type.new
-    }.with {
-      one_timer
-    }
-    one_timer
+  def self.of_next(type, count: 1)
+    ReplacesType.new.replace(type, count)
   end
 
   # Replaces every singleton method on `type` with a fake, and when instantiated

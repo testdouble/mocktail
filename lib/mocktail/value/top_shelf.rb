@@ -7,6 +7,7 @@ module Mocktail
     def initialize
       @type_replacements = {}
       @registrations = {}
+      #      @of_next_registrations = {}
     end
 
     def already_replaced?(type)
@@ -34,5 +35,19 @@ module Mocktail
     def reset_type_replacement_for_current_thread!
       @registrations[Thread.current] = []
     end
+
+    #     def of_next_on_current_thread?(type)
+    #       @of_next_registrations[Thread.current] ||= []
+    #       @of_next_registrations[Thread.current].include?(type)
+    #     end
+
+    #     def register_of_next_for_current_thread!(type)
+    #       @of_next_registrations[Thread.current] ||= []
+    #       @of_next_registrations[Thread.current] |= [type]
+    #     end
+
+    #     def deregister_of_next_for_current_thread!
+    #       @of_next_registrations[Thread.current] = []
+    #     end
   end
 end

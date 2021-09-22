@@ -10,6 +10,7 @@ require_relative "mocktail/registers_matcher"
 require_relative "mocktail/registers_stubbing"
 require_relative "mocktail/replaces_next"
 require_relative "mocktail/replaces_type"
+require_relative "mocktail/resets_state"
 require_relative "mocktail/value"
 require_relative "mocktail/verifies_call"
 require_relative "mocktail/version"
@@ -35,6 +36,10 @@ module Mocktail
 
   define_singleton_method :stubs, DSL.instance_method(:stubs)
   define_singleton_method :verify, DSL.instance_method(:verify)
+
+  def self.reset
+    ResetsState.new.reset
+  end
 
   def self.captor
     Matchers::Captor.new

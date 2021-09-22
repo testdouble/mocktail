@@ -11,6 +11,16 @@ module Mocktail
       @demonstration_in_progress = false
     end
 
+    def reset!
+      @calls = []
+      @stubbings = []
+      # Could cause an exception or prevent pollution—you decide!
+      @demonstration_in_progress = false
+      # note we don't reset dry_types and doubles don't carry any
+      # user-meaningful state on them, and clearing them on reset could result
+      # in valid mocks being broken and stop working
+    end
+
     def store_double(double)
       @dry_types[double.original_type] ||= double.dry_type
       @doubles << double

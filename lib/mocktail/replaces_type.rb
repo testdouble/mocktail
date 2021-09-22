@@ -10,6 +10,8 @@ module Mocktail
     end
 
     def replace(type)
+      raise UnsupportedMocktail.new("Mocktail.replace() only supports classes and modules") unless type.is_a?(Class) || type.is_a?(Module)
+
       if type.is_a?(Class)
         @top_shelf.register_new_replacement!(type)
         @redefines_new.redefine(type)

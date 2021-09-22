@@ -3,6 +3,10 @@ require "test_helper"
 class ReplaceTest < Minitest::Test
   include Mocktail::DSL
 
+  def teardown
+    Mocktail.reset
+  end
+
   class Building
     def self.size(uom:)
       raise "Unimplemented"
@@ -137,6 +141,13 @@ class ReplaceTest < Minitest::Test
         end
       }
     ].flatten.shuffle.each(&:join)
+  end
+
+  def test_not_a_module_or_a_class
+    e = assert_raises(Mocktail::UnsupportedMocktail) { Mocktail.replace(42) }
+    assert_equal <<~MSG.chomp, e.message
+      Mocktail.replace() only supports classes and modules
+    MSG
   end
 
   private

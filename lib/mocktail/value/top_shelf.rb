@@ -15,6 +15,12 @@ module Mocktail
       @type_replacements[type] ||= TypeReplacement.new(type: type)
     end
 
+    def reset_current_thread!
+      @new_registrations[Thread.current] = []
+      @of_next_registrations[Thread.current] = []
+      @singleton_method_registrations[Thread.current] = []
+    end
+
     def register_new_replacement!(type)
       @new_registrations[Thread.current] ||= []
       @new_registrations[Thread.current] |= [type]

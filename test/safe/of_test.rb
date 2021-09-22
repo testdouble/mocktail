@@ -3,6 +3,10 @@ require "test_helper"
 class OfTest < Minitest::Test
   include Mocktail::DSL
 
+  def teardown
+    Mocktail.reset
+  end
+
   class Neato
     def is_neato?
       true
@@ -85,16 +89,5 @@ class OfTest < Minitest::Test
 
   def test_constructors_dont_require_args
     assert Mocktail.of(Argz)
-  end
-
-  def test_of_next
-    neato_mocktail = Mocktail.of_next(Neato)
-    next_neato = Neato.new
-    third_neato = Neato.new
-
-    # Next time someone calls new on the thing, they get the exact same mocktail
-    assert_same neato_mocktail, next_neato
-    # And it's unwound
-    assert_equal Neato, third_neato.class
   end
 end

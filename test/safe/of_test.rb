@@ -21,6 +21,7 @@ class OfTest < Minitest::Test
     assert_match(/^#<Class for mocktail of OfTest::Neato:0x[0-9a-f]+>$/, neato.class.inspect)
     assert_equal neato.class.inspect, neato.class.to_s
     assert neato.is_a?(Neato)
+    assert neato.instance_of?(Neato)
     assert neato.kind_of?(Neato) # standard:disable Style/ClassCheck
   end
 

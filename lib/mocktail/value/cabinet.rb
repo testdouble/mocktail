@@ -1,10 +1,11 @@
+# The Cabinet stores all thread-local state, so anything that goes here
+# is guaranteed by Mocktail to be local to the currently-running thread
 module Mocktail
   class Cabinet
     attr_writer :demonstration_in_progress
     attr_reader :calls, :stubbings
 
     def initialize
-      @dry_types = {}
       @doubles = []
       @calls = []
       @stubbings = []
@@ -16,13 +17,12 @@ module Mocktail
       @stubbings = []
       # Could cause an exception or prevent pollution—you decide!
       @demonstration_in_progress = false
-      # note we don't reset dry_types and doubles don't carry any
+      # note we don't reset doubles as they don't carry any
       # user-meaningful state on them, and clearing them on reset could result
       # in valid mocks being broken and stop working
     end
 
     def store_double(double)
-      @dry_types[double.original_type] ||= double.dry_type
       @doubles << double
     end
 
@@ -32,10 +32,6 @@ module Mocktail
 
     def store_stubbing(stubbing)
       @stubbings << stubbing
-    end
-
-    def dry_type_of(original_type)
-      @dry_types[original_type]
     end
 
     def demonstration_in_progress?

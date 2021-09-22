@@ -13,11 +13,15 @@ module Mocktail
         def initialize(*args, **kwargs, &blk)
         end
 
+        define_method :is_a?, ->(thing) {
+          type.ancestors.include?(thing)
+        }
+        alias_method :kind_of?, :is_a?
+
         if type_type == :class
-          define_method :is_a?, ->(thing) {
-            type.ancestors.include?(thing)
+          define_method :instance_of?, ->(thing) {
+            type == thing
           }
-          alias_method :kind_of?, :is_a?
         end
       }
 

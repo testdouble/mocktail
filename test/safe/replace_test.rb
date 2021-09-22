@@ -149,12 +149,4 @@ class ReplaceTest < Minitest::Test
       Mocktail.replace() only supports classes and modules
     MSG
   end
-
-  private
-
-  def thread(&blk)
-    Thread.new(&blk).tap do |t|
-      t.abort_on_exception = true
-    end
-  end
 end

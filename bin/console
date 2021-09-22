@@ -4,6 +4,30 @@ require "mocktail"
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
+class Negroni
+  def self.ingredients
+    [:gin, :campari, :sweet_vermouth]
+  end
+
+  def shake!(shaker)
+    shaker.mix(self.class.ingredients)
+  end
+
+  def sip(amount)
+    raise "unimplemented"
+  end
+end
+
+include Mocktail::DSL
+class UserRepository
+  def find(id); end
+
+  def transaction(&blk); end
+end
+
+class Auditor
+  def record!(message, user:, action: nil); end
+end
 
 
 # (If you use this, don't forget to add pry to your Gemfile!)

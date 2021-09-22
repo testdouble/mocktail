@@ -10,7 +10,7 @@ library for Ruby that provides a terse and robust API for creating mocks,
 getting them in the hands of the code you're testing, stub & verify behavior,
 and even safely override class methods.
 
-## First, an aperitif
+## An aperitif
 
 Before getting into the details, let's demonstrate what Mocktail's API looks
 like. Suppose you want to test a `Bartender` class:
@@ -50,7 +50,7 @@ assert_equal "🎉", result
 verify { glass.pour!(:a_drink) }
 ```
 
-# And the chaser
+# The chaser
 
 Mocktail can do a whole lot more:
 
@@ -65,7 +65,7 @@ Mocktail can do a whole lot more:
 
 ## Ready to order?
 
-### Install
+### Install the gem
 
 The main ingredient to add to your Gemfile:
 
@@ -73,7 +73,7 @@ The main ingredient to add to your Gemfile:
 gem "mocktail", group: :test
 ```
 
-### Add the DSL
+### Sprinkle in the DSL
 
 Then, in each of your tests or in a test helper, you'll probably want to include
 Mocktail's DSL. (This is optional, however, as every method in the DSL is also
@@ -95,11 +95,10 @@ RSpec.configure do |config|
 end
 ```
 
-### Clean up after each test
+### Clean up when you're done
 
-When making so many concoctions, it's important to keep a clean bar! To reset
-Mocktail's internal state between tests and avoid test pollution, you should
-also call `Mocktail.reset` after each test:
+To reset Mocktail's internal state between tests and avoid test pollution, you
+should also call `Mocktail.reset` after each test:
 
 In Minitest:
 
@@ -124,8 +123,8 @@ end
 
 ## API
 
-The public API is a pretty quick read of the [top-level module's
-source](lib/mocktail.rb). Here's a longer menu to explain what goes into each
+The entire public API is listed in the [top-level module's
+source](lib/mocktail.rb). Below is a longer menu to explain what goes into each
 feature.
 
 ### Mocktail.of

@@ -88,7 +88,6 @@ class OfTest < Minitest::Test
   end
 
   def test_of_next
-    skip
     neato_mocktail = Mocktail.of_next(Neato)
     next_neato = Neato.new
     third_neato = Neato.new

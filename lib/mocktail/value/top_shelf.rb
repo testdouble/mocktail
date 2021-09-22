@@ -7,6 +7,7 @@ module Mocktail
     def initialize
       @type_replacements = {}
       @new_registrations = {}
+      @of_next_registrations = {}
       @singleton_method_registrations = {}
     end
 
@@ -22,6 +23,21 @@ module Mocktail
     def new_replaced?(type)
       @new_registrations[Thread.current] ||= []
       @new_registrations[Thread.current].include?(type)
+    end
+
+    def register_of_next_replacement!(type)
+      @of_next_registrations[Thread.current] ||= []
+      @of_next_registrations[Thread.current] |= [type]
+    end
+
+    def of_next_registered?(type)
+      @of_next_registrations[Thread.current] ||= []
+      @of_next_registrations[Thread.current].include?(type)
+    end
+
+    def unregister_of_next_replacement!(type)
+      @of_next_registrations[Thread.current] ||= []
+      @of_next_registrations[Thread.current] -= [type]
     end
 
     def register_singleton_method_replacement!(type)

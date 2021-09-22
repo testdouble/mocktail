@@ -74,6 +74,11 @@ class ReplaceTest < Minitest::Test
     stubs { House.new(:lol) }.with { :wat }
 
     assert_equal :wat, House.new(:lol)
+
+    Thread.new {
+      e = assert_raises { House.new(:foo) }
+      assert_equal "Unimplemented", e.message
+    }.tap { |t| t.abort_on_exception = true }.join
   end
 
   module Home

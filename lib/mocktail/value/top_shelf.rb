@@ -7,7 +7,6 @@ module Mocktail
     def initialize
       @type_replacements = {}
       @registrations = {}
-      #      @of_next_registrations = {}
     end
 
     def already_replaced?(type)

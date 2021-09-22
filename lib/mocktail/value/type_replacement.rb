@@ -3,6 +3,8 @@ module Mocktail
     :type,
     :original_methods,
     :replacement_methods,
+    :original_new,
+    :replacement_new,
     keyword_init: true
   )
   end

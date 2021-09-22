@@ -6,7 +6,7 @@ width="90%"/>
 
 Mocktail is a [test
 double](https://github.com/testdouble/contributing-tests/wiki/Test-Double)
-library for Ruby. Mocktail provides a terse and robust API for creating mocks,
+library for Ruby that provides a terse and robust API for creating mocks,
 getting them in the hands of the code you're testing, stub & verify behavior,
 and even safely override class methods.
 

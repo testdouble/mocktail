@@ -7,19 +7,10 @@ module Mocktail
     end
 
     def initialize
-      @dry_types = {}
       @type_replacements = {}
       @new_registrations = {}
       @of_next_registrations = {}
       @singleton_method_registrations = {}
-    end
-
-    def store_dry_type(original_type, dry_type)
-      @dry_types[original_type] ||= dry_type
-    end
-
-    def dry_type_of(original_type)
-      @dry_types[original_type]
     end
 
     def type_replacement_for(type)

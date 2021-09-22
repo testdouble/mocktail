@@ -13,7 +13,6 @@ module Mocktail
       @ensures_imitation_support.ensure(type)
       @makes_double.make(type).tap do |double|
         Mocktail.cabinet.store_double(double)
-        @top_shelf.store_dry_type(double.original_type, double.dry_type)
       end.dry_instance
     end
   end

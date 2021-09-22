@@ -27,15 +27,16 @@ module Mocktail
     ReplacesNext.new.replace(type, count)
   end
 
+  # See lib/mocktail/dsl.rb
+  define_singleton_method :stubs, DSL.instance_method(:stubs)
+  define_singleton_method :verify, DSL.instance_method(:verify)
+
   # Replaces every singleton method on `type` with a fake, and when instantiated
   # or included will also fake instance methods
   def self.replace(type)
     ReplacesType.new.replace(type)
     nil
   end
-
-  define_singleton_method :stubs, DSL.instance_method(:stubs)
-  define_singleton_method :verify, DSL.instance_method(:verify)
 
   def self.reset
     ResetsState.new.reset

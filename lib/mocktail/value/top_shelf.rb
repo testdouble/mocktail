@@ -9,16 +9,8 @@ module Mocktail
       @registrations = {}
     end
 
-    def already_replaced?(type)
-      !!@type_replacements[type]
-    end
-
-    def store_type_replacement(type_replacement)
-      @type_replacements[type_replacement.type] = type_replacement
-    end
-
     def type_replacement_for(type)
-      @type_replacements[type]
+      @type_replacements[type] ||= TypeReplacement.new(type: type)
     end
 
     def replaced_on_current_thread?(type)

@@ -31,6 +31,18 @@ module Mocktail
   define_singleton_method :stubs, DSL.instance_method(:stubs)
   define_singleton_method :verify, DSL.instance_method(:verify)
 
+  def self.matchers
+    MatcherPresentation.new
+  end
+
+  def self.captor
+    Matchers::Captor.new
+  end
+
+  def self.register_matcher(matcher)
+    RegistersMatcher.new.register(matcher)
+  end
+
   # Replaces every singleton method on `type` with a fake, and when instantiated
   # or included will also fake instance methods
   def self.replace(type)
@@ -42,18 +54,7 @@ module Mocktail
     ResetsState.new.reset
   end
 
-  def self.captor
-    Matchers::Captor.new
-  end
-
-  def self.matchers
-    MatcherPresentation.new
-  end
-
-  def self.register_matcher(matcher)
-    RegistersMatcher.new.register(matcher)
-  end
-
+  # Stores most transactional state about calls & stubbing configurations
   def self.cabinet
     Thread.current[:mocktail_store] ||= Cabinet.new
   end

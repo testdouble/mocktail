@@ -1,14 +1,15 @@
 module Mocktail
   class ReplacesNext
     def initialize
+      @top_shelf = TopShelf.instance
+      @redefines_new = RedefinesNew.new
       @imitates_type = ImitatesType.new.imitate(type)
     end
 
     def replace(type, count)
       mocktails = count.times { @imitates_type.imitate(type) }
 
-      # mock_new_if_not_mocked
-
+      @redefines_new.redefine(type)
       mocktails.reverse.each.with_index do |mocktail, i|
         stubs(
           ignore_extra_args: true,

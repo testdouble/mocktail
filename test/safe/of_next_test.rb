@@ -61,4 +61,44 @@ class OfNextTest < Minitest::Test
       Mocktail.of_next() only supports classes
     MSG
   end
+
+  def test_multiple_threads
+    [
+      thread do
+        mock_neatos = Mocktail.of_next(Neato, count: 3)
+        sleep 0.001
+        assert_equal mock_neatos[0], Neato.new
+        sleep 0.001
+        assert_equal mock_neatos[1], Neato.new
+        sleep 0.001
+        assert_equal mock_neatos[2], Neato.new
+        sleep 0.001
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+      end,
+      thread do
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+        sleep 0.001
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+        sleep 0.001
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+      end,
+      thread do
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+        Mocktail.replace(Neato)
+        neato = Neato.new
+        stubs { neato.is_neato? }.with { false }
+        refute neato.is_neato?
+      end,
+      thread do
+        assert Neato.new.class == Neato # standard:disable Style/ClassEqualityComparison
+        Mocktail.of_next(Neato)
+        sleep 0.001
+        neato = Neato.new
+        sleep 0.001
+        stubs { neato.is_neato? }.with { 42 }
+        sleep 0.001
+        assert_equal 42, neato.is_neato?
+      end
+    ].flatten.shuffle.each(&:join)
+  end
 end

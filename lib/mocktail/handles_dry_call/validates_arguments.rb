@@ -1,3 +1,5 @@
+require_relative "../share/simulates_argument_error"
+
 module Mocktail
   class ValidatesArguments
     def self.disable!
@@ -21,6 +23,10 @@ module Mocktail
       end
     end
 
+    def initialize
+      @simulates_argument_error = SimulatesArgumentError.new
+    end
+
     def validate(dry_call)
       return if self.class.disabled?
 
@@ -32,8 +38,7 @@ module Mocktail
 
       unless args_match?(arg_params, dry_call.args) &&
           kwargs_match?(kwarg_params, dry_call.kwargs)
-        # TODO - replace all this with a smarter printout of expectation
-        raise ArgumentError.new("wrong number of arguments")
+        raise @simulates_argument_error.simulate(arg_params, dry_call.args, kwarg_params, dry_call.kwargs)
       end
     end
 

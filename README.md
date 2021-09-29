@@ -50,20 +50,26 @@ assert_equal "🎉", result
 verify { glass.pour!(:a_drink) }
 ```
 
-# The chaser
+## Why order?
 
-And that's not all! Mocktail can do a whole lot more:
+Besides a lack of hangover, Mocktail offers several advantages over other
+mocking libraries:
 
-* Singleton methods on classes and modules can be replaced with
-  [Mocktail.replace(type)](#mocktailreplace) while still preserving thread
-  safety
-* Arity of arguments and keyword arguments of faked methods is enforced—no more
-  tests that keep passing after an API changes
-* Super-duper detailed error messages when verifications fail
-* Dynamic stubbings based on the arguments passed to the actual call
-* Built-in [argument matchers](#mocktailmatchers) and a simple API for adding
-  [custom matchers](#custom-matchers)
-* [Argument captors](#mocktailcaptor) for assertions of very complex arguments
+* **Fewer hoops to jump through**: [`Mocktail.of_next(type)`] avoids the need
+  for dependency injection by returning a Mocktail of the type the next time
+  `Type.new` is called. You can inject a fake into production code in one
+  line.
+* **Fewer false test passes**: Arity of arguments and keyword arguments of faked
+  methods is enforced—no more tests that keep passing after an API changes
+* **Super-duper detailed error messages when verifications fail**
+* **Fake class methods**: Singleton methods on classes and modules can be
+  replaced with [`Mocktail.replace(type)`](#mocktailreplace) while still
+  preserving thread safety
+* **Less test setup**: Dynamic stubbings based on the arguments passed to the actual call
+* **Expressive**: Built-in [argument matchers](#mocktailmatchers) and a simple
+  API for adding [custom matchers](#custom-matchers)
+* **Powerful**: [Argument captors](#mocktailcaptor) for assertions of very
+  complex arguments
 
 ## Ready to order?
 
@@ -548,4 +554,3 @@ including (but not limited to) one-on-one communications, public posts/comments,
 code reviews, pull requests, and GitHub issues. If violations occur, Test Double
 will take any action they deem appropriate for the infraction, up to and
 including blocking a user from the organization's repositories.
-

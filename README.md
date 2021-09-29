@@ -57,7 +57,7 @@ mocking libraries:
 
 * **Fewer hoops to jump through**: [`Mocktail.of_next(type)`] avoids the need
   for dependency injection by returning a Mocktail of the type the next time
-  `Type.new` is called. You can inject a fake into use production code in one
+  `Type.new` is called. You can inject a fake into production code in one
   line.
 * **Fewer false test passes**: Arity of arguments and keyword arguments of faked
   methods is enforced—no more tests that keep passing after an API changes

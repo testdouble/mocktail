@@ -2,14 +2,12 @@ name: Ruby
 
 on: [push,pull_request]
 
-
-
 jobs:
   build:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        ruby-version: [2.5, 2.7, 3.0.1]
+        ruby-version: [2.7, 3.0.1]
 
     runs-on: ${{ matrix.os }}
 

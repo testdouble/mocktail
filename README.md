@@ -513,6 +513,24 @@ When you call `Mocktail.replace(type)`, all of the singleton methods on the
 provided type are replaced with fake methods available for stubbing and
 verification. It's really that simple.
 
+For example, if our `Bartender` class has a class method:
+
+```ruby
+class Bartender
+  def self.cliche_greeting
+    ["It's 5 o'clock somewhere!", "Norm!"].sample
+  end
+end
+```
+
+We can replace the behavior of the overall class, and then stub how we'd like it
+to respond, in our test:
+
+```ruby
+Mocktail.replace(Bartender)
+stubs { Bartender.cliche_greeting }.with { "Norm!" }
+```
+
 [**Obligatory warning:** Mocktail does its best to ensure that other threads
 won't be affected when you replace the singleton methods on a type, but your
 mileage may very! Singleton methods are global and code that introspects or

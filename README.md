@@ -284,7 +284,7 @@ user_repository.find(1) # => :not_found
 `ignore_extra_args` will allow a demonstration to be considered satisfied even
 if it fails to specify arguments and keyword arguments made by the actual call:
 
-```
+```ruby
 stubs { user_repository.find(4) }.with { :a_person }
 user_repository.find(4, debug: true) # => nil
 

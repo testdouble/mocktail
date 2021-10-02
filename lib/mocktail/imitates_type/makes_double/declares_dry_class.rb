@@ -5,10 +5,9 @@ module Mocktail
     end
 
     def declare(type)
-      type_type = type_of(type)
       instance_methods = instance_methods_on(type)
       dry_class = Class.new(Object) {
-        include type if type_type == :module
+        include type if type.instance_of?(Module)
 
         def initialize(*args, **kwargs, &blk)
         end
@@ -18,15 +17,15 @@ module Mocktail
         }
         alias_method :kind_of?, :is_a?
 
-        if type_type == :class
+        if type.instance_of?(Class)
           define_method :instance_of?, ->(thing) {
             type == thing
           }
         end
       }
 
-      add_stringify_methods!(dry_class, :to_s, type, type_type, instance_methods)
-      add_stringify_methods!(dry_class, :inspect, type, type_type, instance_methods)
+      add_stringify_methods!(dry_class, :to_s, type, instance_methods)
+      add_stringify_methods!(dry_class, :inspect, type, instance_methods)
 
       define_double_methods!(dry_class, type, instance_methods)
 
@@ -54,7 +53,7 @@ module Mocktail
       end
     end
 
-    def add_stringify_methods!(dry_class, method_name, type, type_type, instance_methods)
+    def add_stringify_methods!(dry_class, method_name, type, instance_methods)
       dry_class.define_singleton_method method_name, -> {
         if (id_matches = super().match(/:([0-9a-fx]+)>$/))
           "#<Class #{"including module " if type.instance_of?(Module)}for mocktail of #{type.name}:#{id_matches[1]}>"
@@ -71,14 +70,6 @@ module Mocktail
             super()
           end
         }
-      end
-    end
-
-    def type_of(type)
-      if type.is_a?(Class)
-        :class
-      elsif type.is_a?(Module)
-        :module
       end
     end
 

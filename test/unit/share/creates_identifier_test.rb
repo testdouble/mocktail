@@ -23,6 +23,12 @@ module Mocktail
       assert_equal "foo_bar", @subject.create("foo  bar")
     end
 
+    def test_weird
+      assert_equal "object", @subject.create(Object.new)
+      assert_equal "class_identifier", @subject.create(Class.new)
+      assert_equal "else_arg", @subject.create("else", default: "arg")
+    end
+
     def test_invalid
       assert_equal "identifier", @subject.create(2)
       assert_equal "arg", @subject.create("2", default: "arg")

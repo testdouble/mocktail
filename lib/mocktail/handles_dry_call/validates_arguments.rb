@@ -1,5 +1,3 @@
-require_relative "../share/simulates_argument_error"
-
 module Mocktail
   class ValidatesArguments
     def self.disable!
@@ -30,28 +28,9 @@ module Mocktail
     def validate(dry_call)
       return if self.class.disabled?
 
-      arg_params, kwarg_params = dry_call.original_method.parameters.reject { |type, _|
-        type == :block
-      }.partition { |type, _|
-        [:req, :opt, :rest].include?(type)
-      }
-
-      unless args_match?(arg_params, dry_call.args) &&
-          kwargs_match?(kwarg_params, dry_call.kwargs)
-        raise @simulates_argument_error.simulate(arg_params, dry_call.args, kwarg_params, dry_call.kwargs)
+      if (error = @simulates_argument_error.simulate(dry_call))
+        raise error
       end
-    end
-
-    private
-
-    def args_match?(arg_params, args)
-      args.size >= arg_params.count { |type, _| type == :req } &&
-        (arg_params.any? { |type, _| type == :rest } || args.size <= arg_params.size)
-    end
-
-    def kwargs_match?(kwarg_params, kwargs)
-      kwarg_params.select { |type, _| type == :keyreq }.all? { |_, name| kwargs.key?(name) } &&
-        (kwarg_params.any? { |type, _| type == :keyrest } || kwargs.keys.all? { |name| kwarg_params.any? { |_, key| name == key } })
     end
   end
 end

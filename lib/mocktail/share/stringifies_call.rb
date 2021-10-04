@@ -1,18 +1,22 @@
 module Mocktail
   class StringifiesCall
-    def stringify(call)
-      "#{call.method}#{args_to_s(call)}#{blockify(call.block)}"
+    def stringify(call, anonymous_blocks: false, always_parens: false)
+      "#{call.method}#{args_to_s(call, parens: always_parens)}#{blockify(call.block, anonymous: anonymous_blocks)}"
     end
 
     private
 
-    def args_to_s(call)
-      unless (args_lists = [
+    def args_to_s(call, parens: true)
+      args_lists = [
         argify(call.args),
         kwargify(call.kwargs),
         lambdafy(call.block)
-      ].compact).empty?
+      ].compact
+
+      if !args_lists.empty?
         "(#{args_lists.join(", ")})"
+      elsif parens
+        "()"
       end
     end
 
@@ -31,9 +35,14 @@ module Mocktail
       "&lambda[#{source_locationify(block)}]"
     end
 
-    def blockify(block)
+    def blockify(block, anonymous:)
       return unless block && !block.lambda?
-      " { Proc at #{source_locationify(block)} }"
+
+      if anonymous
+        " {…}"
+      else
+        " { Proc at #{source_locationify(block)} }"
+      end
     end
 
     def source_locationify(block)

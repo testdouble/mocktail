@@ -1,3 +1,12 @@
+# 0.0.3
+
+* Implement method_missing on all mocked instance methods to print out useful
+  information, like the target type, the attempted call, an example method
+  definition that would match the call (for paint-by-numbers-like TDD), and
+  did_you_mean gem integration of similar method names in case it was just a
+  miss
+* Cleans artificially-generated argument errors of gem-internal backtraces
+
 # 0.0.2
 
 * Drop Ruby 2.7 support. Unbeknownst to me (since I developed mocktail using

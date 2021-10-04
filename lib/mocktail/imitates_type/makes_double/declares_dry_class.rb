@@ -2,6 +2,7 @@ module Mocktail
   class DeclaresDryClass
     def initialize
       @handles_dry_call = HandlesDryCall.new
+      @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
     end
 
     def declare(type)
@@ -24,8 +25,12 @@ module Mocktail
         end
       }
 
+      # These have special implementations, but if the user defines
+      # any of them on the object itself, then they'll be replaced with normal
+      # mocked methods. YMMV
       add_stringify_methods!(dry_class, :to_s, type, instance_methods)
       add_stringify_methods!(dry_class, :inspect, type, instance_methods)
+      define_method_missing_errors!(dry_class, type, instance_methods)
 
       define_double_methods!(dry_class, type, instance_methods)
 
@@ -42,7 +47,7 @@ module Mocktail
             singleton: false,
             double: self,
             original_type: type,
-            dry_type: self.class,
+            dry_type: dry_class,
             method: method,
             original_method: type.instance_method(method),
             args: args,
@@ -73,10 +78,39 @@ module Mocktail
       end
     end
 
-    def instance_methods_on(type)
-      type.instance_methods.reject { |m|
-        ignored_ancestors.include?(type.instance_method(m).owner)
+    def define_method_missing_errors!(dry_class, type, instance_methods)
+      return if instance_methods.include?(:method_missing)
+
+      raises_neato_no_method_error = @raises_neato_no_method_error
+      dry_class.define_method :method_missing, ->(name, *args, **kwargs, &block) {
+        raises_neato_no_method_error.call(
+          Call.new(
+            singleton: false,
+            double: self,
+            original_type: type,
+            dry_type: self.class,
+            method: name,
+            original_method: nil,
+            args: args,
+            kwargs: kwargs,
+            block: block
+          )
+        )
       }
+    end
+
+    def instance_methods_on(type)
+      methods = type.instance_methods + [
+        (:respond_to_missing? if type.private_method_defined?(:respond_to_missing?))
+      ].compact
+
+      methods.reject { |m|
+        ignore?(type, m)
+      }
+    end
+
+    def ignore?(type, method_name)
+      ignored_ancestors.include?(type.instance_method(method_name).owner)
     end
 
     def ignored_ancestors

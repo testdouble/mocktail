@@ -272,8 +272,18 @@ class StubTest < Minitest::Test
     assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) }
     assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
     assert_raises(ArgumentError) { does_too_much.do(1, also: 3) }
+    assert_raises(ArgumentError) { does_too_much.do(1, and: 2, fake_keyword: 4) }
     assert_raises(ArgumentError) { does_too_much.splats(12) }
     assert_raises(ArgumentError) { does_too_much.splats(b: 4) }
+
+    e = assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
+    # Make sure the backtrace doesn't contain gem library paths
+    refute e.backtrace.any? { |frame|
+      frame.include?("mocktail/lib")
+    }, "Library paths should not appear in backtrace:\n#{e.backtrace.join("\n")}"
+
+    # Make sure the message contains the call
+    assert_equal "missing keyword: :and [Mocktail call: `do(1, 2, also: 3) { Proc at test/safe/stub_test.rb:279 }']", e.message
 
     # Make sure it doesn't raise:
     does_too_much.do(1, and: 2)
@@ -359,5 +369,67 @@ class StubTest < Minitest::Test
 
     assert_equal 6, thing_2.lol(4)
     assert_equal 7, thing_1.lol(5)
+  end
+
+  class ThingThatDoesMethodMissingStuff
+    def real_method?
+      true
+    end
+
+    def method_missing(name, *args, **kwargs, &blk)
+      {
+        name: name,
+        args: args,
+        kwargs: kwargs,
+        blk: blk
+      }
+    end
+
+    def respond_to_missing?(name, private_methods = false)
+      name.start_with?("a")
+    end
+  end
+
+  def test_handling_thing_that_does_method_missing_stuff
+    # see: https://github.com/ruby/ruby/blob/d92f09a5eea009fa28cd046e9d0eb698e3d94c5c/spec/ruby/language/def_spec.rb#L65
+    # and: https://github.com/ruby/ruby/blob/eaeb0a008ba13ba0e531f3ccf589c44351cddbfe/vm_method.c#L776-L787
+    subject = Mocktail.of(ThingThatDoesMethodMissingStuff)
+
+    stubs { |m| subject.send(:respond_to_missing?, m.any, m.any) }.with { |call|
+      call.args[0].start_with?("b")
+    }
+    stubs(ignore_extra_args: true, ignore_arity: true) { subject.method_missing }.with { |call|
+      "#{call.method}|#{call.args.map(&:inspect).join(", ")}|#{call.kwargs.map { |k, v| "#{k}: #{v}" }.join(", ")}"
+    }
+    stubs { subject.real_method? }.with { :lol }
+
+    assert_equal :lol, subject.real_method?
+    assert_equal false, subject.respond_to?("alpha")
+    assert_equal true, subject.respond_to?("beta")
+    assert_equal false, subject.respond_to?("charlie")
+
+    assert_equal "method_missing|:beta, :panda|cool: 4", subject.beta(:panda, cool: 4)
+  end
+
+  class Methodless
+  end
+
+  def test_default_method_missing_warnings
+    methodless = Mocktail.of(Methodless)
+
+    e = assert_raises(NoMethodError) {
+      stubs { methodless.do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
+    }
+    assert_equal <<~MSG, e.message
+      No method `StubTest::Methodless#do_stuff' exists for call:
+
+        do_stuff(42, a: 4) {…}
+
+      Need to define the method? Here's a sample definition:
+
+        def do_stuff(arg, a:, &blk)
+        end
+
+    MSG
   end
 end

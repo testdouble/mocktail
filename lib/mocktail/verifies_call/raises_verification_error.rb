@@ -1,5 +1,5 @@
 require_relative "raises_verification_error/gathers_calls_of_method"
-require_relative "raises_verification_error/stringifies_call"
+require_relative "../share/stringifies_call"
 
 module Mocktail
   class RaisesVerificationError

@@ -17,6 +17,10 @@ module Mocktail
       @type_replacements[type] ||= TypeReplacement.new(type: type)
     end
 
+    def type_replacement_if_exists_for(type)
+      @type_replacements[type]
+    end
+
     def reset_current_thread!
       @new_registrations[Thread.current] = []
       @of_next_registrations[Thread.current] = []

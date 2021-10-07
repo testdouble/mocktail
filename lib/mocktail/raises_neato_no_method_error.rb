@@ -1,16 +1,18 @@
 require_relative "share/stringifies_call"
+require_relative "share/stringifies_method_name"
 require_relative "share/creates_identifier"
 
 module Mocktail
   class RaisesNeatoNoMethodError
     def initialize
       @stringifies_call = StringifiesCall.new
+      @stringifies_method_name = StringifiesMethodName.new
       @creates_identifier = CreatesIdentifier.new
     end
 
     def call(call)
       raise NoMethodError.new <<~MSG
-        No method `#{call.original_type.name}##{call.method}' exists for call:
+        No method `#{@stringifies_method_name.stringify(call)}' exists for call:
 
           #{@stringifies_call.stringify(call, anonymous_blocks: true, always_parens: true)}
 

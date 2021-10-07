@@ -1,5 +1,6 @@
 require_relative "mocktail/dsl"
 require_relative "mocktail/errors"
+require_relative "mocktail/explains_thing"
 require_relative "mocktail/handles_dry_call"
 require_relative "mocktail/handles_dry_new_call"
 require_relative "mocktail/imitates_type"
@@ -56,7 +57,13 @@ module Mocktail
     ResetsState.new.reset
   end
 
+  def self.explain(thing)
+    ExplainsThing.new.explain(thing)
+  end
+
   # Stores most transactional state about calls & stubbing configurations
+  # Anything returned by this is undocumented and could change at any time, so
+  # don't commit code that relies on it!
   def self.cabinet
     Thread.current[:mocktail_store] ||= Cabinet.new
   end

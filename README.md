@@ -50,26 +50,37 @@ assert_equal "🎉", result
 verify { glass.pour!(:a_drink) }
 ```
 
-## Why order?
+## Why Mocktail?
 
-Besides a lack of hangover, Mocktail offers several advantages over other
-mocking libraries:
+Besides helping you avoid a hangover, Mocktail offers several advantages over
+Ruby's other mocking libraries:
 
-* **Fewer hoops to jump through**: [`Mocktail.of_next(type)`] avoids the need
-  for dependency injection by returning a Mocktail of the type the next time
-  `Type.new` is called. You can inject a fake into production code in one
-  line.
-* **Fewer false test passes**: Arity of arguments and keyword arguments of faked
-  methods is enforced—no more tests that keep passing after an API changes
-* **Super-duper detailed error messages when verifications fail**
-* **Fake class methods**: Singleton methods on classes and modules can be
-  replaced with [`Mocktail.replace(type)`](#mocktailreplace) while still
-  preserving thread safety
-* **Less test setup**: Dynamic stubbings based on the arguments passed to the actual call
+* **Simpler test recipes**: [Mocktail.of_next(type)](#mocktailof_next) both
+  creates your mock and supplies to your subject under test in a single
+  one-liner. No more forcing dependency injection for the sake of your tests
+* **WYSIWYG API**: Want to know how to stub a call to `phone.dial(911)`? You
+  just demonstrate the call with `stubs { phone.dial(911) }.with { :operator }`.
+  Because stubbing & verifying looks just like the actual call, your tests
+  becomes a sounding board for your APIs as you invent them
+* **Argument validation**: Ever see a test pass after a change to a mocked
+  method should have broken it? Not with Mocktail, you haven't
+* **Mocked class methods**: Singleton methods on modules and classes can be
+  faked out using [`Mocktail.replace(type)`](#mocktailreplace) without
+  sacrificing thread safety
+* **Super-duper detailed error messages** A good mocking library should make
+  coding feel like
+  [paint-by-number](https://en.wikipedia.org/wiki/Paint_by_number), thoughtfully
+  guiding you from one step to the next. Calling a method that doesn't exist
+  will print a sample definition you can copy-paste. Verification failures will
+  print every call that _did_ occur. And [Mocktail.explain()](#mocktailexplain)
+  provides even more introspection
 * **Expressive**: Built-in [argument matchers](#mocktailmatchers) and a simple
-  API for adding [custom matchers](#custom-matchers)
+  API for adding [custom matchers](#custom-matchers) allow you to tune your
+  stubbing configuration and call verification to match _exactly_ what your test
+  intends
 * **Powerful**: [Argument captors](#mocktailcaptor) for assertions of very
-  complex arguments
+  complex arguments, as well as advanced configuration options for stubbing &
+  verification
 
 ## Ready to order?
 
@@ -538,6 +549,154 @@ invokes a replaced method in a peculiar-enough way could lead to hard-to-track
 down bugs. (If this concerns you, then the fact that class methods are
 effectively global state may be a great reason not to rely too heavily on
 them!)]
+
+### Mocktail.explain
+
+Test debugging is hard enough when there _aren't_ fake objects flying every
+which way, so Mocktail tries to make it a little easier by way of better
+messages throughout the library.
+
+#### Undefined methods
+
+One message you'll see automatically if you try to call a method
+that doesn't exist is this one, which gives a sample definition of the method
+you had attempted to call:
+
+```ruby
+class IceTray
+end
+
+ice_tray = Mocktail.of(IceTray)
+
+ice_tray.fill(:water_type, 30)
+# => No method `IceTray#fill' exists for call: (NoMethodError)
+#
+#      fill(:water_type, 30)
+#
+#    Need to define the method? Here's a sample definition:
+#
+#      def fill(water_type, arg)
+#      end
+```
+
+From there, you can just copy-paste the provided method stub as a starting point
+for your new method.
+
+#### `nil` values returned by faked methods
+
+Suppose you go ahead and implement the `fill` method above and configure a
+stubbing:
+
+```ruby
+ice_tray = Mocktail.of(IceTray)
+
+stubs { ice_tray.fill(:tap_water, 30) }.with { :normal_ice }
+```
+
+But then you find that your subject under test is just getting `nil` back and
+you don't understand why:
+
+```ruby
+def prep
+  ice = ice_tray.fill(:tap_water, 50) # => nil
+  glass.add(ice)
+end
+```
+
+You can pass that `nil` value to `Mocktail.explain` and get an
+`UnsatisfiedStubExplanation` that will include both a `reference` object to explore
+ as well a summary message:
+
+```ruby
+def prep
+  ice = ice_tray.fill(:tap_water, 50).tap do |wat|
+    puts Mocktail.explain(wat).message
+  end
+  glass.add(ice)
+end
+```
+
+Which will print:
+
+```
+This `nil' was returned by a mocked `IceTray#fill' method
+because none of its configured stubbings were satisfied.
+
+The actual call:
+
+  fill(:tap_water, 50)
+
+Stubbings configured prior to this call but not satisfied by it:
+
+  fill(:tap_water, 30)
+```
+
+#### Fake instances created by Mocktail
+
+Any instances created by `Mocktail.of` or `Mocktail.of_next` can also be passed
+to `Mocktail.explain`, and they will list out all the calls and stubbings made
+for each of their fake methods.
+
+Calling `Mocktail.explain(ice_tray).message` following the example above will
+yield:
+
+```
+This is a fake `IceTray' instance.
+
+It has these mocked methods:
+  - fill
+
+`IceTray#fill' stubbings:
+
+  fill(:tap_water, 30)
+
+`IceTray#fill' calls:
+
+  fill(:tap_water, 50)
+```
+
+#### Modules and classes with singleton methods replaced
+
+If you've called `Mocktail.replace()` on a class or module, it can also be
+passed to `Mocktail.explain()` for a summary of all the stubbing configurations
+and calls made against its faked singleton methods for the currently running
+thread.
+
+```ruby
+Mocktail.replace(Shop)
+
+stubs { |m| Shop.open!(m.numeric) }.with { :a_bar }
+
+Shop.open!(42)
+
+Shop.close!(42)
+
+puts Mocktail.explain(Shop).message
+```
+
+Will print:
+
+```ruby
+`Shop' is a class that has had its singleton methods faked.
+
+It has these mocked methods:
+  - close!
+  - open!
+
+`Shop.close!' has no stubbings.
+
+`Shop.close!' calls:
+
+  close!(42)
+
+`Shop.open!' stubbings:
+
+  open!(numeric)
+
+`Shop.open!' calls:
+
+  open!(42)
+```
 
 ### Mocktail.reset
 

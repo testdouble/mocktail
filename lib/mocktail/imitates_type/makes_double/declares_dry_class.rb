@@ -5,8 +5,7 @@ module Mocktail
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
     end
 
-    def declare(type)
-      instance_methods = instance_methods_on(type)
+    def declare(type, instance_methods)
       dry_class = Class.new(Object) {
         include type if type.instance_of?(Module)
 
@@ -97,24 +96,6 @@ module Mocktail
           )
         )
       }
-    end
-
-    def instance_methods_on(type)
-      methods = type.instance_methods + [
-        (:respond_to_missing? if type.private_method_defined?(:respond_to_missing?))
-      ].compact
-
-      methods.reject { |m|
-        ignore?(type, m)
-      }
-    end
-
-    def ignore?(type, method_name)
-      ignored_ancestors.include?(type.instance_method(method_name).owner)
-    end
-
-    def ignored_ancestors
-      Object.ancestors
     end
   end
 end

@@ -56,6 +56,26 @@ class Bartender
   end
 end
 
-# (If you use this, don't forget to add pry to your Gemfile!)
+class IceTray
+  def fill(water_type, amount)
+  end
+end
+
+class Shop
+  def self.open!(bar_id)
+  end
+
+  def self.close!(bar_id)
+  end
+end
+
+Mocktail.replace(Shop)
+
+stubs { |m| Shop.open!(m.numeric) }.with { :a_bar }
+
+Shop.open!(42)
+
+Shop.close!(42)
+
 require "pry"
 Pry.start

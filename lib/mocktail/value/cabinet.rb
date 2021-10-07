@@ -37,5 +37,17 @@ module Mocktail
     def demonstration_in_progress?
       @demonstration_in_progress
     end
+
+    def double_for_instance(thing)
+      @doubles.find { |double| double.dry_instance == thing }
+    end
+
+    def stubbings_for_double(double)
+      @stubbings.select { |stubbing| stubbing.recording.double == double.dry_instance }
+    end
+
+    def calls_for_double(double)
+      @calls.select { |call| call.double == double.dry_instance }
+    end
   end
 end

@@ -26,7 +26,7 @@ class VerifyTest < Minitest::Test
       verify { sends_email.send(to: "jenn@example.com") }
     }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::SendsEmail#send to be called like:
+      Expected mocktail of `VerifyTest::SendsEmail#send' to be called like:
 
         send(to: "jenn@example.com")
 
@@ -50,7 +50,7 @@ class VerifyTest < Minitest::Test
       verify { sends_email.dont_send! }
     }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::SendsEmail#dont_send! to be called like:
+      Expected mocktail of `VerifyTest::SendsEmail#dont_send!' to be called like:
 
         dont_send!
 
@@ -78,7 +78,7 @@ class VerifyTest < Minitest::Test
     # to note that verifications blow up at verify()-time, so it won't be a
     # mystery for very long when the user looks at the error's line number
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack(that {…}, b: that {…})
 
@@ -104,7 +104,7 @@ class VerifyTest < Minitest::Test
     }
     # It is indeed very frustrating how little introspection I can do of these blocks…
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:103 }
 
@@ -152,7 +152,7 @@ class VerifyTest < Minitest::Test
       verify(ignore_block: true) { |m| syn.ack(1337) }
     }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack(1337) [ignoring blocks]
 
@@ -178,7 +178,7 @@ class VerifyTest < Minitest::Test
       verify(ignore_extra_args: true) { |m| syn.ack(:trousers) }
     }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack(:trousers) [ignoring extra args]
 
@@ -199,7 +199,7 @@ class VerifyTest < Minitest::Test
 
     e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack [2 times]
 
@@ -210,7 +210,7 @@ class VerifyTest < Minitest::Test
 
     e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack [2 times]
 
@@ -228,7 +228,7 @@ class VerifyTest < Minitest::Test
 
     e = assert_raises(Mocktail::VerificationError) { verify(times: 2) { syn.ack } }
     assert_equal <<~MSG, e.message
-      Expected mocktail of VerifyTest::Syn#ack to be called like:
+      Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
         ack [2 times]
 
@@ -239,6 +239,32 @@ class VerifyTest < Minitest::Test
         ack(:a)
 
         ack(:c)
+
+    MSG
+  end
+
+  class EmailSender
+    def self.send(email)
+    end
+  end
+
+  def test_replacing_classes
+    Mocktail.replace(EmailSender)
+
+    EmailSender.send(:a_email)
+
+    e = assert_raises(Mocktail::VerificationError) {
+      verify { EmailSender.send(:b_email) }
+    }
+
+    assert_equal <<~MSG, e.message
+      Expected mocktail of `VerifyTest::EmailSender.send' to be called like:
+
+        send(:b_email)
+
+      It was called differently 1 time:
+
+        send(:a_email)
 
     MSG
   end

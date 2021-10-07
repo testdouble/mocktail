@@ -1,3 +1,14 @@
+# unreleased
+
+* Introduce Mocktail.explain(), which will return a message & reference object
+  for any of:
+  * A class that has been passed to Mocktail.replace()
+  * An instance created by Mocktail.of() or of_next()
+  * A nil value returned by an unsatisfied stubbing invocation
+* Fix some minor printing issue with the improved NoMethodError released in
+  0.0.3
+
+
 # 0.0.3
 
 * Implement method_missing on all mocked instance methods to print out useful

@@ -59,9 +59,9 @@ module Mocktail
         This is a fake `#{double.original_type.name}' instance.
 
         It has these mocked methods:
-        #{double.dry_methods.map { |method| "  - #{method}" }.join("\n")}
+        #{double.dry_methods.sort.map { |method| "  - #{method}" }.join("\n")}
 
-        #{double.dry_methods.map { |method| describe_dry_method(double_data, method) }.join("\n")}
+        #{double.dry_methods.sort.map { |method| describe_dry_method(double_data, method) }.join("\n")}
       MSG
     end
 

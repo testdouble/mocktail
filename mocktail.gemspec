@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Justin Searls"]
   spec.email = ["searls@gmail.com"]
 
-  spec.summary = "your objects, less potency"
+  spec.summary = "Take your objects, and make them a double"
   spec.homepage = "https://github.com/testdouble/mocktail"
   spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 

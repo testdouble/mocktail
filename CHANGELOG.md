@@ -1,4 +1,8 @@
-# unreleased
+# 0.0.5
+
+* Fix concurrency [#6](https://github.com/testdouble/mocktail/pull/6)
+
+# 0.0.4
 
 * Introduce Mocktail.explain(), which will return a message & reference object
   for any of:

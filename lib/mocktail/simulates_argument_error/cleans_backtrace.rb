@@ -1,3 +1,5 @@
+require "pathname"
+
 module Mocktail
   class CleansBacktrace
     BASE_PATH = (Pathname.new(__FILE__) + "../../..").to_s

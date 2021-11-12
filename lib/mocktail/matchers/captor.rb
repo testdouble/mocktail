@@ -34,6 +34,10 @@ module Mocktail::Matchers
       def captured?
         @captured
       end
+
+      def inspect
+        "capture"
+      end
     end
 
     attr_reader :capture

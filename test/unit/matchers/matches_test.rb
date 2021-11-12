@@ -20,6 +20,8 @@ module Mocktail::Matchers
 
   class MatchesTest < Minitest::Test
     def test_some_matches
+      assert_equal "matches(\"name\")", Matches.new("name").inspect
+
       assert Matches.new("foo").match?("foobar")
       assert Matches.new(/\d/).match?("4")
       refute Matches.new(/\s/).match?("nospace")

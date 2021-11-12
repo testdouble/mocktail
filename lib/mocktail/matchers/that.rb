@@ -6,7 +6,7 @@ module Mocktail::Matchers
 
     def initialize(&blk)
       if blk.nil?
-        raise "The `that` matcher must be passed a block (e.g. `that { |arg| … }`)"
+        raise ArgumentError.new("The `that` matcher must be passed a block (e.g. `that { |arg| … }`)")
       end
       @blk = blk
     end

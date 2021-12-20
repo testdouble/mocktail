@@ -21,6 +21,10 @@ module Mocktail
 
             #{@stringifies_call.stringify(dry_call, always_parens: true)}
 
+          The call site:
+
+            #{unsatisfying_call.backtrace.first}
+
           #{@stringifies_call.stringify_multiple(other_stubbings.map(&:recording),
             nonzero_message: "Stubbings configured prior to this call but not satisfied by it",
             zero_message: "No stubbings were configured on this method")}

@@ -30,6 +30,10 @@ class ExplainTest < Minitest::Test
 
         do()
 
+      The call site:
+
+        #{__FILE__}:17:in `test_explain_stub_returned_nil'
+
       No stubbings were configured on this method.
 
     MSG
@@ -56,6 +60,10 @@ class ExplainTest < Minitest::Test
       The actual call:
 
         do()
+
+      The call site:
+
+        #{__FILE__}:45:in `test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 

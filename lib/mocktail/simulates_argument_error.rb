@@ -1,7 +1,7 @@
 require_relative "simulates_argument_error/transforms_params"
 require_relative "simulates_argument_error/reconciles_args_with_params"
 require_relative "simulates_argument_error/recreates_message"
-require_relative "simulates_argument_error/cleans_backtrace"
+require_relative "share/cleans_backtrace"
 require_relative "share/stringifies_call"
 
 module Mocktail

@@ -580,12 +580,27 @@ ice_tray.fill(:water_type, 30)
 ```
 
 From there, you can just copy-paste the provided method stub as a starting point
-for your new method.
+for your new method:
 
-#### `nil` values returned by faked methods
+```ruby
+class IceTray
+  def fill(water_type, amount)
+  end
+end
+```
 
-Suppose you go ahead and implement the `fill` method above and configure a
-stubbing:
+### Unexpected nils with Mocktail.explain_nils
+
+Is a faked method returning `nil` and you don't understand why?
+
+By default, methods faked by Mocktail will return `nil` when no stubbing is
+satisfied. A frequent frustration, therefore, is when the way `stubs {}.with {}`
+is configured does not satisfy a call the way you expected. To try to make
+debugging this a little bit easier, the gem provides a top-level
+`Mocktail.explain_nils` method that will return an array of summaries of every
+call to a faked method that failed to satisfy any stubbings.
+
+For example, suppose you stub this `fill` method like so:
 
 ```ruby
 ice_tray = Mocktail.of(IceTray)
@@ -598,16 +613,17 @@ you don't understand why:
 
 ```ruby
 def prep
-  ice = ice_tray.fill(:tap_water, 50) # => nil
-  glass.add(ice)
+  ice = ice_tray.fill(:tap_water, 50)
+  glass.add(ice) # => why is `ice` nil?!
 end
 ```
 
 Whenever you're confused by a nil, you can call `Mocktail.explain_nils` for an
-array containing an `UnsatisfyingCallExplanation` objects (one for each nil that
-was returned by a mocked method that did not satisfying any configured stubbings
-since the most recent call to `Mocktail.reset`). The returned objects will
-include both a `reference` object to explore as well a summary `message`:
+array containing `UnsatisfyingCallExplanation` objects (one for each call to
+a faked method that did not satisfy any configured stubbings).
+
+The returned explanation objects will include both a `reference` object to
+explore as well a summary `message`:
 
 ```ruby
 def prep
@@ -627,16 +643,24 @@ The actual call:
 
   fill(:tap_water, 50)
 
+The call site:
+
+  /path/to/your/code.rb:42:in `prep'
+
 Stubbings configured prior to this call but not satisfied by it:
 
   fill(:tap_water, 30)
 ```
 
+The `reference` object will have details of the `call` itself, an array of
+`other_stubbings` defined on the faked method, and a `backtrace` to determine
+which call site produced the unexpected `nil` value.
+
 #### Fake instances created by Mocktail
 
-Any instances created by `Mocktail.of` or `Mocktail.of_next` can also be passed
-to `Mocktail.explain`, and they will list out all the calls and stubbings made
-for each of their fake methods.
+Any instances created by `Mocktail.of` or `Mocktail.of_next` can be passed to
+`Mocktail.explain`, and they will list out all the calls and stubbings made for
+each of their fake methods.
 
 Calling `Mocktail.explain(ice_tray).message` following the example above will
 yield:
@@ -662,6 +686,8 @@ If you've called `Mocktail.replace()` on a class or module, it can also be
 passed to `Mocktail.explain()` for a summary of all the stubbing configurations
 and calls made against its faked singleton methods for the currently running
 thread.
+
+Imagine a `Shop` class with `self.open!` and `self.close!` singleton methods:
 
 ```ruby
 Mocktail.replace(Shop)

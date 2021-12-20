@@ -1,3 +1,13 @@
+# 1.0.0
+
+* First breaking change! 🎉
+* Remove support for `Mocktail.explain(nil)` because fake nil values cannot be
+made falsey. Pretty big mistake
+* Add `Mocktail.explain_nils` which will return explanation objects of every
+call that didn't satisfy a stubbing since the last reset, including the call
+site where it happened and the backtrace to try to tease out which one you're
+looking for
+
 # 0.0.6
 
 * Require pathname, which I missed because `bundle exec` loads it. Wups!

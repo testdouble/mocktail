@@ -13,7 +13,8 @@ module Mocktail
         stubbing.satisfied!
         stubbing.effect&.call(dry_call)
       else
-        StubReturnedNil.new(@describes_unsatisfied_stubbing.describe(dry_call))
+        @describes_unsatisfied_stubbing.describe(dry_call)
+        nil
       end
     end
 

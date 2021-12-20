@@ -9,9 +9,7 @@ module Mocktail
     end
 
     def explain(thing)
-      if is_stub_returned_nil?(thing)
-        unsatisfied_stub_explanation(thing)
-      elsif (double = Mocktail.cabinet.double_for_instance(thing))
+      if (double = Mocktail.cabinet.double_for_instance(thing))
         double_explanation(double)
       elsif (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
         replaced_type_explanation(type_replacement)
@@ -21,31 +19,6 @@ module Mocktail
     end
 
     private
-
-    # Our fake nil doesn't even implement respond_to?, instead quacking like nil
-    def is_stub_returned_nil?(thing)
-      thing.was_returned_by_unsatisfied_stub?
-    rescue NoMethodError
-    end
-
-    def unsatisfied_stub_explanation(stub_returned_nil)
-      unsatisfied_stubbing = stub_returned_nil.unsatisfied_stubbing
-      dry_call = unsatisfied_stubbing.call
-      other_stubbings = unsatisfied_stubbing.other_stubbings
-
-      UnsatisfiedStubExplanation.new(unsatisfied_stubbing, <<~MSG)
-        This `nil' was returned by a mocked `#{@stringifies_method_name.stringify(dry_call)}' method
-        because none of its configured stubbings were satisfied.
-
-        The actual call:
-
-          #{@stringifies_call.stringify(dry_call, always_parens: true)}
-
-        #{describe_multiple_calls(other_stubbings.map(&:recording),
-          "Stubbings configured prior to this call but not satisfied by it",
-          "No stubbings were configured on this method")}
-      MSG
-    end
 
     def double_explanation(double)
       double_data = DoubleData.new(

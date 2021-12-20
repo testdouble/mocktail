@@ -12,12 +12,12 @@ class ExplainTest < Minitest::Test
     end
   end
 
-  def test_explain_real_nil
-    real_nil = Thing.new.do
+  def test_explain_nil
+    a_nil = Thing.new.do
 
-    explanation = Mocktail.explain(real_nil)
+    explanation = Mocktail.explain(a_nil)
 
-    assert_nil real_nil
+    assert_nil a_nil
     assert_kind_of Mocktail::NoExplanation, explanation
     assert_equal Mocktail::NoExplanation, explanation.type
     assert_equal <<~MSG.tr("\n", ""), explanation.message
@@ -30,56 +30,6 @@ class ExplainTest < Minitest::Test
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain(Thing.new)
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain(Object.new)
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain("hi")
-  end
-
-  def test_explain_stub_returned_nil
-    thing = Mocktail.of(Thing)
-    stub_nil = thing.do
-
-    explanation = Mocktail.explain(stub_nil)
-
-    assert_nil stub_nil
-    assert_kind_of Mocktail::UnsatisfiedStubExplanation, explanation
-    assert_equal Mocktail::UnsatisfiedStubExplanation, explanation.type
-    assert_equal <<~MSG, explanation.message
-      This `nil' was returned by a mocked `ExplainTest::Thing#do' method
-      because none of its configured stubbings were satisfied.
-
-      The actual call:
-
-        do()
-
-      No stubbings were configured on this method.
-
-    MSG
-  end
-
-  def test_explain_stub_returned_nil_with_stubbings
-    thing = Mocktail.of(Thing)
-    stubs { thing.do("pants") }.with { :ok }
-    stub_nil = thing.do
-    stubs { thing.do("too late of a stubbing") }.with { :ok }
-
-    explanation = Mocktail.explain(stub_nil)
-
-    assert_nil stub_nil
-    assert_kind_of Mocktail::UnsatisfiedStubExplanation, explanation
-    assert_equal Mocktail::UnsatisfiedStubExplanation, explanation.type
-    # As for what's on this object, that's unspecified and may change. Don't rely on this!
-    assert_kind_of Mocktail::UnsatisfiedStubbing, explanation.reference
-    assert_equal <<~MSG, explanation.message
-      This `nil' was returned by a mocked `ExplainTest::Thing#do' method
-      because none of its configured stubbings were satisfied.
-
-      The actual call:
-
-        do()
-
-      Stubbings configured prior to this call but not satisfied by it:
-
-        do("pants")
-
-    MSG
   end
 
   def test_explain_double_instance

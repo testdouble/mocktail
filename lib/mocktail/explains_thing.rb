@@ -68,33 +68,21 @@ module Mocktail
       ))
 
       [
-        describe_multiple_calls(
+        @stringifies_call.stringify_multiple(
           double_data.stubbings.map(&:recording).select { |call|
             call.method == method
           },
-          "`#{method_name}' stubbings",
-          "`#{method_name}' has no stubbings"
+          nonzero_message: "`#{method_name}' stubbings",
+          zero_message: "`#{method_name}' has no stubbings"
         ),
-        describe_multiple_calls(
+        @stringifies_call.stringify_multiple(
           double_data.calls.select { |call|
             call.method == method
           },
-          "`#{method_name}' calls",
-          "`#{method_name}' has no calls"
+          nonzero_message: "`#{method_name}' calls",
+          zero_message: "`#{method_name}' has no calls"
         )
       ].join("\n")
-    end
-
-    def describe_multiple_calls(calls, nonzero_message, zero_message)
-      if calls.empty?
-        "#{zero_message}.\n"
-      else
-        <<~MSG
-          #{nonzero_message}:
-
-          #{calls.map { |call| "  " + @stringifies_call.stringify(call) }.join("\n\n")}
-        MSG
-      end
     end
 
     def no_explanation(thing)

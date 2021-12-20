@@ -18,4 +18,8 @@ class Minitest::Test
       t.abort_on_exception = true
     end
   end
+
+  def teardown
+    Mocktail.reset
+  end
 end

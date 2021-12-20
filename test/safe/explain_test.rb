@@ -12,6 +12,58 @@ class ExplainTest < Minitest::Test
     end
   end
 
+  def test_explain_stub_returned_nil
+    thing = Mocktail.of(Thing)
+    thing.do
+
+    explanations = Mocktail.explain_nils
+
+    assert_equal 1, explanations.size
+    explanation = explanations.first
+    assert_kind_of Mocktail::UnsatisfyingCallExplanation, explanation
+    assert_equal Mocktail::UnsatisfyingCallExplanation, explanation.type
+    assert_equal <<~MSG, explanation.message
+      `nil' was returned by a mocked `ExplainTest::Thing#do' method
+      because none of its configured stubbings were satisfied.
+
+      The actual call:
+
+        do()
+
+      No stubbings were configured on this method.
+
+    MSG
+  end
+
+  def test_explain_stub_returned_nil_with_stubbings
+    thing = Mocktail.of(Thing)
+    stubs { thing.do("pants") }.with { :ok }
+    thing.do
+    stubs { thing.do("too late of a stubbing") }.with { :ok }
+
+    explanations = Mocktail.explain_nils
+
+    assert_equal 1, explanations.size
+    explanation = explanations.first
+    assert_kind_of Mocktail::UnsatisfyingCallExplanation, explanation
+    assert_equal Mocktail::UnsatisfyingCallExplanation, explanation.type
+    # As for what's on this object, that's unspecified and may change. Don't rely on this!
+    assert_kind_of Mocktail::UnsatisfyingCall, explanation.reference
+    assert_equal <<~MSG, explanation.message
+      `nil' was returned by a mocked `ExplainTest::Thing#do' method
+      because none of its configured stubbings were satisfied.
+
+      The actual call:
+
+        do()
+
+      Stubbings configured prior to this call but not satisfied by it:
+
+        do("pants")
+
+    MSG
+  end
+
   def test_explain_nil
     a_nil = Thing.new.do
 

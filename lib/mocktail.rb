@@ -1,6 +1,7 @@
 require_relative "mocktail/dsl"
 require_relative "mocktail/errors"
 require_relative "mocktail/explains_thing"
+require_relative "mocktail/explains_nils"
 require_relative "mocktail/handles_dry_call"
 require_relative "mocktail/handles_dry_new_call"
 require_relative "mocktail/imitates_type"
@@ -59,6 +60,10 @@ module Mocktail
 
   def self.explain(thing)
     ExplainsThing.new.explain(thing)
+  end
+
+  def self.explain_nils
+    ExplainsNils.new.explain
   end
 
   # Stores most transactional state about calls & stubbing configurations

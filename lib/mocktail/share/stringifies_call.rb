@@ -4,6 +4,20 @@ module Mocktail
       "#{call.method}#{args_to_s(call, parens: always_parens)}#{blockify(call.block, anonymous: anonymous_blocks)}"
     end
 
+    def stringify_multiple(calls, nonzero_message:, zero_message:,
+      anonymous_blocks: false, always_parens: false)
+
+      if calls.empty?
+        "#{zero_message}.\n"
+      else
+        <<~MSG
+          #{nonzero_message}:
+
+          #{calls.map { |call| "  " + stringify(call) }.join("\n\n")}
+        MSG
+      end
+    end
+
     private
 
     def args_to_s(call, parens: true)

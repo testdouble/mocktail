@@ -603,15 +603,16 @@ def prep
 end
 ```
 
-You can pass that `nil` value to `Mocktail.explain` and get an
-`UnsatisfiedStubExplanation` that will include both a `reference` object to explore
- as well a summary message:
+Whenever you're confused by a nil, you can call `Mocktail.explain_nils` for an
+array containing an `UnsatisfyingCallExplanation` objects (one for each nil that
+was returned by a mocked method that did not satisfying any configured stubbings
+since the most recent call to `Mocktail.reset`). The returned objects will
+include both a `reference` object to explore as well a summary `message`:
 
 ```ruby
 def prep
-  ice = ice_tray.fill(:tap_water, 50).tap do |wat|
-    puts Mocktail.explain(wat).message
-  end
+  ice = ice_tray.fill(:tap_water, 50)
+  puts Mocktail.explain_nils.first.message
   glass.add(ice)
 end
 ```
@@ -704,6 +705,10 @@ This one's simple: you probably want to call `Mocktail.reset` after each test,
 but you _definitely_ want to call it if you're using `Mocktail.replace` or
 `Mocktail.of_next` anywhere, since those will affect state that is shared across
 tests.
+
+Calling reset in a `teardown` or `after(:each)` hook will also improve the
+usefulness of messages returned by `Mocktail.explain` and
+`Mocktail.explain_nils`.
 
 ## Acknowledgements
 

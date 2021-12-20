@@ -1,7 +1,7 @@
 module Mocktail
   class DescribesUnsatisfiedStubbing
     def describe(dry_call)
-      UnsatisfiedStubbing.new(
+      UnsatisfyingCall.new(
         call: dry_call,
         other_stubbings: Mocktail.cabinet.stubbings.select { |stubbing|
           dry_call.double == stubbing.recording.double &&

@@ -15,7 +15,7 @@ module Mocktail
   class NoExplanation < Explanation
   end
 
-  class UnsatisfiedStubExplanation < Explanation
+  class UnsatisfyingCallExplanation < Explanation
   end
 
   class DoubleExplanation < Explanation

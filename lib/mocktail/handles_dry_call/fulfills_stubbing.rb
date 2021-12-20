@@ -13,14 +13,25 @@ module Mocktail
         stubbing.satisfied!
         stubbing.effect&.call(dry_call)
       else
-        @describes_unsatisfied_stubbing.describe(dry_call)
+        store_unsatisfying_call!(dry_call)
         nil
       end
     end
 
     def satisfaction(dry_call)
       return if Mocktail.cabinet.demonstration_in_progress?
+
       @finds_satisfaction.find(dry_call)
+    end
+
+    private
+
+    def store_unsatisfying_call!(dry_call)
+      return if Mocktail.cabinet.demonstration_in_progress?
+
+      Mocktail.cabinet.store_unsatisfying_call(
+        @describes_unsatisfied_stubbing.describe(dry_call)
+      )
     end
   end
 end

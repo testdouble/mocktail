@@ -411,6 +411,18 @@ class StubTest < Minitest::Test
     assert_equal "method_missing|:beta, :panda|cool: 4", subject.beta(:panda, cool: 4)
   end
 
+  def test_unsatisfied_stubbings_are_falsey_lol_whoops
+    thing = Mocktail.of(Thing)
+
+    stubs { thing.lol(:correct) }.with { true }
+
+    unsatisfied_return_value = thing.lol(:incorrect)
+    assert_nil unsatisfied_return_value
+    if unsatisfied_return_value
+      fail "An unsatisfied stubbing returned a truthy value!!!"
+    end
+  end
+
   class Methodless
   end
 

@@ -3,18 +3,20 @@
 module Mocktail
   class Cabinet
     attr_writer :demonstration_in_progress
-    attr_reader :calls, :stubbings
+    attr_reader :calls, :stubbings, :unsatisfying_calls
 
     def initialize
       @doubles = []
       @calls = []
       @stubbings = []
+      @unsatisfying_calls = []
       @demonstration_in_progress = false
     end
 
     def reset!
       @calls = []
       @stubbings = []
+      @unsatisfying_calls = []
       # Could cause an exception or prevent pollution—you decide!
       @demonstration_in_progress = false
       # note we don't reset doubles as they don't carry any
@@ -32,6 +34,10 @@ module Mocktail
 
     def store_stubbing(stubbing)
       @stubbings << stubbing
+    end
+
+    def store_unsatisfying_call(unsatisfying_call)
+      @unsatisfying_calls << unsatisfying_call
     end
 
     def demonstration_in_progress?

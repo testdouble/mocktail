@@ -91,4 +91,13 @@ class OfTest < Minitest::Test
   def test_constructors_dont_require_args
     assert Mocktail.of(Argz)
   end
+
+  class DoubleEquals
+    def ==(other)
+    end
+  end
+
+  def test_double_equals_doesnt_infinite_loop
+    assert Mocktail.of(DoubleEquals)
+  end
 end

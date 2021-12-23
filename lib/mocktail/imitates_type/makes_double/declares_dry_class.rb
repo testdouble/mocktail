@@ -38,9 +38,12 @@ module Mocktail
 
     private
 
+    IGNORED_METHODS = [:==]
+    private_constant :IGNORED_METHODS
+
     def define_double_methods!(dry_class, type, instance_methods)
       handles_dry_call = @handles_dry_call
-      instance_methods.each do |method|
+      (instance_methods - IGNORED_METHODS).each do |method|
         dry_class.define_method method, ->(*args, **kwargs, &block) {
           handles_dry_call.handle(Call.new(
             singleton: false,

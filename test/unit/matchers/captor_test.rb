@@ -8,6 +8,7 @@ module Mocktail::Matchers
       refute captor.captured?
       assert_nil captor.value
 
+      assert_equal :capture, Captor::Capture.matcher_name
       assert captor.capture.match?(42) # side effect!
       assert captor.captured?
       assert_equal 42, captor.value

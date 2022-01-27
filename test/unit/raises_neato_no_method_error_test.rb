@@ -22,7 +22,7 @@ module Mocktail
         ))
       }
 
-      assert_match <<~MSG, e.message
+      assert_equal <<~MSG, e.message
         No method `Mocktail::RaisesNeatoNoMethodErrorTest::Garage#open' exists for call:
 
           open()
@@ -46,7 +46,7 @@ module Mocktail
         ))
       }
 
-      assert_match <<~MSG, e.message
+      assert_equal <<~MSG, e.message
         No method `Mocktail::RaisesNeatoNoMethodErrorTest::Garage#open' exists for call:
 
           open(42, :pants, "99bottles", "and some space", "11 t@hi|ngs 29|@#", :pants, "*", a: 1, b: 2) {…}
@@ -70,7 +70,7 @@ module Mocktail
         ))
       }
 
-      assert_match <<~MSG, e.message
+      assert_equal <<~MSG, e.message
         No method `Mocktail::RaisesNeatoNoMethodErrorTest::Garage#closes' exists for call:
 
           closes("stuff")

@@ -11,7 +11,7 @@ module Mocktail
     end
 
     def call(call)
-      raise NoMethodError.new <<~MSG
+      raise NoMethodError, <<~MSG, caller[1..]
         No method `#{@stringifies_method_name.stringify(call)}' exists for call:
 
           #{@stringifies_call.stringify(call, anonymous_blocks: true, always_parens: true)}

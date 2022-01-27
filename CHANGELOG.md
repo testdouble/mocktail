@@ -1,3 +1,9 @@
+# 1.1.0
+
+* Feature: add support for passing methods to `Mocktail.explain()`
+* Fix 3.1 support by bypassing highlight_error for custom NoMethodError objects
+  raised by Mocktail [error_highlight#20](https://github.com/ruby/error_highlight/issues/20)
+
 # 1.0.0
 
 * First breaking change! 🎉

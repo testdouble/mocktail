@@ -432,7 +432,7 @@ class StubTest < Minitest::Test
     e = assert_raises(NoMethodError) {
       stubs { methodless.do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
     }
-    assert_equal <<~MSG, e.message
+    assert_match <<~MSG, e.message
       No method `StubTest::Methodless#do_stuff' exists for call:
 
         do_stuff(42, a: 4) {…}

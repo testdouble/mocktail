@@ -23,4 +23,7 @@ module Mocktail
 
   class ReplacedTypeExplanation < Explanation
   end
+
+  class FakeMethodExplanation < Explanation
+  end
 end

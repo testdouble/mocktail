@@ -553,14 +553,160 @@ them!)]
 ### Mocktail.explain
 
 Test debugging is hard enough when there _aren't_ fake objects flying every
-which way, so Mocktail tries to make it a little easier by way of better
-messages throughout the library.
+which way, so Mocktail tries to make it a little easier on you. In addition to
+returning useful messages throughout the API, the gem also includes an
+introspection method `Mocktail.explain(thing)`, which returns a human-readable
+`message` and a `reference` object with useful attributes (that vary depending
+on the type of fake `thing` you pass in. Below are some things `explain()` can
+do.
+
+#### Fake instances created by Mocktail
+
+Any instances created by `Mocktail.of` or `Mocktail.of_next` can be passed to
+`Mocktail.explain`, and they will list out all the calls and stubbings made for
+each of their fake methods.
+
+Suppose these interactions have occurred:
+
+```ruby
+ice_tray = Mocktail.of(IceTray)
+
+Mocktail.stubs { ice_tray.fill(:tap_water, 30) }.with { :some_ice }
+
+ice_tray.fill(:tap_water, 50)
+```
+
+You can interrogate what's going on with the fake instance by passing it to
+`explain`:
+
+```ruby
+explanation = Mocktail.explain(ice_tray)
+
+explanation.reference.type      #=> IceTray
+explanation.reference.double    #=> The ice_tray instance
+explanation.reference.calls     #=> details on each invocation of each method
+explanation.reference.stubbings #=> all stubbings configured for each method
+```
+
+Calling `explanation.message` will return:
+
+```
+This is a fake `IceTray' instance.
+
+It has these mocked methods:
+  - fill
+
+`IceTray#fill' stubbings:
+
+  fill(:tap_water, 30)
+
+`IceTray#fill' calls:
+
+  fill(:tap_water, 50)
+
+```
+
+#### Modules and classes with singleton methods replaced
+
+If you've called `Mocktail.replace()` on a class or module, it can also be
+passed to `Mocktail.explain()` for a summary of all the stubbing configurations
+and calls made against its faked singleton methods for the currently running
+thread.
+
+Imagine a `Shop` class with `self.open!` and `self.close!` singleton methods:
+
+```ruby
+Mocktail.replace(Shop)
+
+stubs { |m| Shop.open!(m.numeric) }.with { :a_bar }
+
+Shop.open!(42)
+
+Shop.close!(42)
+
+explanation = Mocktail.explain(Shop)
+
+explanation.reference.type      #=> Shop
+explanation.reference.replaced_method_names #=> [:close!, :open!]
+explanation.reference.calls     #=> details on each invocation of each method
+explanation.reference.stubbings #=> all stubbings configured for each method
+```
+
+And `explanation.message` will return:
+
+```ruby
+`Shop' is a class that has had its singleton methods faked.
+
+It has these mocked methods:
+  - close!
+  - open!
+
+`Shop.close!' has no stubbings.
+
+`Shop.close!' calls:
+
+  close!(42)
+
+  close!(42)
+
+`Shop.open!' stubbings:
+
+  open!(numeric)
+
+  open!(numeric)
+
+`Shop.open!' calls:
+
+  open!(42)
+
+  open!(42)
+```
+
+#### Methods on faked instances and replaced types
+
+In addition to passing the test double, you can also pass a reference to any
+fake method created by Mocktail to `Mocktail.explain`:
+
+```ruby
+ice_tray = Mocktail.of(IceTray)
+
+ice_tray.fill(:chilled, 50)
+
+explanation = Mocktail.explain(ice_tray.method(:fill))
+
+explanation.reference.receiver  #=> a reference to the `ice_tray` instance
+explanation.reference.calls     #=> details on each invocation of the method
+explanation.reference.stubbings #=> all stubbings configured for the method
+```
+
+The above may be handy in cases where you want to assert the number of calls of
+a method outside the `Mocktail.verify` API:
+
+```ruby
+assert_equal 1, explanation.reference.calls.size
+```
+
+The explanation will also contain a `message` like this:
+
+```
+`IceTray#fill' has no stubbings.
+
+`IceTray#fill' calls:
+
+  fill(:chilled, 50)
+```
+
+Replaced singleton methods can also be passed to `explain()`, so something like
+`Mocktail.explain(Shop.method(:open!))` from the earlier example would also work
+(with `Shop` being the `receiver` on the explanation's `reference`).
 
 #### Undefined methods
 
-One message you'll see automatically if you try to call a method
-that doesn't exist is this one, which gives a sample definition of the method
-you had attempted to call:
+There's no API for this one, but Mocktail also offers explanations for methods
+that don't exist yet. You'll see this error message whenever you try to call a
+method that doesn't exist on a test double. The message is designed to
+facilitate "paint-by-numbers" TDD, by including a sample definition of the
+method you had attempted to call that can be copy-pasted into a source listing:
 
 ```ruby
 class IceTray
@@ -589,7 +735,7 @@ class IceTray
 end
 ```
 
-### Unexpected nils with Mocktail.explain_nils
+### Mocktail.explain_nils
 
 Is a faked method returning `nil` and you don't understand why?
 
@@ -655,75 +801,6 @@ Stubbings configured prior to this call but not satisfied by it:
 The `reference` object will have details of the `call` itself, an array of
 `other_stubbings` defined on the faked method, and a `backtrace` to determine
 which call site produced the unexpected `nil` value.
-
-#### Fake instances created by Mocktail
-
-Any instances created by `Mocktail.of` or `Mocktail.of_next` can be passed to
-`Mocktail.explain`, and they will list out all the calls and stubbings made for
-each of their fake methods.
-
-Calling `Mocktail.explain(ice_tray).message` following the example above will
-yield:
-
-```
-This is a fake `IceTray' instance.
-
-It has these mocked methods:
-  - fill
-
-`IceTray#fill' stubbings:
-
-  fill(:tap_water, 30)
-
-`IceTray#fill' calls:
-
-  fill(:tap_water, 50)
-```
-
-#### Modules and classes with singleton methods replaced
-
-If you've called `Mocktail.replace()` on a class or module, it can also be
-passed to `Mocktail.explain()` for a summary of all the stubbing configurations
-and calls made against its faked singleton methods for the currently running
-thread.
-
-Imagine a `Shop` class with `self.open!` and `self.close!` singleton methods:
-
-```ruby
-Mocktail.replace(Shop)
-
-stubs { |m| Shop.open!(m.numeric) }.with { :a_bar }
-
-Shop.open!(42)
-
-Shop.close!(42)
-
-puts Mocktail.explain(Shop).message
-```
-
-Will print:
-
-```ruby
-`Shop' is a class that has had its singleton methods faked.
-
-It has these mocked methods:
-  - close!
-  - open!
-
-`Shop.close!' has no stubbings.
-
-`Shop.close!' calls:
-
-  close!(42)
-
-`Shop.open!' stubbings:
-
-  open!(numeric)
-
-`Shop.open!' calls:
-
-  open!(42)
-```
 
 ### Mocktail.reset
 

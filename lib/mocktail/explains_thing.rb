@@ -13,6 +13,8 @@ module Mocktail
         double_explanation(double)
       elsif (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
         replaced_type_explanation(type_replacement)
+      elsif (fake_method_explanation = fake_method_explanation_for(thing))
+        fake_method_explanation
       else
         no_explanation(thing)
       end
@@ -20,13 +22,37 @@ module Mocktail
 
     private
 
-    def double_explanation(double)
-      double_data = DoubleData.new(
+    def fake_method_explanation_for(thing)
+      return unless thing.is_a?(Method)
+      method = thing
+      receiver = thing.receiver
+
+      receiver_data = if (double = Mocktail.cabinet.double_for_instance(receiver))
+        data_for_double(double)
+      elsif (type_replacement = TopShelf.instance.type_replacement_if_exists_for(receiver))
+        data_for_type_replacement(type_replacement)
+      end
+
+      if receiver_data
+        FakeMethodExplanation.new(FakeMethodData.new(
+          receiver: receiver,
+          calls: receiver_data.calls,
+          stubbings: receiver_data.stubbings
+        ), describe_dry_method(receiver_data, method.name))
+      end
+    end
+
+    def data_for_double(double)
+      DoubleData.new(
         type: double.original_type,
         double: double.dry_instance,
         calls: Mocktail.cabinet.calls_for_double(double),
         stubbings: Mocktail.cabinet.stubbings_for_double(double)
       )
+    end
+
+    def double_explanation(double)
+      double_data = data_for_double(double)
 
       DoubleExplanation.new(double_data, <<~MSG)
         This is a fake `#{double.original_type.name}' instance.
@@ -38,8 +64,8 @@ module Mocktail
       MSG
     end
 
-    def replaced_type_explanation(type_replacement)
-      type_replacement_data = TypeReplacementData.new(
+    def data_for_type_replacement(type_replacement)
+      TypeReplacementData.new(
         type: type_replacement.type,
         replaced_method_names: type_replacement.replacement_methods.map(&:name).sort,
         calls: Mocktail.cabinet.calls.select { |call|
@@ -49,6 +75,10 @@ module Mocktail
           stubbing.recording.double == type_replacement.type
         }
       )
+    end
+
+    def replaced_type_explanation(type_replacement)
+      type_replacement_data = data_for_type_replacement(type_replacement)
 
       ReplacedTypeExplanation.new(type_replacement_data, <<~MSG)
         `#{type_replacement.type}' is a #{type_replacement.type.class.to_s.downcase} that has had its singleton methods faked.

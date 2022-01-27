@@ -173,4 +173,42 @@ class ExplainTest < Minitest::Test
 
     MSG
   end
+
+  def test_explain_method_calls_on_instance
+    thing = Mocktail.of(Thing)
+    thing.do
+
+    result = Mocktail.explain(thing.method(:do))
+
+    assert_equal 1, Mocktail.explain(thing).reference.calls { |c| c.method == :do }.size
+    assert_equal <<~MSG, result.message
+      `ExplainTest::Thing#do' has no stubbings.
+
+      `ExplainTest::Thing#do' calls:
+
+        do
+    MSG
+    assert_equal thing, result.reference.receiver
+    assert_equal [], result.reference.stubbings
+    assert_equal 1, result.reference.calls.size
+  end
+
+  def test_explain_method_calls_on_singleton
+    Mocktail.replace(Training)
+    stubs { Training.teach(:jerry) }.with { "🐾" }
+
+    result = Mocktail.explain(Training.method(:teach))
+
+    assert_equal 1, Mocktail.explain(Training).reference.stubbings { |c| c.method == :do }.size
+    assert_equal <<~MSG, result.message
+      `ExplainTest::Training.teach' stubbings:
+
+        teach(:jerry)
+
+      `ExplainTest::Training.teach' has no calls.
+    MSG
+    assert_equal Training, result.reference.receiver
+    assert_equal 1, result.reference.stubbings.size
+    assert_equal [], result.reference.calls
+  end
 end

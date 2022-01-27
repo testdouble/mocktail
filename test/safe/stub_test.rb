@@ -404,9 +404,9 @@ class StubTest < Minitest::Test
     stubs { subject.real_method? }.with { :lol }
 
     assert_equal :lol, subject.real_method?
-    assert_equal false, subject.respond_to?("alpha")
-    assert_equal true, subject.respond_to?("beta")
-    assert_equal false, subject.respond_to?("charlie")
+    assert_equal false, subject.respond_to?(:alpha)
+    assert_equal true, subject.respond_to?(:beta)
+    assert_equal false, subject.respond_to?(:charlie)
 
     assert_equal "method_missing|:beta, :panda|cool: 4", subject.beta(:panda, cool: 4)
   end

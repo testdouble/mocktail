@@ -4,7 +4,9 @@ module Mocktail::Matchers
       :any
     end
 
-    def initialize
+    # Change this comment to a descriptive one once this is merged:
+    # https://github.com/rubocop/rubocop/pull/10551
+    def initialize # standard:disable Style/RedundantInitialize
     end
 
     def match?(actual)

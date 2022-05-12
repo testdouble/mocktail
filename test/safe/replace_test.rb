@@ -83,6 +83,10 @@ class ReplaceTest < Minitest::Test
       e = assert_raises { House.new(:foo) }
       assert_equal "Unimplemented", e.message
     }.tap { |t| t.abort_on_exception = true }.join
+
+    error = assert_raises(NoMethodError) { House.color }
+    assert_match(/No method `ReplaceTest::House\.color'/, error.message)
+    assert_match(/def self.color\n  end/, error.message)
   end
 
   module Home

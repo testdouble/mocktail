@@ -12,6 +12,7 @@ module Mocktail
         type.method(name)
       } - [type_replacement.replacement_new]
 
+      declare_singleton_method_missing_errors!(type)
       handles_dry_call = @handles_dry_call
       type_replacement.replacement_methods = type_replacement.original_methods.map { |original_method|
         type.singleton_class.send(:undef_method, original_method.name)
@@ -34,6 +35,28 @@ module Mocktail
         }
         type.singleton_method(original_method.name)
       }
+    end
+
+    def declare_singleton_method_missing_errors!(type)
+      return if type.singleton_methods.include?(:method_missing)
+
+      raises_neato_no_method_error = RaisesNeatoNoMethodError.new
+      type.define_singleton_method :method_missing,
+        ->(name, *args, **kwargs, &block) {
+          raises_neato_no_method_error.call(
+            Call.new(
+              singleton: true,
+              double: self,
+              original_type: type,
+              dry_type: self.class,
+              method: name,
+              original_method: nil,
+              args: args,
+              kwargs: kwargs,
+              block: block
+            )
+          )
+        }
     end
   end
 end

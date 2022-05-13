@@ -813,6 +813,31 @@ Calling reset in a `teardown` or `after(:each)` hook will also improve the
 usefulness of messages returned by `Mocktail.explain` and
 `Mocktail.explain_nils`.
 
+## References
+
+Mocktail is designed following a somewhat academic understanding of what mocking
+is and how it should be used. Below are several references on this topic.
+
+Blog Posts and Papers:
+
+- [Endo-Testing: Unit Testing with Mock
+  Objects](<https://www2.ccs.neu.edu/research/demeter/related-work/extreme-programming/MockObjectsFinal.PDF>
+  by Tim Mackinnon, Steve Freeman, and Philip Craig, the paper that introduced
+  mocking presented by the creators of mocking.
+- Michael Feathers' [The Flawed Theory Behind Unit
+  Testing](<https://michaelfeathers.typepad.com/michael_feathers_blog/2008/06/the-flawed-theo.html>)
+
+Books:
+
+- [_Growing Object-Oriented Software, Guided by
+  Tests_](<https://bookshop.org/books/growing-object-oriented-software-guided-by-tests/9780321503626>)
+  by Steve Freeman and Nat Price
+
+Talks:
+
+- [Please don’t mock me](https://www.youtube.com/watch?v=Af4M8GMoxi4) by Justin
+  Searls
+
 ## Acknowledgements
 
 Mocktail is created & maintained by the software agency [Test
@@ -839,4 +864,3 @@ including (but not limited to) one-on-one communications, public posts/comments,
 code reviews, pull requests, and GitHub issues. If violations occur, Test Double
 will take any action they deem appropriate for the infraction, up to and
 including blocking a user from the organization's repositories.
-

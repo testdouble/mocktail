@@ -89,5 +89,30 @@ module Mocktail
 
       MSG
     end
+
+    def test_singleton_call
+      e = assert_raises(NoMethodError) {
+        @subject.call(Call.new(
+          original_type: Garage,
+          singleton: true,
+          method: :search,
+          args: [],
+          kwargs: {model: "Liftmaster"},
+          block: nil
+        ))
+      }
+
+      assert_equal <<~MSG, e.message
+        No method `Mocktail::RaisesNeatoNoMethodErrorTest::Garage.search' exists for call:
+
+          search(model: "Liftmaster")
+
+        Need to define the method? Here's a sample definition:
+
+          def self.search(model:)
+          end
+
+      MSG
+    end
   end
 end

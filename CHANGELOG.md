@@ -1,3 +1,9 @@
+# 1.1.1
+
+* Improve output for undefined singleton methods
+  ([#11](https://github.com/testdouble/mocktail/pull/11) by
+  [@calebhearth](https://github.com/calebhearth))
+
 # 1.1.0
 
 * Feature: add support for passing methods to `Mocktail.explain()`

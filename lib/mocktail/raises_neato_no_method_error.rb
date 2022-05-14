@@ -18,7 +18,7 @@ module Mocktail
 
         Need to define the method? Here's a sample definition:
 
-          def #{call.method}#{params(call)}
+          def #{"self." if call.singleton}#{call.method}#{params(call)}
           end
         #{corrections(call)}
       MSG

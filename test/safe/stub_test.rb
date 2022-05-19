@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 require "test_helper"
 
 class StubTest < Minitest::Test

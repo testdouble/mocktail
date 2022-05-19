@@ -1,6 +1,6 @@
-# typed: ignore
+# typed: false
 module Mocktail
-  class Signature < Struct.new(
+  Signature = Struct.new(
     :positional_params,
     :positional_args,
     :keyword_params,
@@ -9,16 +9,14 @@ module Mocktail
     :block_arg,
     keyword_init: true
   )
-  end
 
-  class Params < Struct.new(
+  Params = Struct.new(
     :all,
     :required,
     :optional,
     :rest,
     keyword_init: true
-  )
-
+  ) do
     def initialize(**params)
       super
       self.all ||= []

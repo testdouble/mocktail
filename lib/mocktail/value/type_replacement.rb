@@ -1,6 +1,6 @@
-# typed: ignore
+# typed: false
 module Mocktail
-  class TypeReplacement < Struct.new(
+  TypeReplacement = Struct.new(
     :type,
     :original_methods,
     :replacement_methods,
@@ -8,5 +8,4 @@ module Mocktail
     :replacement_new,
     keyword_init: true
   )
-  end
 end

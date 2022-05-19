@@ -1,14 +1,13 @@
-# typed: ignore
+# typed: false
 module Mocktail
-  class Stubbing < Struct.new(
+  Stubbing = Struct.new(
     :demonstration,
     :demo_config,
     :satisfaction_count,
     :recording,
     :effect,
     keyword_init: true
-  )
-
+  ) do
     def initialize(**kwargs)
       super
       self.satisfaction_count ||= 0

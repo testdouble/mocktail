@@ -1,11 +1,10 @@
-# typed: ignore
+# typed: false
 module Mocktail
-  class DoubleData < Struct.new(
+  DoubleData = Struct.new(
     :type,
     :double,
     :calls,
     :stubbings,
     keyword_init: true
   )
-  end
 end

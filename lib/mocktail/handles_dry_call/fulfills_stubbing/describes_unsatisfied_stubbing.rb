@@ -1,3 +1,4 @@
+# typed: false
 require_relative "../../share/cleans_backtrace"
 
 module Mocktail

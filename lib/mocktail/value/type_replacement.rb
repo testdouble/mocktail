@@ -1,3 +1,4 @@
+# typed: ignore
 module Mocktail
   class TypeReplacement < Struct.new(
     :type,

@@ -1,3 +1,4 @@
+# typed: true
 # The Cabinet stores all thread-local state, so anything that goes here
 # is guaranteed by Mocktail to be local to the currently-running thread
 module Mocktail

@@ -1,3 +1,4 @@
+# typed: true
 require "test_helper"
 
 class VerifyTest < Minitest::Test
@@ -106,13 +107,13 @@ class VerifyTest < Minitest::Test
     assert_equal <<~MSG, e.message
       Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:103 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:104 }
 
       It was called differently 2 times:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:95 }
-
         ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:96 }
+
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:97 }
 
     MSG
   end
@@ -158,7 +159,7 @@ class VerifyTest < Minitest::Test
 
       It was called differently 1 time:
 
-        ack(42) { Proc at test/safe/verify_test.rb:147 }
+        ack(42) { Proc at test/safe/verify_test.rb:148 }
 
     MSG
   end

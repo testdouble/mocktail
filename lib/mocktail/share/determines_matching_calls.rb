@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class DeterminesMatchingCalls
     def determine(real_call, demo_call, demo_config)

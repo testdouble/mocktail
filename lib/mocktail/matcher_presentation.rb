@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class MatcherPresentation
     def respond_to_missing?(name, include_private = false)

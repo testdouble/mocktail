@@ -1,3 +1,4 @@
+# typed: true
 require_relative "imitates_type/ensures_imitation_support"
 require_relative "imitates_type/makes_double"
 

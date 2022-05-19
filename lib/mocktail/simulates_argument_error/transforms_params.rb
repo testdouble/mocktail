@@ -1,3 +1,4 @@
+# typed: false
 module Mocktail
   class TransformsParams
     def transform(dry_call)

@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class RegistersMatcher
     def register(matcher_type)

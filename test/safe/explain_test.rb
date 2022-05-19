@@ -1,3 +1,4 @@
+# typed: true
 require "test_helper"
 
 class ExplainTest < Minitest::Test
@@ -32,7 +33,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:17:in `test_explain_stub_returned_nil'
+        #{__FILE__}:18:in `test_explain_stub_returned_nil'
 
       No stubbings were configured on this method.
 
@@ -63,7 +64,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:45:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:46:in `test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 

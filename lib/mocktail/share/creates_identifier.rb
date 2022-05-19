@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class CreatesIdentifier
     KEYWORDS = %w[__FILE__ __LINE__ alias and begin BEGIN break case class def defined? do else elsif end END ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield]

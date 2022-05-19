@@ -8,3 +8,8 @@ gem "minitest"
 gem "standard"
 gem "pry"
 gem "simplecov"
+
+gem "sorbet-static-and-runtime"
+gem "tapioca"
+gem "spoom"
+gem "rubocop-sorbet"

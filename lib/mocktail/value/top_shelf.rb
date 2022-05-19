@@ -1,3 +1,4 @@
+# typed: false
 module Mocktail
   class TopShelf
     def self.instance

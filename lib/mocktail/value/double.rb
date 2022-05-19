@@ -1,3 +1,4 @@
+# typed: ignore
 module Mocktail
   class Double < Struct.new(
     :original_type,

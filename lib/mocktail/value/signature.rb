@@ -1,3 +1,4 @@
+# typed: ignore
 module Mocktail
   class Signature < Struct.new(
     :positional_params,

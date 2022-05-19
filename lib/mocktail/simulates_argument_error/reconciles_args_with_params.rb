@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class ReconcilesArgsWithParams
     def reconcile(signature)

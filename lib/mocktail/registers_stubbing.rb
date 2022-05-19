@@ -1,3 +1,4 @@
+# typed: false
 require_relative "records_demonstration"
 
 module Mocktail

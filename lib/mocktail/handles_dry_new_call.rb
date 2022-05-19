@@ -1,3 +1,4 @@
+# typed: false
 module Mocktail
   class HandlesDryNewCall
     def initialize

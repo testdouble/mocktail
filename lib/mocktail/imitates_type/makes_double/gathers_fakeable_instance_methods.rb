@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class GathersFakeableInstanceMethods
     def gather(type)

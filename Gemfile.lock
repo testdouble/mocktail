@@ -8,6 +8,7 @@ GEM
   specs:
     ast (2.4.2)
     coderay (1.1.3)
+    diff-lcs (1.5.0)
     docile (1.4.0)
     method_source (1.0.0)
     minitest (5.15.0)
@@ -19,6 +20,11 @@ GEM
       method_source (~> 1.0)
     rainbow (3.1.1)
     rake (13.0.6)
+    rbi (0.0.14)
+      ast
+      parser (>= 2.6.4.0)
+      sorbet-runtime (>= 0.5.9204)
+      unparser
     regexp_parser (2.3.0)
     rexml (3.2.5)
     rubocop (1.27.0)
@@ -35,6 +41,8 @@ GEM
     rubocop-performance (1.13.3)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
+    rubocop-sorbet (0.6.8)
+      rubocop (>= 0.90.0)
     ruby-progressbar (1.11.0)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -42,10 +50,48 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    sorbet (0.5.10020)
+      sorbet-static (= 0.5.10020)
+    sorbet-runtime (0.5.10020)
+    sorbet-static (0.5.10020-universal-darwin-14)
+    sorbet-static (0.5.10020-universal-darwin-15)
+    sorbet-static (0.5.10020-universal-darwin-16)
+    sorbet-static (0.5.10020-universal-darwin-17)
+    sorbet-static (0.5.10020-universal-darwin-18)
+    sorbet-static (0.5.10020-universal-darwin-19)
+    sorbet-static (0.5.10020-universal-darwin-20)
+    sorbet-static (0.5.10020-universal-darwin-21)
+    sorbet-static (0.5.10020-x86_64-linux)
+    sorbet-static-and-runtime (0.5.10020)
+      sorbet (= 0.5.10020)
+      sorbet-runtime (= 0.5.10020)
+    spoom (1.1.11)
+      sorbet (>= 0.5.9204)
+      sorbet-runtime (>= 0.5.9204)
+      thor (>= 0.19.2)
     standard (1.10.0)
       rubocop (= 1.27.0)
       rubocop-performance (= 1.13.3)
+    tapioca (0.8.0)
+      bundler (>= 1.17.3)
+      parallel (>= 1.21.0)
+      pry (>= 0.12.2)
+      rbi (~> 0.0.0, >= 0.0.14)
+      sorbet-static-and-runtime (>= 0.5.9204)
+      spoom (~> 1.1.0, >= 1.1.11)
+      thor (>= 1.2.0)
+      yard-sorbet
+    thor (1.2.1)
     unicode-display_width (2.1.0)
+    unparser (0.6.5)
+      diff-lcs (~> 1.3)
+      parser (>= 3.1.0)
+    webrick (1.7.0)
+    yard (0.9.27)
+      webrick (~> 1.7.0)
+    yard-sorbet (0.6.1)
+      sorbet-runtime (>= 0.5)
+      yard (>= 0.9)
 
 PLATFORMS
   arm64-darwin-20
@@ -56,8 +102,12 @@ DEPENDENCIES
   mocktail!
   pry
   rake
+  rubocop-sorbet
   simplecov
+  sorbet-static-and-runtime
+  spoom
   standard
+  tapioca
 
 BUNDLED WITH
    2.3.6

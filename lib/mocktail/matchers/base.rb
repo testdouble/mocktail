@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail::Matchers
   class Base
     # Custom matchers can receive any args, kwargs, or block they want. Usually

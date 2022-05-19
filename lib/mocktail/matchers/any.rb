@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail::Matchers
   class Any < Base
     def self.matcher_name

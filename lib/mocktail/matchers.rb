@@ -1,3 +1,4 @@
+# typed: strict
 module Mocktail
   module Matchers
   end

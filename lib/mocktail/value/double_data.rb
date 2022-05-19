@@ -1,3 +1,4 @@
+# typed: ignore
 module Mocktail
   class DoubleData < Struct.new(
     :type,

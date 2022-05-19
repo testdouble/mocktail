@@ -1,3 +1,4 @@
+# typed: true
 module Mocktail
   class InitializesMocktail
     def init

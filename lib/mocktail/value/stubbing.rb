@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Mocktail
   Stubbing = Struct.new(
     :demonstration,

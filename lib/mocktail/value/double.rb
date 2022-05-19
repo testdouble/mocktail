@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Mocktail
   Double = Struct.new(
     :original_type,

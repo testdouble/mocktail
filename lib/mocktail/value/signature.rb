@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Mocktail
   Signature = Struct.new(
     :positional_params,

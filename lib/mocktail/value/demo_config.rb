@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 module Mocktail
   DemoConfig = Struct.new(
     :ignore_block,

@@ -841,7 +841,7 @@ Talks:
 ## Acknowledgements
 
 Mocktail is created & maintained by the software agency [Test
-Double](https://twitter.com). If you've ever come across our eponymously-named
+Double](https://testdouble.com). If you've ever come across our eponymously-named
 [testdouble.js](https://github.com/testdouble/testdouble.js/), you might find
 Mocktail's API to be quite similar. The term "test double" was originally coined
 by Gerard Meszaros in his book [xUnit Test

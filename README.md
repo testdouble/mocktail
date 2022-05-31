@@ -10,6 +10,11 @@ library for Ruby that provides a terse and robust API for creating mocks,
 getting them in the hands of the code you're testing, stub & verify behavior,
 and even safely override class methods.
 
+If you'd prefer a voice & video introduction to Mocktail aside from this README,
+you might enjoy this ⚡️[Lightning
+Talk](https://blog.testdouble.com/talks/2022-05-18-please-mock-me?utm_source=twitter&utm_medium=organic-social&utm_campaign=conf-talk)⚡️ 
+from RailsConf 2022.
+
 ## An aperitif
 
 Before getting into the details, let's demonstrate what Mocktail's API looks

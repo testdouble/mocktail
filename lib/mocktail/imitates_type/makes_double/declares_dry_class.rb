@@ -44,6 +44,7 @@ module Mocktail
         dry_class.undef_method(method) if dry_class.method_defined?(method)
 
         dry_class.define_method method, ->(*args, **kwargs, &block) {
+          Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
           handles_dry_call.handle(Call.new(
             singleton: false,
             double: self,

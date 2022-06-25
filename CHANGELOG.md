@@ -1,3 +1,9 @@
+# 1.1.2
+
+* Fix cases where classes that redefine built-in methods could cause issues when
+  Mocktail in turn called those methods internally
+  [#15](https://github.com/testdouble/mocktail/pull/15)
+
 # 1.1.1
 
 * Improve output for undefined singleton methods

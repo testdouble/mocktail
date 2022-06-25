@@ -1,8 +1,14 @@
+require_relative "compares_safely"
+
 module Mocktail
   class DeterminesMatchingCalls
+    def initialize
+      @compares_safely = ComparesSafely.new
+    end
+
     def determine(real_call, demo_call, demo_config)
-      real_call.double == demo_call.double &&
-        real_call.method == demo_call.method &&
+      @compares_safely.compare(real_call.double, demo_call.double) &&
+        @compares_safely.compare(real_call.method, demo_call.method) &&
 
         # Matcher implementation will replace this:
         args_match?(real_call.args, demo_call.args, demo_config.ignore_extra_args) &&
@@ -53,7 +59,7 @@ module Mocktail
           demo_arg.is_mocktail_matcher?
         demo_arg.match?(real_arg)
       else
-        demo_arg == real_arg
+        demo_arg == real_arg # TODO <-- test if mock object and call safe compare if so, otherwise ==
       end
     end
   end

@@ -1,3 +1,4 @@
+require_relative "mocktail/debug"
 require_relative "mocktail/dsl"
 require_relative "mocktail/errors"
 require_relative "mocktail/explains_thing"

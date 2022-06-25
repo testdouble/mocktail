@@ -43,7 +43,9 @@ class MockingMethodfulClassesTest < Minitest::Test
     assert_equal overrides_everything.normal_method, 32
     assert_equal overrides_everything == 3, true
     assert_equal overrides_everything == 2, false
-
+    verify { overrides_everything.normal_method }
+    verify { overrides_everything == 3 }
+    verify(times: 0) { overrides_everything == 4 }
     explanation = Mocktail.explain(overrides_everything)
     assert_equal explanation.reference.stubbings[0].satisfaction_count, 1
     assert_equal explanation.reference.stubbings[1].satisfaction_count, 1

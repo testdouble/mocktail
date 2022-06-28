@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mocktail (1.1.2)
+    mocktail (1.1.3)
 
 GEM
   remote: https://rubygems.org/

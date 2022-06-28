@@ -1,3 +1,9 @@
+# 1.1.3
+
+* Improve the robustness of how we call the original methods on doubles &
+  replaced class methods on mocks internally by Mocktail to avoid behavior being
+  altered by how users configure mock objects
+
 # 1.1.2
 
 * Fix cases where classes that redefine built-in methods could cause issues when

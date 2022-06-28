@@ -28,7 +28,7 @@ class MockingMethodfulClassesTest < Minitest::Test
       }
     end
 
-    def normal_method
+    def normal_method(arg = nil)
     end
   end
 
@@ -50,5 +50,14 @@ class MockingMethodfulClassesTest < Minitest::Test
     assert_equal explanation.reference.stubbings[0].satisfaction_count, 1
     assert_equal explanation.reference.stubbings[1].satisfaction_count, 1
     assert_equal explanation.reference.stubbings[2].satisfaction_count, 1
+  end
+
+  def test_passing_mocks_and_comparing_them
+    mock_1 = Mocktail.of(OverridesEverything)
+    mock_2 = Mocktail.of(OverridesEverything)
+
+    stubs { mock_1.normal_method(mock_2) }.with { :great_success }
+
+    assert_equal mock_1.normal_method(mock_2), :great_success
   end
 end

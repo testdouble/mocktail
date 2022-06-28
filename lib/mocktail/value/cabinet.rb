@@ -1,4 +1,4 @@
-require_relative "../share/compares_safely"
+require_relative "../share/bind"
 
 # The Cabinet stores all thread-local state, so anything that goes here
 # is guaranteed by Mocktail to be local to the currently-running thread
@@ -8,7 +8,6 @@ module Mocktail
     attr_reader :calls, :stubbings, :unsatisfying_calls
 
     def initialize
-      @compares_safely = ComparesSafely.new
       @doubles = []
       @calls = []
       @stubbings = []
@@ -48,18 +47,21 @@ module Mocktail
     end
 
     def double_for_instance(thing)
-      @doubles.find { |double| @compares_safely.compare(double.dry_instance, thing) }
+      @doubles.find { |double|
+        # Intentionally calling directly to avoid an infinite recursion in Bind.call
+        Object.instance_method(:==).bind_call(double.dry_instance, thing)
+      }
     end
 
     def stubbings_for_double(double)
       @stubbings.select { |stubbing|
-        @compares_safely.compare(stubbing.recording.double, double.dry_instance)
+        Bind.call(stubbing.recording.double, :==, double.dry_instance)
       }
     end
 
     def calls_for_double(double)
       @calls.select { |call|
-        @compares_safely.compare(call.double, double.dry_instance)
+        Bind.call(call.double, :==, double.dry_instance)
       }
     end
   end

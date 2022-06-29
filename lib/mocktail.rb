@@ -1,3 +1,4 @@
+require_relative "mocktail/builds_method_signature"
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
 require_relative "mocktail/dsl"

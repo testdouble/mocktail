@@ -1,3 +1,4 @@
+require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
 require_relative "mocktail/dsl"
 require_relative "mocktail/errors"
@@ -65,6 +66,13 @@ module Mocktail
 
   def self.explain_nils
     ExplainsNils.new.explain
+  end
+
+  # An alias for Mocktail.explain(double).reference.calls
+  # Takes an optional second parameter of the method name to filter only
+  # calls to that method
+  def self.calls(double, method_name = nil)
+    CollectsCalls.new.collect(double, method_name)
   end
 
   # Stores most transactional state about calls & stubbing configurations

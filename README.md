@@ -12,7 +12,7 @@ and even safely override class methods.
 
 If you'd prefer a voice & video introduction to Mocktail aside from this README,
 you might enjoy this ⚡️[Lightning
-Talk](https://blog.testdouble.com/talks/2022-05-18-please-mock-me?utm_source=twitter&utm_medium=organic-social&utm_campaign=conf-talk)⚡️ 
+Talk](https://blog.testdouble.com/talks/2022-05-18-please-mock-me?utm_source=twitter&utm_medium=organic-social&utm_campaign=conf-talk)⚡️
 from RailsConf 2022.
 
 ## An aperitif
@@ -403,6 +403,10 @@ verify { |m| auditor.record!("ok", user_id: 1) { |block| block.call.is_a?(Date) 
   arguments while still being considered satisfied
 * `ignore_block` will similarly allow the demonstration to forego specifying a
   block, even if the actual call receives one
+
+Note that if you want to verify a method _wasn't_ called at all or called a
+specific number of times—especially if you don't care about the parameters, you
+may want to look at the [Mocktail.calls()](#mocktailcalls) API.
 
 ### Mocktail.matchers
 
@@ -806,6 +810,54 @@ Stubbings configured prior to this call but not satisfied by it:
 The `reference` object will have details of the `call` itself, an array of
 `other_stubbings` defined on the faked method, and a `backtrace` to determine
 which call site produced the unexpected `nil` value.
+
+### Mocktail.calls
+
+When practicing test-driven development, you may want to ensure that a
+dependency wasn't called at all, and don't particularly care about the
+parameters. To provide a terse way to express this, Mocktail offers a top-level
+`calls(double, method_name = nil)` method that returns an array of the calls to
+the mock (optionally filtered to a particular method name) in the order they
+were called.
+
+Suppose you were writing a test of this method for example:
+
+```ruby
+def import_users
+  users_response = @gets_users.get
+  if users_response.success?
+    @upserts_users.upsert(users_response.data)
+  end
+end
+```
+
+A test case of the negative branch of that `if` statement (when `success?` is
+false) might simply want to assert that `@upserts_users.upsert` wasn't called at
+all, regardless of its parameters.
+
+The easiest way to do this is to use `Mocktail.calls()` method, which is an
+alias of [Mocktail.explain(double).reference.calls](#mocktailexplain) that can
+filter to a specific method name. In the case of a test of the above method, you
+could assert:
+
+```ruby
+# Assert that the `upsert` method on the mock was never called
+assert_equal 0, Mocktail.calls(@upserts_users, :upsert).size
+
+# Assert that NO METHODS on the mock were called at all:
+assert_equal 0, Mocktail.calls(@upserts_users).size
+```
+
+If you're interested in doing more complicated introspection in the nature of
+the calls, their ordering, and so forth, the `calls` method will return
+`Mocktail::Call` values with the args, kwargs, block, and information about the
+original class and method being mocked.
+
+(While this behavior can technically be accomplished with `verify(times: 0) { …
+}`, it's verbose and error prone to do so. Because `verify` is careful to only
+assert exact argument matches, it can get pretty confusing to remember to tack
+on `ignore_extra_args: true` and to call the method with zero args to cover all
+cases.)
 
 ### Mocktail.reset
 

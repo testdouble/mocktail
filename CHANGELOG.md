@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Introduce the Mocktail.calls() API https://github.com/testdouble/mocktail/pull/16
+
 # 1.1.3
 
 * Improve the robustness of how we call the original methods on doubles &

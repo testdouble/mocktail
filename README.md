@@ -814,11 +814,10 @@ which call site produced the unexpected `nil` value.
 ### Mocktail.calls
 
 When practicing test-driven development, you may want to ensure that a
-dependency wasn't called at all, and don't particularly care about the
-parameters. To provide a terse way to express this, Mocktail offers a top-level
-`calls(double, method_name = nil)` method that returns an array of the calls to
-the mock (optionally filtered to a particular method name) in the order they
-were called.
+dependency wasn't called at all. To provide a terse way to express this, 
+Mocktail offers a top-level `calls(double, method_name = nil)` method that 
+returns an array of the calls to the mock (optionally filtered to a 
+particular method name) in the order they were called.
 
 Suppose you were writing a test of this method for example:
 

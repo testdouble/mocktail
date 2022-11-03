@@ -50,22 +50,23 @@ module Mocktail
 
         # TODO: This is failing because none of self, type, dry_class, method,
         # etc are in scope for the dry_class.
-        dry_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{method}#{method_signature}
-            Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
-            HandlesDryClass.new.handle(Call.new(
-              singleton: false,
-              double: self,
-              original_type: type,
-              dry_type: dry_class,
-              method: method,
-              original_method: type.instance_method(method),
-              args: args,
-              kwargs: kwargs,
-              block: block
-            ))
-          end
-        RUBY
+        dry_class.define_method method,
+          eval(<<-RUBY, binding, __FILE__, __LINE__ + 1)
+            ->#{method_signature} do
+              Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
+              handles_dry_call.handle(Call.new(
+                singleton: false,
+                double: self,
+                original_type: type,
+                dry_type: dry_class,
+                method: method,
+                original_method: type.instance_method(method),
+                args: args,
+                kwargs: kwargs,
+                block: block
+              ))
+            end
+          RUBY
       end
     end
 

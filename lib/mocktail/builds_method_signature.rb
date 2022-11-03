@@ -15,7 +15,6 @@ module Mocktail
       end
     end
 
-
     def positional
       @signature.positional_params.all.map do |name|
         if @signature.positional_params.required.include?(name)
@@ -45,7 +44,7 @@ module Mocktail
 
     def block
       if dotdotdot.empty? && @signature.block_param
-         "&block"
+        "&block"
       else
         ""
       end

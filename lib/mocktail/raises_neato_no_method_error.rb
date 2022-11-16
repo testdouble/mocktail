@@ -71,7 +71,7 @@ module Mocktail
 
       <<~MSG
 
-        There #{corrections.size == 1 ? "is" : "are"} also #{corrections.size} similar method#{"s" if corrections.size != 1} on #{call.original_type.name}.
+        There #{(corrections.size == 1) ? "is" : "are"} also #{corrections.size} similar method#{"s" if corrections.size != 1} on #{call.original_type.name}.
 
         Did you mean?
         #{corrections.map { |c| "  #{c}" }.join("\n")}

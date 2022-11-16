@@ -27,7 +27,7 @@ class OfTest < Minitest::Test
 
   class Welp
     def to_s
-      "¯\_(ツ)_/¯"
+      "¯\\_(ツ)_/¯"
     end
 
     def inspect

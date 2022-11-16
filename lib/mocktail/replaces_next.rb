@@ -30,7 +30,7 @@ module Mocktail
         }
       end
 
-      mocktails.size == 1 ? mocktails.first : mocktails
+      (mocktails.size == 1) ? mocktails.first : mocktails
     end
   end
 end

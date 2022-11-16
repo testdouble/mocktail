@@ -17,9 +17,8 @@ module Mocktail
 
     def positional
       @signature.positional_params.all.map do |name|
-        if @signature.positional_params.required.include?(name)
-          name.to_s
-        elsif @signature.positional_params.optional.include?(name)
+        if @signature.positional_params.required.include?(name) ||
+            @signature.positional_params.optional.include?(name)
           "#{name} = nil"
         elsif @signature.positional_params.rest == name && name != :*
           "*#{name}"
@@ -30,9 +29,8 @@ module Mocktail
     def keyword
       if dotdotdot.empty?
         @signature.keyword_params.all.map do |name|
-          if @signature.keyword_params.required.include?(name)
-            "#{name}:"
-          elsif @signature.keyword_params.optional.include?(name)
+          if @signature.keyword_params.required.include?(name) ||
+              @signature.keyword_params.optional.include?(name)
             "#{name}: nil"
           elsif @signature.keyword_params.rest == name && name != :**
             "**#{name}" end
@@ -44,7 +42,7 @@ module Mocktail
 
     def block
       if dotdotdot.empty? && @signature.block_param
-        "&block"
+        "&#{@signature.block_param}"
       else
         ""
       end

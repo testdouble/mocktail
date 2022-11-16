@@ -11,54 +11,54 @@ module Mocktail
     end
 
     def test_positional_call
-      assert_equal "(a, b)", @subject.build(signature(
-        positional_params: Params.new(all: [:a, :b], required: [:a, :b]),
-      ))     
+      assert_equal "(a = nil, b = nil)", @subject.build(signature(
+        positional_params: Params.new(all: [:a, :b], required: [:a, :b])
+      ))
     end
 
     def test_optional_positional_call
-      assert_equal "(a = nil, b)", @subject.build(signature(
+      assert_equal "(a = nil, b = nil)", @subject.build(signature(
         positional_params: Params.new(
           all: [:a, :b],
           required: [:b],
           optional: [:a]
-        ),
+        )
       ))
     end
 
     def test_kwarg_call
-      assert_equal "(a: nil, b:)", @subject.build(signature(
+      assert_equal "(a: nil, b: nil)", @subject.build(signature(
         keyword_params: Params.new(
           all: [:a, :b],
           required: [:b],
           optional: [:a]
-        ),
+        )
       ))
     end
 
     def test_block_call
-      assert_equal "(&block)", @subject.build(signature(
-        block_param: [],
+      assert_equal "(&blk)", @subject.build(signature(
+        block_param: :blk
       ))
     end
 
     def test_rest_call
       assert_equal "(*args)", @subject.build(signature(
-        positional_params: Params.new(all: [:args], rest: :args),
+        positional_params: Params.new(all: [:args], rest: :args)
       ))
     end
 
     def test_kwrest_call
       assert_equal "(**kwargs)", @subject.build(signature(
-        keyword_params: Params.new(all: [:kwargs], rest: :kwargs),
+        keyword_params: Params.new(all: [:kwargs], rest: :kwargs)
       ))
     end
 
     def test_complex_call
-      assert_equal "(a, b = nil, *args, c:, d: nil, **kwargs, &block)", @subject.build(signature(
+      assert_equal "(a = nil, b = nil, *args, c: nil, d: nil, **kwargs, &block)", @subject.build(signature(
         positional_params: Params.new(all: [:a, :b, :args], required: [:a], optional: [:b], rest: :args),
         keyword_params: Params.new(all: [:c, :d, :kwargs], required: [:c], optional: [:d], rest: :kwargs),
-        block_param: [:block],
+        block_param: :block
       ))
     end
 
@@ -77,11 +77,14 @@ module Mocktail
         params: method(:dotdotdot_with_args).parameters
       )
 
-      assert_equal "(a, b = nil, ...)", @subject.build(sig)
+      assert_equal "(a = nil, b = nil, ...)", @subject.build(sig)
     end
 
-    def dotdotdot(...); end
-    def dotdotdot_with_args(a, b = :foo, ...); end
+    def dotdotdot(...)
+    end
+
+    def dotdotdot_with_args(a, b = :foo, ...)
+    end
 
     def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: false)
       Signature.new(

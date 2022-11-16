@@ -15,6 +15,7 @@ module Mocktail
     private
 
     def args_match?(real_args, demo_args, ignore_extra_args)
+      # Guard clause for performance:
       return true if ignore_extra_args && demo_args.empty?
 
       (

@@ -51,7 +51,7 @@ module Mocktail
         # TODO: This is failing because none of self, type, dry_class, method,
         # etc are in scope for the dry_class.
         dry_class.define_method method,
-          eval(<<-RUBY, binding, __FILE__, __LINE__ + 1)
+          eval(<<-RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
               handles_dry_call.handle(Call.new(

@@ -1,7 +1,6 @@
 module Mocktail
   class DeclaresDryClass
     def initialize
-      @handles_dry_call = HandlesDryCall.new
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
       @transforms_params = TransformsParams.new
       @builds_method_signature = BuildsMethodSignature.new
@@ -41,7 +40,6 @@ module Mocktail
     private
 
     def define_double_methods!(dry_class, type, instance_methods)
-      handles_dry_call = @handles_dry_call # TODO: eval makes this a warning
       instance_methods.each do |method|
         dry_class.undef_method(method) if dry_class.method_defined?(method)
         parameters = type.instance_method(method).parameters
@@ -53,10 +51,10 @@ module Mocktail
         dry_class.define_method method,
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
-              Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
+              ::Mocktail::Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
               __mocktail_default_args = binding.local_variable_defined?(:__mocktail_default_args) ? binding.local_variable_get(:__mocktail_default_args) : {}
 
-              handles_dry_call.handle(Call.new(
+              ::Mocktail::HandlesDryCall.new.handle(Call.new(
                 singleton: false,
                 double: self,
                 original_type: type,

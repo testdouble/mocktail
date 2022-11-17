@@ -1,3 +1,9 @@
+# 1.2.1
+
+* Adds support for faking methods that use options hashes that are called with
+  and without curly braces [#17](https://github.com/testdouble/mocktail/pull/17)
+  (This is a sweeping change and there will probably be bugs.)
+
 # 1.2.0
 
 * Introduce the Mocktail.calls() API https://github.com/testdouble/mocktail/pull/16

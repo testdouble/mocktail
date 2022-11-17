@@ -474,4 +474,25 @@ class StubTest < Minitest::Test
     assert_equal validates_thing.validate({email: "foo@bar"}), :valid
     assert_equal validates_thing.validate({email: "foobar"}), :invalid
   end
+
+  class ThingWithBadlyOrderedArgs
+    def positional(a, b = nil, c = nil, d, e) # standard:disable Style/OptionalArguments
+    end
+  end
+
+  def test_out_of_order_args_work
+    thing = Mocktail.of(ThingWithBadlyOrderedArgs)
+
+    stubs { thing.positional(:a, :d, :e) }.with { :weird }
+    stubs { thing.positional(:a, :b, :d, :e) }.with { :less_weird }
+    stubs { thing.positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
+
+    assert_equal :weird, thing.positional(:a, :d, :e)
+    assert_equal :less_weird, thing.positional(:a, :b, :d, :e)
+    assert_equal :even_less_weird, thing.positional(:a, :b, :c, :d, :e)
+
+    assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0].args
+    assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1].args
+    assert_equal [:a, :b, :c, :d, :e], Mocktail.calls(thing, :positional)[2].args
+  end
 end

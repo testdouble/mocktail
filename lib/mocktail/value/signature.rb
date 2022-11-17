@@ -29,7 +29,7 @@ module Mocktail
     end
 
     def allowed
-      required + optional
+      all.select { |name| required.include?(name) || optional.include?(name) }
     end
 
     def rest?

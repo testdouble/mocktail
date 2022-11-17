@@ -444,4 +444,34 @@ class StubTest < Minitest::Test
 
     MSG
   end
+
+  class Checkable
+    def check
+      raise "unimplemented"
+    end
+  end
+
+  class ValidatesThing
+    def initialize(checkable)
+      @checkable = checkable
+    end
+
+    def validate(thing)
+      @checkable.check { thing[:email].include?("@") }
+    end
+  end
+
+  # Methods that don't declare a block arg can still yield to a block, so
+  # we need to make sure that our generated signatures don't break that.
+  def test_implicit_block_arg
+    checkable = Mocktail.of(Checkable)
+    validates_thing = ValidatesThing.new(checkable)
+
+    stubs { checkable.check { |blk| blk.call == true } }.with { :valid }
+
+    stubs { checkable.check { |blk| blk.call != true } }.with { :invalid }
+
+    assert_equal validates_thing.validate({email: "foo@bar"}), :valid
+    assert_equal validates_thing.validate({email: "foobar"}), :invalid
+  end
 end

@@ -64,9 +64,7 @@ module Mocktail
                 call_binding: __send__(:binding),
                 default_args: (__send__(:binding).local_variable_defined?(:__mocktail_default_args) ? __send__(:binding).local_variable_get(:__mocktail_default_args) : {}),
                 **__mocktail_closure
-              )).tap do |result|
-                # binding.irb
-              end
+              ))
             end
           RUBBY
       end

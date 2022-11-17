@@ -19,7 +19,7 @@ module Mocktail
       @signature.positional_params.all.map do |name|
         if @signature.positional_params.required.include?(name) ||
             @signature.positional_params.optional.include?(name)
-          "#{name} = nil"
+          "#{name} = ((__mocktail_default_args ||= {})[:#{name}] = nil)"
         elsif @signature.positional_params.rest == name && name != :*
           "*#{name}"
         end
@@ -31,7 +31,7 @@ module Mocktail
         @signature.keyword_params.all.map do |name|
           if @signature.keyword_params.required.include?(name) ||
               @signature.keyword_params.optional.include?(name)
-            "#{name}: nil"
+            "#{name}: ((__mocktail_default_args ||= {})[:#{name}] = nil)"
           elsif @signature.keyword_params.rest == name && name != :**
             "**#{name}" end
         end.join(", ")

@@ -41,7 +41,7 @@ module Mocktail
     private
 
     def define_double_methods!(dry_class, type, instance_methods)
-      handles_dry_call = @handles_dry_call
+      handles_dry_call = @handles_dry_call # TODO: eval makes this a warning
       instance_methods.each do |method|
         dry_class.undef_method(method) if dry_class.method_defined?(method)
         parameters = type.instance_method(method).parameters
@@ -51,9 +51,11 @@ module Mocktail
         # TODO: This is failing because none of self, type, dry_class, method,
         # etc are in scope for the dry_class.
         dry_class.define_method method,
-          eval(<<-RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
+          eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
+              __mocktail_default_args = binding.local_variable_defined?(:__mocktail_default_args) ? binding.local_variable_get(:__mocktail_default_args) : {}
+
               handles_dry_call.handle(Call.new(
                 singleton: false,
                 double: self,
@@ -61,12 +63,15 @@ module Mocktail
                 dry_type: dry_class,
                 method: method,
                 original_method: type.instance_method(method),
-                args: args,
-                kwargs: kwargs,
-                block: block
+                args: signature.positional_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.map { |p| binding.local_variable_get(p) } +
+                  ((binding.local_variable_get(signature.positional_params.rest) if signature.positional_params.rest && !__mocktail_default_args&.key?(signature.positional_params.rest)) || []),
+                kwargs: signature.keyword_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.to_h { |p| [p, binding.local_variable_get(p)] }.merge(
+                  (binding.local_variable_get(signature.keyword_params.rest) if signature.keyword_params.rest && !__mocktail_default_args&.key?(signature.keyword_params.rest)) || {}
+                ),
+                block: #{signature.block_param || "nil"}
               ))
             end
-          RUBY
+          RUBBY
       end
     end
 
@@ -100,7 +105,7 @@ module Mocktail
             singleton: false,
             double: self,
             original_type: type,
-            dry_type: self.class,
+            dry_type: Bind.call(self, :class),
             method: name,
             original_method: nil,
             args: args,

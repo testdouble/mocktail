@@ -11,13 +11,13 @@ module Mocktail
     end
 
     def test_positional_call
-      assert_equal "(a = nil, b = nil)", @subject.build(signature(
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil))", @subject.build(signature(
         positional_params: Params.new(all: [:a, :b], required: [:a, :b])
       ))
     end
 
     def test_optional_positional_call
-      assert_equal "(a = nil, b = nil)", @subject.build(signature(
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil))", @subject.build(signature(
         positional_params: Params.new(
           all: [:a, :b],
           required: [:b],
@@ -27,7 +27,7 @@ module Mocktail
     end
 
     def test_kwarg_call
-      assert_equal "(a: nil, b: nil)", @subject.build(signature(
+      assert_equal "(a: ((__mocktail_default_args ||= {})[:a] = nil), b: ((__mocktail_default_args ||= {})[:b] = nil))", @subject.build(signature(
         keyword_params: Params.new(
           all: [:a, :b],
           required: [:b],
@@ -55,7 +55,7 @@ module Mocktail
     end
 
     def test_complex_call
-      assert_equal "(a = nil, b = nil, *args, c: nil, d: nil, **kwargs, &block)", @subject.build(signature(
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), *args, c: ((__mocktail_default_args ||= {})[:c] = nil), d: ((__mocktail_default_args ||= {})[:d] = nil), **kwargs, &block)", @subject.build(signature(
         positional_params: Params.new(all: [:a, :b, :args], required: [:a], optional: [:b], rest: :args),
         keyword_params: Params.new(all: [:c, :d, :kwargs], required: [:c], optional: [:d], rest: :kwargs),
         block_param: :block
@@ -77,7 +77,7 @@ module Mocktail
         params: method(:dotdotdot_with_args).parameters
       )
 
-      assert_equal "(a = nil, b = nil, ...)", @subject.build(sig)
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), ...)", @subject.build(sig)
     end
 
     def dotdotdot(...)

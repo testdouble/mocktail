@@ -85,11 +85,13 @@ module Mocktail
     end
 
     unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
-      def dotdotdot(...)
-      end
+      eval(<<~RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
+        def dotdotdot(...)
+        end
 
-      def dotdotdot_with_args(a, b = :foo, ...)
-      end
+        def dotdotdot_with_args(a, b = :foo, ...)
+        end
+      RUBY
     end
 
     def test_dotdotdot_call

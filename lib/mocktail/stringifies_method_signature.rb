@@ -1,6 +1,6 @@
 module Mocktail
-  class BuildsMethodSignature
-    def build(signature)
+  class StringifiesMethodSignature
+    def stringify(signature)
       positional_params = positional(signature)
       dotdotdot_param = dotdotdot(signature)
       keyword_params = keyword(signature) if dotdotdot_param.nil?

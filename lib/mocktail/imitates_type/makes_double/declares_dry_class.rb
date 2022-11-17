@@ -3,7 +3,7 @@ module Mocktail
     def initialize
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
       @transforms_params = TransformsParams.new
-      @builds_method_signature = BuildsMethodSignature.new
+      @stringifies_method_signature = StringifiesMethodSignature.new
     end
 
     def declare(type, instance_methods)
@@ -44,7 +44,7 @@ module Mocktail
         dry_class.undef_method(method) if dry_class.method_defined?(method)
         parameters = type.instance_method(method).parameters
         signature = @transforms_params.transform(Call.new, params: parameters)
-        method_signature = @builds_method_signature.build(signature)
+        method_signature = @stringifies_method_signature.stringify(signature)
 
         dry_class.define_method method,
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval

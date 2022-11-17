@@ -8,6 +8,9 @@ module Mocktail
     :block_arg,
     keyword_init: true
   )
+    DEFAULT_REST_ARGS = "args"
+    DEFAULT_REST_KWARGS = "kwargs"
+    DEFAULT_BLOCK_PARAM = "blk"
   end
 
   class Params < Struct.new(
@@ -26,7 +29,7 @@ module Mocktail
     end
 
     def allowed
-      required + optional
+      all.select { |name| required.include?(name) || optional.include?(name) }
     end
 
     def rest?

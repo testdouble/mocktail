@@ -8,6 +8,9 @@ module Mocktail
     :block_arg,
     keyword_init: true
   )
+    DEFAULT_REST_ARGS = "args"
+    DEFAULT_REST_KWARGS = "kwargs"
+    DEFAULT_BLOCK_PARAM = "blk"
   end
 
   class Params < Struct.new(

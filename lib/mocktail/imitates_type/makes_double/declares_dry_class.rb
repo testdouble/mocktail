@@ -64,7 +64,7 @@ module Mocktail
                 kwargs: signature.keyword_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.to_h { |p| [p, binding.local_variable_get(p)] }.merge(
                   (binding.local_variable_get(signature.keyword_params.rest) if signature.keyword_params.rest && !__mocktail_default_args&.key?(signature.keyword_params.rest)) || {}
                 ),
-                block: #{signature.block_param || "blk"}
+                block: #{signature.block_param || Signature::DEFAULT_BLOCK_PARAM}
               ))
             end
           RUBBY

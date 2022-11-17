@@ -63,6 +63,8 @@ module Mocktail
     end
 
     def test_dotdotdot_call
+      skip if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
+
       sig = TransformsParams.new.transform(
         Call.new,
         params: method(:dotdotdot).parameters
@@ -72,6 +74,8 @@ module Mocktail
     end
 
     def test_dotdotdot_with_args_call
+      skip if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
+
       sig = TransformsParams.new.transform(
         Call.new,
         params: method(:dotdotdot_with_args).parameters
@@ -80,10 +84,14 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), ...)", @subject.build(sig)
     end
 
-    def dotdotdot(...)
-    end
+    unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
+      eval(<<~RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
+        def dotdotdot(...)
+        end
 
-    def dotdotdot_with_args(a, b = :foo, ...)
+        def dotdotdot_with_args(a, b = :foo, ...)
+        end
+      RUBY
     end
 
     def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: false)

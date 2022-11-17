@@ -1,3 +1,5 @@
+require_relative "declares_dry_class/reconstructs_call"
+
 module Mocktail
   class DeclaresDryClass
     def initialize
@@ -57,23 +59,14 @@ module Mocktail
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               ::Mocktail::Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
-              __mocktail_binding = __send__(:binding)
-              __mocktail_default_args = __mocktail_binding.local_variable_defined?(:__mocktail_default_args) ? __mocktail_binding.local_variable_get(:__mocktail_default_args) : {}
-
-              ::Mocktail::HandlesDryCall.new.handle(Call.new(
-                singleton: false,
+              ::Mocktail::HandlesDryCall.new.handle(::Mocktail::ReconstructsCall.new.reconstruct(
                 double: self,
-                original_type: __mocktail_closure[:type],
-                dry_type: __mocktail_closure[:dry_class],
-                method: __mocktail_closure[:method],
-                original_method: __mocktail_closure[:original_method],
-                args: __mocktail_closure[:signature].positional_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.map { |p| __mocktail_binding.local_variable_get(p) } +
-                  ((__mocktail_binding.local_variable_get(__mocktail_closure[:signature].positional_params.rest) if __mocktail_closure[:signature].positional_params.rest && !__mocktail_default_args&.key?(__mocktail_closure[:signature].positional_params.rest)) || []),
-                kwargs: __mocktail_closure[:signature].keyword_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.to_h { |p| [p, __mocktail_binding.local_variable_get(p)] }.merge(
-                  (__mocktail_binding.local_variable_get(__mocktail_closure[:signature].keyword_params.rest) if __mocktail_closure[:signature].keyword_params.rest && !__mocktail_default_args&.key?(__mocktail_closure[:signature].keyword_params.rest)) || {}
-                ),
-                block: __mocktail_binding.local_variable_get(__mocktail_closure[:signature].block_param || ::Mocktail::Signature::DEFAULT_BLOCK_PARAM)
-              ))
+                call_binding: __send__(:binding),
+                default_args: (__send__(:binding).local_variable_defined?(:__mocktail_default_args) ? __send__(:binding).local_variable_get(:__mocktail_default_args) : {}),
+                **__mocktail_closure
+              )).tap do |result|
+                # binding.irb
+              end
             end
           RUBBY
       end

@@ -103,7 +103,7 @@ module Mocktail
             singleton: false,
             double: self,
             original_type: type,
-            dry_type: Bind.call(self, :class),
+            dry_type: self.class,
             method: name,
             original_method: nil,
             args: args,

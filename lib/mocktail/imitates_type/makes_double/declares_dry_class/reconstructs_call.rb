@@ -17,14 +17,31 @@ module Mocktail
     private
 
     def args_for(signature, call_binding, default_args)
-      signature.positional_params.allowed.reject { |p| default_args&.key?(p) }.map { |p| call_binding.local_variable_get(p) } +
-        ((call_binding.local_variable_get(signature.positional_params.rest) if signature.positional_params.rest && !default_args&.key?(signature.positional_params.rest)) || [])
+      arg_names, rest_name = non_default_args(signature.positional_params, default_args)
+
+      arg_values = arg_names.map { |p| call_binding.local_variable_get(p) }
+      rest_value = call_binding.local_variable_get(rest_name) if rest_name
+
+      arg_values + (rest_value || [])
     end
 
     def kwargs_for(signature, call_binding, default_args)
-      signature.keyword_params.allowed.reject { |p| default_args&.key?(p) }.to_h { |p| [p, call_binding.local_variable_get(p)] }.merge(
-        (call_binding.local_variable_get(signature.keyword_params.rest) if signature.keyword_params.rest && !default_args&.key?(signature.keyword_params.rest)) || {}
-      )
+      kwarg_names, kwrest_name = non_default_args(signature.keyword_params, default_args)
+
+      kwarg_values = kwarg_names.to_h { |p| [p, call_binding.local_variable_get(p)] }
+      kwrest_value = call_binding.local_variable_get(kwrest_name) if kwrest_name
+
+      kwarg_values.merge(kwrest_value || {})
+    end
+
+    def non_default_args(params, default_args)
+      named_args = params.allowed
+        .reject { |p| default_args&.key?(p) }
+      rest_arg = if params.rest && !default_args&.key?(params.rest)
+        params.rest
+      end
+
+      [named_args, rest_arg]
     end
   end
 end

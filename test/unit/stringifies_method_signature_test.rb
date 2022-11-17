@@ -7,7 +7,9 @@ module Mocktail
     end
 
     def test_basic_call
-      assert_equal @subject.stringify(signature), "()"
+      result = @subject.stringify(signature)
+
+      assert_equal "(&blk)", result
     end
 
     def test_positional_call
@@ -15,7 +17,7 @@ module Mocktail
         positional_params: Params.new(all: [:a, :b], required: [:a, :b])
       ))
 
-      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil))", result
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
     def test_optional_positional_call
@@ -27,7 +29,7 @@ module Mocktail
         )
       ))
 
-      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil))", result
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
     def test_kwarg_call
@@ -39,13 +41,19 @@ module Mocktail
         )
       ))
 
-      assert_equal "(a: ((__mocktail_default_args ||= {})[:a] = nil), b: ((__mocktail_default_args ||= {})[:b] = nil))", result
+      assert_equal "(a: ((__mocktail_default_args ||= {})[:a] = nil), b: ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
     def test_block_call
       result = @subject.stringify(signature(
-        block_param: :blk
+        block_param: :blocky
       ))
+
+      assert_equal "(&blocky)", result
+    end
+
+    def test_argless_call
+      result = @subject.stringify(signature)
 
       assert_equal "(&blk)", result
     end
@@ -55,7 +63,7 @@ module Mocktail
         positional_params: Params.new(all: [:args], rest: :args)
       ))
 
-      assert_equal "(*args)", result
+      assert_equal "(*args, &blk)", result
     end
 
     def test_kwrest_call
@@ -63,7 +71,7 @@ module Mocktail
         keyword_params: Params.new(all: [:kwargs], rest: :kwargs)
       ))
 
-      assert_equal "(**kwargs)", result
+      assert_equal "(**kwargs, &blk)", result
     end
 
     def test_complex_call
@@ -76,6 +84,16 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), *args, c: ((__mocktail_default_args ||= {})[:c] = nil), d: ((__mocktail_default_args ||= {})[:d] = nil), **kwargs, &block)", result
     end
 
+    unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
+      eval(<<~RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
+        def dotdotdot(...)
+        end
+
+        def dotdotdot_with_args(a, b = :foo, ...)
+        end
+      RUBY
+    end
+
     def test_dotdotdot_call
       skip if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
       signature = TransformsParams.new.transform(
@@ -85,7 +103,7 @@ module Mocktail
 
       result = @subject.stringify(signature)
 
-      assert_equal "(...)", result
+      assert_equal "(*args, **kwargs, &blk)", result
     end
 
     def test_dotdotdot_with_args_call
@@ -97,17 +115,7 @@ module Mocktail
 
       result = @subject.stringify(signature)
 
-      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), ...)", result
-    end
-
-    unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
-      eval(<<~RUBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
-        def dotdotdot(...)
-        end
-
-        def dotdotdot_with_args(a, b = :foo, ...)
-        end
-      RUBY
+      assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), *args, **kwargs, &blk)", result
     end
 
     def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: false)

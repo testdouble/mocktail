@@ -2,11 +2,10 @@ module Mocktail
   class StringifiesMethodSignature
     def stringify(signature)
       positional_params = positional(signature)
-      dotdotdot_param = dotdotdot(signature)
-      keyword_params = keyword(signature) if dotdotdot_param.nil?
-      block_param = block(signature) if dotdotdot_param.nil?
+      keyword_params = keyword(signature)
+      block_param = block(signature)
 
-      "(#{[positional_params, dotdotdot_param, keyword_params, block_param].compact.join(", ")})"
+      "(#{[positional_params, keyword_params, block_param].compact.join(", ")})"
     end
 
     private
@@ -15,8 +14,8 @@ module Mocktail
       params = signature.positional_params.all.map do |name|
         if signature.positional_params.allowed.include?(name)
           "#{name} = ((__mocktail_default_args ||= {})[:#{name}] = nil)"
-        elsif signature.positional_params.rest == name && name != :*
-          "*#{name}"
+        elsif signature.positional_params.rest == name
+          "*#{(name == :*) ? "args" : name}"
         end
       end.compact
 
@@ -27,8 +26,8 @@ module Mocktail
       params = signature.keyword_params.all.map do |name|
         if signature.keyword_params.allowed.include?(name)
           "#{name}: ((__mocktail_default_args ||= {})[:#{name}] = nil)"
-        elsif signature.keyword_params.rest == name && name != :**
-          "**#{name}"
+        elsif signature.keyword_params.rest == name
+          "**#{(name == :**) ? "kwargs" : name}"
         end
       end.compact
 
@@ -36,22 +35,10 @@ module Mocktail
     end
 
     def block(signature)
-      if signature.block_param
+      if signature.block_param && signature.block_param != :&
         "&#{signature.block_param}"
-      end
-    end
-
-    def dotdotdot(signature)
-      if signature.positional_params.rest == :* &&
-          signature.keyword_params.rest == :** &&
-          signature.block_param == :&
-        "..."
-      end
-    end
-
-    def rest_name(params)
-      if params.rest && params.rest != :* && params.rest != :**
-        params.rest
+      else
+        "&blk"
       end
     end
   end

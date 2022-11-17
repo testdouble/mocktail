@@ -45,26 +45,34 @@ module Mocktail
         parameters = type.instance_method(method).parameters
         signature = @transforms_params.transform(Call.new, params: parameters)
         method_signature = @stringifies_method_signature.stringify(signature)
+        __mocktail_closure = {
+          dry_class: dry_class,
+          type: type,
+          method: method,
+          original_method: type.instance_method(method),
+          signature: signature
+        }
 
         dry_class.define_method method,
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               ::Mocktail::Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
-              __mocktail_default_args = binding.local_variable_defined?(:__mocktail_default_args) ? binding.local_variable_get(:__mocktail_default_args) : {}
+              __mocktail_binding = __send__(:binding)
+              __mocktail_default_args = __mocktail_binding.local_variable_defined?(:__mocktail_default_args) ? __mocktail_binding.local_variable_get(:__mocktail_default_args) : {}
 
               ::Mocktail::HandlesDryCall.new.handle(Call.new(
                 singleton: false,
                 double: self,
-                original_type: type,
-                dry_type: dry_class,
-                method: method,
-                original_method: type.instance_method(method),
-                args: signature.positional_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.map { |p| binding.local_variable_get(p) } +
-                  ((binding.local_variable_get(signature.positional_params.rest) if signature.positional_params.rest && !__mocktail_default_args&.key?(signature.positional_params.rest)) || []),
-                kwargs: signature.keyword_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.to_h { |p| [p, binding.local_variable_get(p)] }.merge(
-                  (binding.local_variable_get(signature.keyword_params.rest) if signature.keyword_params.rest && !__mocktail_default_args&.key?(signature.keyword_params.rest)) || {}
+                original_type: __mocktail_closure[:type],
+                dry_type: __mocktail_closure[:dry_class],
+                method: __mocktail_closure[:method],
+                original_method: __mocktail_closure[:original_method],
+                args: __mocktail_closure[:signature].positional_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.map { |p| __mocktail_binding.local_variable_get(p) } +
+                  ((__mocktail_binding.local_variable_get(__mocktail_closure[:signature].positional_params.rest) if __mocktail_closure[:signature].positional_params.rest && !__mocktail_default_args&.key?(__mocktail_closure[:signature].positional_params.rest)) || []),
+                kwargs: __mocktail_closure[:signature].keyword_params.allowed.reject { |p| __mocktail_default_args&.key?(p) }.to_h { |p| [p, __mocktail_binding.local_variable_get(p)] }.merge(
+                  (__mocktail_binding.local_variable_get(__mocktail_closure[:signature].keyword_params.rest) if __mocktail_closure[:signature].keyword_params.rest && !__mocktail_default_args&.key?(__mocktail_closure[:signature].keyword_params.rest)) || {}
                 ),
-                block: binding.local_variable_get(signature.block_param || ::Mocktail::Signature::DEFAULT_BLOCK_PARAM)
+                block: __mocktail_binding.local_variable_get(__mocktail_closure[:signature].block_param || ::Mocktail::Signature::DEFAULT_BLOCK_PARAM)
               ))
             end
           RUBBY

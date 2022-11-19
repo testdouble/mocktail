@@ -3,6 +3,8 @@ require_relative "../share/bind"
 module Mocktail
   class TransformsParams
     def transform(dry_call, params: dry_call.original_method.parameters)
+      params = name_unnamed_params(params)
+
       Signature.new(
         positional_params: Params.new(
           all: params.select { |t, _|
@@ -27,6 +29,18 @@ module Mocktail
         block_param: params.find { |t, _| Bind.call(t, :==, :block) }&.last,
         block_arg: dry_call.block
       )
+    end
+
+    private
+
+    def name_unnamed_params(params)
+      params.map.with_index { |param, i|
+        if param.size == 1
+          param + ["unnamed_arg_#{i + 1}"]
+        else
+          param
+        end
+      }
     end
   end
 end

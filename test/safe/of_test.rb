@@ -91,4 +91,18 @@ class OfTest < Minitest::Test
   def test_constructors_dont_require_args
     assert Mocktail.of(Argz)
   end
+
+  class Toolbox
+    attr_accessor :hammer
+  end
+
+  def test_can_mock_attr_accessors
+    toolbox = Mocktail.of(Toolbox)
+
+    stubs { toolbox.hammer }.with { "🔨" }
+    assert_equal "🔨", toolbox.hammer
+
+    toolbox.hammer = "🔧"
+    verify { toolbox.hammer = "🔧" }
+  end
 end

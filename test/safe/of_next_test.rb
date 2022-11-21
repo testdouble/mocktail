@@ -19,6 +19,12 @@ class OfNextTest < Minitest::Test
     end
   end
 
+  class OptionsHash
+    def initialize(opts = {})
+      raise "options hash required!"
+    end
+  end
+
   def test_of_next
     neato_mocktail = Mocktail.of_next(Neato)
     next_neato = Neato.new
@@ -50,6 +56,12 @@ class OfNextTest < Minitest::Test
     assert_equal three_neats[1], Neato.new
     assert_equal three_neats[2], Neato.new
     assert Neato.new.to_s.include?("Mocktail")
+  end
+
+  def test_options_hash_initializer
+    thing = Mocktail.of_next(OptionsHash)
+
+    assert_equal thing, OptionsHash.new(item: "hello")
   end
 
   module AModule

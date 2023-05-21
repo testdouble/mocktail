@@ -1,5 +1,5 @@
 module Mocktail
-  class Call < Struct.new(
+  Call = Struct.new(
     :singleton,
     :double,
     :original_type,
@@ -11,5 +11,4 @@ module Mocktail
     :block,
     keyword_init: true
   )
-  end
 end

@@ -1,11 +1,11 @@
 module Mocktail
-  class TypeReplacementData < Struct.new(
+  TypeReplacementData = Struct.new(
     :type,
     :replaced_method_names,
     :calls,
     :stubbings,
     keyword_init: true
-  )
+  ) do
     def double
       type
     end

@@ -9,3 +9,8 @@ gem "standard"
 gem "pry"
 gem "simplecov"
 gem "m"
+
+gem "sorbet-static-and-runtime"
+gem "tapioca"
+gem "spoom"
+gem "rubocop-sorbet"

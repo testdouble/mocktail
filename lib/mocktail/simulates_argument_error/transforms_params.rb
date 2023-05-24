@@ -1,3 +1,5 @@
+# typed: true
+
 require_relative "../share/bind"
 
 module Mocktail

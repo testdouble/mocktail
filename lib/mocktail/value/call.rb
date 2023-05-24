@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   Call = Struct.new(
     :singleton,

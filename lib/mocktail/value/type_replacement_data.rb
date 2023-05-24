@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   TypeReplacementData = Struct.new(
     :type,

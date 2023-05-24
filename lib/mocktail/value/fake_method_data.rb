@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   FakeMethodData = Struct.new(
     :receiver,

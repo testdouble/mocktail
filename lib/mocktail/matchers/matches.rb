@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail::Matchers
   class Matches < Base
     def self.matcher_name

@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class StringifiesMethodName
     def stringify(call)

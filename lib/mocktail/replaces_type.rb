@@ -1,3 +1,5 @@
+# typed: true
+
 require_relative "replaces_type/redefines_new"
 require_relative "replaces_type/redefines_singleton_methods"
 

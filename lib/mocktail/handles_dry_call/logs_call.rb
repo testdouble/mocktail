@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class LogsCall
     def log(dry_call)

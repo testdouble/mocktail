@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class RecordsDemonstration
     def record(demonstration, demo_config)

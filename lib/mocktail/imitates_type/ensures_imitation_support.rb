@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class EnsuresImitationSupport
     def ensure(type)

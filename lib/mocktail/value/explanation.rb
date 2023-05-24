@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class Explanation
     attr_reader :reference, :message

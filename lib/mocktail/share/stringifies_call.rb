@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class StringifiesCall
     def stringify(call, anonymous_blocks: false, always_parens: false)

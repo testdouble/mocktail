@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   module Bind
     def self.call(mock, method_name, *args, **kwargs, &blk)

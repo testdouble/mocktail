@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class StringifiesMethodSignature
     def stringify(signature)

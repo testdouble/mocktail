@@ -1,3 +1,5 @@
+# typed: true
+
 require "pathname"
 
 module Mocktail

@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   module DSL
     def stubs(ignore_block: false, ignore_extra_args: false, ignore_arity: false, times: nil, &demo)

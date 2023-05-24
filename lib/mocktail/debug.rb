@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   module Debug
     # It would be easy and bad for the mocktail lib to call something like

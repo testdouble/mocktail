@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail::Matchers
   # Captors are conceptually complex implementations, but with a simple usage/purpose:
   # They are values the user can create and hold onto that will return a matcher

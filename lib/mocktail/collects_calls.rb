@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class CollectsCalls
     def collect(double, method_name)

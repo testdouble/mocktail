@@ -1,3 +1,5 @@
+# typed: true
+
 require_relative "declares_dry_class/reconstructs_call"
 
 module Mocktail

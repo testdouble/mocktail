@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   module Matchers
   end

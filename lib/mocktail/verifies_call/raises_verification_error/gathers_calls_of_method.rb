@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class GathersCallsOfMethod
     def gather(dry_call)

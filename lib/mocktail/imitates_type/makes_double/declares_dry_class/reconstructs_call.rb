@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class ReconstructsCall
     def reconstruct(double:, call_binding:, default_args:, dry_class:, type:, method:, original_method:, signature:)

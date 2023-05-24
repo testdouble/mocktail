@@ -1,3 +1,5 @@
+# typed: true
+
 require "test_helper"
 
 class ResetTest < Minitest::Test

@@ -285,7 +285,7 @@ class StubTest < Minitest::Test
     }, "Library paths should not appear in backtrace:\n#{e.backtrace.join("\n")}"
 
     # Make sure the message contains the call
-    assert_equal "missing keyword: :and [Mocktail call: `do(1, 2, also: 3) { Proc at test/safe/stub_test.rb:279 }']", e.message
+    assert_equal "missing keyword: :and [Mocktail call: `do(1, 2, also: 3) { Proc at test/safe/stub_test.rb:281 }']", e.message
 
     # Make sure it doesn't raise:
     does_too_much.do(1, and: 2)

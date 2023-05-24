@@ -34,11 +34,11 @@ module Mocktail
       assert_equal "hi(d: {:e=>4}, f: [:g, {:h=>5}])", invoke(kwargs: {d: {e: 4}, f: [:g, {h: 5}]})
 
       # Blocks & Procs
-      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:35 }", invoke {}
-      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:10])", invoke(&DummyModule.method(:lol))
+      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:37 }", invoke {}
+      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:12])", invoke(&DummyModule.method(:lol))
 
       # Mix & Match
-      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:39 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
+      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:41 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
     end
 
     private

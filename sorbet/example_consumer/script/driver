@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+rm -rf sorbet/rbi/gems/mocktail*
+
+bin/tapioca gems
+
+ruby test.rb

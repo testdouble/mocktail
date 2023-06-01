@@ -45,8 +45,8 @@ class ReplaceTest < Minitest::Test
 
     # Argument errors still propogate
     assert_raises(ArgumentError) { House.room(wrong: :arg) }
-    assert_raises(ArgumentError) { House.size }
-    assert_raises(ArgumentError) { House.summarize("title", "wups") }
+    assert_raises(ArgumentError) { T.unsafe(House).size }
+    assert_raises(ArgumentError) { T.unsafe(House).summarize("title", "wups") }
 
     # verification works
     verify { House.room("living") }
@@ -63,7 +63,7 @@ class ReplaceTest < Minitest::Test
     assert_equal "😶", House.summarize
 
     # new() does require proper params and can be verified
-    assert_raises(ArgumentError) { House.new }
+    assert_raises(ArgumentError) { T.unsafe(House).new }
     house = House.new(:some_latlong)
 
     verify { House.new(:some_latlong) }
@@ -86,7 +86,7 @@ class ReplaceTest < Minitest::Test
       assert_equal "Unimplemented", e.message
     }.tap { |t| t.abort_on_exception = true }.join
 
-    error = assert_raises(NoMethodError) { House.color }
+    error = assert_raises(NoMethodError) { T.unsafe(House).color }
     assert_match(/No method `ReplaceTest::House\.color'/, error.message)
     assert_match(/def self.color\n  end/, error.message)
   end

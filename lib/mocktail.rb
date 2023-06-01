@@ -1,5 +1,7 @@
 # typed: true
 
+require "sorbet-runtime"
+
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
 require_relative "mocktail/dsl"
@@ -25,6 +27,8 @@ require_relative "mocktail/verifies_call"
 require_relative "mocktail/version"
 
 module Mocktail
+  extend DSL
+
   # Returns an instance of `type` whose implementation is mocked out
   def self.of(type)
     ImitatesType.new.imitate(type)
@@ -35,10 +39,6 @@ module Mocktail
   def self.of_next(type, count: 1)
     ReplacesNext.new.replace(type, count)
   end
-
-  # See lib/mocktail/dsl.rb
-  define_singleton_method :stubs, DSL.instance_method(:stubs)
-  define_singleton_method :verify, DSL.instance_method(:verify)
 
   def self.matchers
     MatcherPresentation.new

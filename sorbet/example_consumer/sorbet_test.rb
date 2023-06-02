@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require "sorbet-runtime"
 
@@ -8,8 +8,9 @@ class Sherbet
   sig { returns(Symbol) }
   attr_reader :flavor
 
+  sig { void }
   def initialize
-    @flavor = :orange
+    @flavor = T.let(:orange, Symbol)
   end
 end
 
@@ -17,8 +18,10 @@ require "mocktail"
 require "minitest/autorun"
 
 class SherbetTest < Minitest::Test
+  extend T::Sig
   include Mocktail::DSL
 
+  sig { void }
   def test_stubbing
     sherbet = Mocktail.of_next(Sherbet)
 
@@ -27,6 +30,7 @@ class SherbetTest < Minitest::Test
     assert_equal :strawberry, sherbet.flavor
   end
 
+  sig { void }
   def test_alias_of_next_with_count
     sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
 

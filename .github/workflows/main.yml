@@ -17,8 +17,12 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
-    - name: Run the default task
+    - name: Install gem dependencies
       run: |
         gem install bundler
         bundle install
-        ./script/test
+        cd sorbet/example_consumer
+        bundle install
+        cd ../..
+    - name: Run the test script
+      run: ./script/test

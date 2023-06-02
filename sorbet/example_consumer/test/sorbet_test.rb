@@ -30,9 +30,16 @@ class SherbetTest < Minitest::Test
 
   sig { void }
   def test_of_next
-    sherbet = Mocktail.of_next(Sherbet)
+    sherbet = Mocktail.of_next(Sherbet, count: 1)
+    T.assert_type!(sherbet, Sherbet)
 
     assert_equal sherbet, Sherbet.new
+  end
+
+  sig { void }
+  def test_of_next_with_count
+    sherbet = Mocktail.of_next_with_count(Sherbet, count: 2)
+    T.assert_type!(sherbet, T::Array[Sherbet])
   end
 
   sig { void }

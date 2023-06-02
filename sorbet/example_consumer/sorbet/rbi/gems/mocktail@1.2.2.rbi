@@ -47,11 +47,25 @@ module Mocktail
     # stubs its constructor to return that fake the next time klass.new is called
     #
     # source://mocktail//lib/mocktail.rb#39
+    sig do
+      type_parameters(:T)
+        .params(
+          type: T::Class[T.type_parameter(:T)],
+          count: T.nilable(Integer)
+        ).returns(T.type_parameter(:T))
+    end
     def of_next(type, count: T.unsafe(nil)); end
 
     # An alias of of_next that always returns an array of fakes
     #
     # source://mocktail//lib/mocktail.rb#44
+    sig do
+      type_parameters(:T)
+        .params(
+          type: T::Class[T.type_parameter(:T)],
+          count: T.nilable(Integer)
+        ).returns(T::Array[T.type_parameter(:T)])
+    end
     def of_next_with_count(type, count:); end
 
     # source://mocktail//lib/mocktail.rb#56

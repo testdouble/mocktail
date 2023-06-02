@@ -23,7 +23,7 @@ class SherbetTest < Minitest::Test
 
   sig { void }
   def test_stubbing
-    sherbet = Mocktail.of_next(Sherbet)
+    sherbet = Mocktail.of(Sherbet)
 
     stubs { sherbet.flavor }.with { :strawberry }
 
@@ -31,9 +31,21 @@ class SherbetTest < Minitest::Test
   end
 
   sig { void }
+  def test_of_next
+    sherbet = Mocktail.of_next(Sherbet)
+
+    assert_equal sherbet, Sherbet.new
+  end
+
+  sig { void }
   def test_alias_of_next_with_count
     sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
 
     assert_equal 2, sherbets.size
+  end
+
+  sig { void }
+  def teardown
+    Mocktail.reset
   end
 end

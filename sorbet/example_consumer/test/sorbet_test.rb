@@ -1,25 +1,21 @@
 # typed: strict
 
-require "sorbet-runtime"
-
-class Sherbet
-  extend T::Sig
-
-  sig { returns(Symbol) }
-  attr_reader :flavor
-
-  sig { void }
-  def initialize
-    @flavor = T.let(:orange, Symbol)
-  end
-end
-
-require "mocktail"
-require "minitest/autorun"
+require "test_helper"
 
 class SherbetTest < Minitest::Test
+  class Sherbet
+    extend T::Sig
+
+    sig { returns(Symbol) }
+    attr_reader :flavor
+
+    sig { void }
+    def initialize
+      @flavor = T.let(:orange, Symbol)
+    end
+  end
+
   extend T::Sig
-  include Mocktail::DSL
 
   sig { void }
   def test_stubbing
@@ -42,10 +38,5 @@ class SherbetTest < Minitest::Test
     sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
 
     assert_equal 2, sherbets.size
-  end
-
-  sig { void }
-  def teardown
-    Mocktail.reset
   end
 end

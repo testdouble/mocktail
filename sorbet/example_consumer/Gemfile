@@ -1,7 +1,10 @@
 source "https://rubygems.org"
 
 gem "mocktail", path: "../.."
+
+gem "standard"
 gem "minitest"
+gem "rake"
 
 gem "sorbet"
 gem "sorbet-runtime"

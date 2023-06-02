@@ -6,5 +6,5 @@ cd sorbet/example_consumer
 
 rm -rf sorbet/rbi/gems/mocktail*
 bin/tapioca gems
-bundle exec ruby sorbet_test.rb
 bundle exec srb tc
+bundle exec rake

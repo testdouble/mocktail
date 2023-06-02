@@ -9,7 +9,7 @@ module Mocktail
         .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
         .returns(T.type_parameter(:T))
     }
-    def of_next(type, count: T.unsafe(nil))
+    def of_next(type, count: 1)
     end
   end
 end

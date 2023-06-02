@@ -814,9 +814,9 @@ which call site produced the unexpected `nil` value.
 ### Mocktail.calls
 
 When practicing test-driven development, you may want to ensure that a
-dependency wasn't called at all. To provide a terse way to express this, 
-Mocktail offers a top-level `calls(double, method_name = nil)` method that 
-returns an array of the calls to the mock (optionally filtered to a 
+dependency wasn't called at all. To provide a terse way to express this,
+Mocktail offers a top-level `calls(double, method_name = nil)` method that
+returns an array of the calls to the mock (optionally filtered to a
 particular method name) in the order they were called.
 
 Suppose you were writing a test of this method for example:
@@ -868,6 +868,20 @@ tests.
 Calling reset in a `teardown` or `after(:each)` hook will also improve the
 usefulness of messages returned by `Mocktail.explain` and
 `Mocktail.explain_nils`.
+
+## Mocktail + Sorbet
+
+You can use Mocktail for type-checked TDD with Sorbet, as Mocktail ships with an
+[RBI file](/rbi/mocktail.rbi) that the [tapioca
+gems](https://github.com/Shopify/tapioca#generating-rbi-files-for-gems) command
+will merge in.
+
+There are some limitations and caveats, however.
+
+* The `count` parameter of `Mocktail.of_next(Class, count:)` will not work, as
+  the method signature is intentionally constrained to only returning a single
+  mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to
+  get an array back with type-checking in place
 
 ## References
 

@@ -40,6 +40,11 @@ module Mocktail
     ReplacesNext.new.replace(type, count)
   end
 
+  # An alias of of_next that always returns an array of fakes
+  def self.of_next_with_count(type, count:)
+    Array(of_next(type, count: count))
+  end
+
   def self.matchers
     MatcherPresentation.new
   end

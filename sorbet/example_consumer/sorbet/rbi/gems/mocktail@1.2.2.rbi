@@ -15,26 +15,26 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#84
+    # source://mocktail//lib/mocktail.rb#89
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#77
+    # source://mocktail//lib/mocktail.rb#82
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#47
+    # source://mocktail//lib/mocktail.rb#52
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#66
+    # source://mocktail//lib/mocktail.rb#71
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#70
+    # source://mocktail//lib/mocktail.rb#75
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#43
+    # source://mocktail//lib/mocktail.rb#48
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
@@ -55,16 +55,21 @@ module Mocktail
     end
     def of_next(type, count: T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#51
+    # An alias of of_next that always returns an array of fakes
+    #
+    # source://mocktail//lib/mocktail.rb#44
+    def of_next_with_count(type, count:); end
+
+    # source://mocktail//lib/mocktail.rb#56
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#57
+    # source://mocktail//lib/mocktail.rb#62
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#62
+    # source://mocktail//lib/mocktail.rb#67
     def reset; end
   end
 end
@@ -1201,7 +1206,7 @@ class Mocktail::ReconstructsCall
   # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#30
   def kwargs_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#39
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#43
   def non_default_args(params, default_args); end
 end
 

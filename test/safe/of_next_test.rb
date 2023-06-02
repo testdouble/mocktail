@@ -33,13 +33,31 @@ class OfNextTest < Minitest::Test
   end
 
   def test_of_next_multiples_then_returns_to_normal
-    five_things = Mocktail.of_next(Argz, count: 5)
+    five_things = T.cast(Mocktail.of_next(Argz, count: 5), T::Array[Argz])
 
     assert_equal five_things[0], Argz.new(42, b: true)
     assert_equal five_things[1], Argz.new(1337, b: false)
     assert_equal five_things[2], Argz.new(nil, b: nil)
     assert_equal five_things[3], Argz.new(nil, b: nil)
     assert_equal five_things[4], Argz.new(nil, b: nil)
+    e = assert_raises { Argz.new(true, b: false) }
+    assert_equal "args required!", e.message
+  end
+
+  def test_of_next_multiples_with_alias_method
+    two_things = Mocktail.of_next_with_count(Argz, count: 2)
+
+    assert_equal two_things[0], Argz.new(42, b: true)
+    assert_equal two_things[1], Argz.new(1337, b: false)
+    e = assert_raises { Argz.new(true, b: false) }
+    assert_equal "args required!", e.message
+  end
+
+  def test_of_single_with_array_typed_alias_method
+    one_things = Mocktail.of_next_with_count(Argz, count: 1)
+
+    assert_equal 1, one_things.size
+    assert_equal one_things[0], Argz.new(42, b: true)
     e = assert_raises { Argz.new(true, b: false) }
     assert_equal "args required!", e.message
   end

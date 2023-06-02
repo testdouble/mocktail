@@ -46,13 +46,6 @@ module Mocktail
     # stubs its constructor to return that fake the next time klass.new is called
     #
     # source://mocktail//lib/mocktail.rb#39
-    sig do
-      type_parameters(:T)
-        .params(
-          type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(Integer)
-        ).returns(T.type_parameter(:T))
-    end
     def of_next(type, count: T.unsafe(nil)); end
 
     # An alias of of_next that always returns an array of fakes
@@ -284,6 +277,7 @@ end
 Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
+# def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 module Mocktail::DSL
   # source://mocktail//lib/mocktail/dsl.rb#5
   def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
@@ -1473,6 +1467,8 @@ end
 
 # source://mocktail//lib/mocktail/value/stubbing.rb#4
 class Mocktail::Stubbing < ::Struct
+  extend T::Generic
+
   # @return [Stubbing] a new instance of Stubbing
   #
   # source://mocktail//lib/mocktail/value/stubbing.rb#12
@@ -1537,6 +1533,7 @@ class Mocktail::Stubbing < ::Struct
   def satisfied!; end
 
   # source://mocktail//lib/mocktail/value/stubbing.rb#21
+  sig { params(block: T.proc.returns(MethodReturnType)).void }
   def with(&block); end
 
   class << self
@@ -1546,6 +1543,8 @@ class Mocktail::Stubbing < ::Struct
     def members; end
     def new(*_arg0); end
   end
+
+  MethodReturnType = type_member
 end
 
 # source://mocktail//lib/mocktail/value/top_shelf.rb#4

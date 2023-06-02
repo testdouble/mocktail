@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "-----> Running Mocktail's tests"
+bundle exec rake
+
+echo "-----> Verifying Sorbet type-checking works"
+./script/test_sorbet_example

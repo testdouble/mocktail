@@ -1,16 +1,11 @@
 # typed: true
 
 require "sorbet-runtime"
-require "mocktail"
-
-def assert_equal(expected, actual)
-  raise "Expected #{expected} to equal #{actual}" unless expected == actual
-end
 
 class Sherbet
   extend T::Sig
 
-  sig { returns(T.nilable(Symbol)) }
+  sig { returns(Symbol) }
   attr_reader :flavor
 
   def initialize
@@ -18,11 +13,23 @@ class Sherbet
   end
 end
 
-sherbet = Mocktail.of_next(Sherbet)
-sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
+require "mocktail"
+require "minitest/autorun"
 
-assert_equal 2, sherbets.size
+class SherbetTest < Minitest::Test
+  include Mocktail::DSL
 
-include Mocktail::DSL # standard:disable Style/MixinUsage
+  def test_stubbing
+    sherbet = Mocktail.of_next(Sherbet)
 
-puts sherbet.flavor
+    stubs { sherbet.flavor }.with { :strawberry }
+
+    assert_equal :strawberry, sherbet.flavor
+  end
+
+  def test_alias_of_next_with_count
+    sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
+
+    assert_equal 2, sherbets.size
+  end
+end

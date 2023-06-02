@@ -20,6 +20,7 @@ module Mocktail
 
     def with(&block)
       self.effect = block
+      nil
     end
   end
 end

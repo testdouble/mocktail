@@ -6,6 +6,14 @@ module Mocktail
   class << self
     sig {
       type_parameters(:T)
+        .params(type: T::Class[T.type_parameter(:T)])
+        .returns(T.type_parameter(:T))
+    }
+    def of(type)
+    end
+
+    sig {
+      type_parameters(:T)
         .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
         .returns(T.type_parameter(:T))
     }

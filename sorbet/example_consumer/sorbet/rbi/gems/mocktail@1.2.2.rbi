@@ -40,6 +40,7 @@ module Mocktail
     # Returns an instance of `type` whose implementation is mocked out
     #
     # source://mocktail//lib/mocktail.rb#33
+    sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND

@@ -19,7 +19,7 @@ class SherbetTest < Minitest::Test
 
   sig { void }
   def test_stubbing
-    sherbet = Mocktail.of_next(Sherbet)
+    sherbet = Mocktail.of(Sherbet)
     T.assert_type!(sherbet, Sherbet)
 
     stubs { sherbet.flavor }.with { :strawberry }

@@ -26,6 +26,7 @@ class SherbetTest < Minitest::Test
     end
   end
 
+  include Mocktail::DSL
   extend T::Sig
 
   sig { void }
@@ -63,10 +64,11 @@ class SherbetTest < Minitest::Test
     stubs { |m|
       T.assert_type!(m, Mocktail::MatcherPresentation)
       sherbet.lick(size: m.is_a?(Integer))
-    }.with { :strawberry }
+    }.with { :tiny }
 
-    assert_equal :strawberry, sherbet.flavor
-    T.assert_type!(sherbet.flavor, Symbol)
+    T.assert_type!(sherbet.lick(size: 5), Symbol)
+    assert_equal :tiny, sherbet.lick(size: 1)
+    assert_equal :tiny, sherbet.lick(size: T.unsafe(nil))
   end
 
   sig { void }

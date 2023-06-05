@@ -869,7 +869,7 @@ Calling reset in a `teardown` or `after(:each)` hook will also improve the
 usefulness of messages returned by `Mocktail.explain` and
 `Mocktail.explain_nils`.
 
-## Mocktail + Sorbet
+## Type-safe mocking with Sorbet
 
 You can use Mocktail for type-checked TDD with Sorbet, as Mocktail ships with an
 [RBI file](/rbi/mocktail.rbi) that the [tapioca

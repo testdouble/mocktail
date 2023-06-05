@@ -804,6 +804,9 @@ end
 
 # source://mocktail//lib/mocktail/matcher_presentation.rb#4
 class Mocktail::MatcherPresentation
+  sig { type_parameters(:T).params(expected: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
+  def is_a?(expected); end
+
   # source://mocktail//lib/mocktail/matcher_presentation.rb#9
   def method_missing(name, *args, **kwargs, &blk); end
 

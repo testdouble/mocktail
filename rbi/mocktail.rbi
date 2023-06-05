@@ -54,3 +54,13 @@ class Mocktail::Stubbing < ::Struct
   def with(&block)
   end
 end
+
+class Mocktail::MatcherPresentation
+  sig {
+    type_parameters(:T)
+      .params(expected: T::Class[T.type_parameter(:T)])
+      .returns(T.type_parameter(:T))
+  }
+  def is_a?(expected)
+  end
+end

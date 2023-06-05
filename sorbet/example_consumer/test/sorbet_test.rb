@@ -29,6 +29,22 @@ class SherbetTest < Minitest::Test
   end
 
   sig { void }
+  def test_stubbing_with_all_dem_options
+    sherbet = Mocktail.of(Sherbet)
+    T.assert_type!(sherbet, Sherbet)
+
+    Mocktail.stubs(
+      ignore_block: true,
+      ignore_extra_args: true,
+      ignore_arity: nil,
+      times: 4
+    ) { sherbet.flavor }.with { :strawberry }
+
+    assert_equal :strawberry, sherbet.flavor
+    T.assert_type!(sherbet.flavor, Symbol)
+  end
+
+  sig { void }
   def test_of_next
     sherbet = Mocktail.of_next(Sherbet, count: 1)
     T.assert_type!(sherbet, Sherbet)

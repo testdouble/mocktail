@@ -38,7 +38,7 @@ module Mocktail::DSL
         ignore_extra_args: T.nilable(T::Boolean),
         ignore_arity: T.nilable(T::Boolean),
         times: T.nilable(Integer),
-        demo: T.proc.returns(T.type_parameter(:T))
+        demo: T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
       )
       .returns(Mocktail::Stubbing[T.type_parameter(:T)])
   }

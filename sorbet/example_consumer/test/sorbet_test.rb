@@ -9,6 +9,17 @@ class SherbetTest < Minitest::Test
     sig { returns(Symbol) }
     attr_reader :flavor
 
+    sig { params(size: Integer).returns(Symbol) }
+    def lick(size:)
+      if size > 10
+        :big
+      elsif size > 5
+        :medium
+      else
+        :small
+      end
+    end
+
     sig { void }
     def initialize
       @flavor = T.let(:orange, Symbol)
@@ -39,6 +50,20 @@ class SherbetTest < Minitest::Test
       ignore_arity: nil,
       times: 4
     ) { sherbet.flavor }.with { :strawberry }
+
+    assert_equal :strawberry, sherbet.flavor
+    T.assert_type!(sherbet.flavor, Symbol)
+  end
+
+  sig { void }
+  def test_stubbing_with_matchers
+    sherbet = Mocktail.of(Sherbet)
+    T.assert_type!(sherbet, Sherbet)
+
+    stubs { |m|
+      T.assert_type!(m, Mocktail::MatcherPresentation)
+      sherbet.lick(size: m.is_a?(Integer))
+    }.with { :strawberry }
 
     assert_equal :strawberry, sherbet.flavor
     T.assert_type!(sherbet.flavor, Symbol)

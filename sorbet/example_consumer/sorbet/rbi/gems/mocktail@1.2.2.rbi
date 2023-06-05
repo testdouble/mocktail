@@ -292,7 +292,6 @@ end
 Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
-# def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 module Mocktail::DSL
   # source://mocktail//lib/mocktail/dsl.rb#5
   def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end

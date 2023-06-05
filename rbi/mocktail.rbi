@@ -42,7 +42,7 @@ module Mocktail::DSL
       )
       .returns(Mocktail::Stubbing[T.type_parameter(:T)])
   }
-  def stubs(ignore_block: false, ignore_extra_args: false, ignore_arity: false, times: nil, &demo)
+  def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo)
   end
 end
 

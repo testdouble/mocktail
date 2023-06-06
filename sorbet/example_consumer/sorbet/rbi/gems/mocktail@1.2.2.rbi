@@ -6,7 +6,7 @@
 
 # typed: true
 
-# source://mocktail//lib/mocktail/refined_sorbet_wrapped_methods.rb#1
+# source://mocktail//lib/mocktail/collects_calls.rb#3
 module Mocktail
   extend ::Mocktail::DSL
 
@@ -335,21 +335,21 @@ end
 class Mocktail::DeclaresDryClass
   # @return [DeclaresDryClass] a new instance of DeclaresDryClass
   #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#9
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#7
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#15
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#14
   def declare(type, instance_methods); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#77
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#76
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#48
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#47
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#97
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#96
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
 
@@ -741,6 +741,24 @@ class Mocktail::GathersFakeableInstanceMethods
 
   # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#19
   def ignored_ancestors; end
+end
+
+# source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#2
+class Mocktail::GrabsOriginalMethodParameters
+  # Sorbet wraps the original method in a sig wrapper, so we need to unwrap it.
+  # The value returned from `owner.instance_method(method_name)` does not have
+  # the real parameters values available, as they'll have been erased
+  #
+  # If the method isn't wrapped by Sorbet, this will return the #instance_method,
+  # per usual
+  #
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#9
+  def grab(method); end
+
+  private
+
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#19
+  def sorbet_wrapped_method(method); end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_call.rb#8
@@ -1230,7 +1248,7 @@ class Mocktail::ReconstructsCall
   # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#30
   def kwargs_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#43
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#39
   def non_default_args(params, default_args); end
 end
 
@@ -1271,34 +1289,36 @@ class Mocktail::RedefinesSingletonMethods
   def redefine(type); end
 end
 
-# source://mocktail//lib/mocktail/refined_sorbet_wrapped_methods.rb#2
-module Mocktail::RefinedSorbetWrappedMethods; end
-
 # source://mocktail//lib/mocktail/registers_matcher.rb#4
 class Mocktail::RegistersMatcher
-  # source://mocktail//lib/mocktail/registers_matcher.rb#7
+  # @return [RegistersMatcher] a new instance of RegistersMatcher
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#5
+  def initialize; end
+
+  # source://mocktail//lib/mocktail/registers_matcher.rb#9
   def register(matcher_type); end
 
   private
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#50
+  # source://mocktail//lib/mocktail/registers_matcher.rb#52
   def invalid_flag?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#43
+  # source://mocktail//lib/mocktail/registers_matcher.rb#45
   def invalid_match?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#35
+  # source://mocktail//lib/mocktail/registers_matcher.rb#37
   def invalid_name?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#31
+  # source://mocktail//lib/mocktail/registers_matcher.rb#33
   def invalid_type?(matcher_type); end
 end
 
@@ -1631,12 +1651,17 @@ end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#6
 class Mocktail::TransformsParams
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#9
+  # @return [TransformsParams] a new instance of TransformsParams
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#7
+  def initialize; end
+
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#11
   def transform(dry_call, params: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#40
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#43
   def name_unnamed_params(params); end
 end
 

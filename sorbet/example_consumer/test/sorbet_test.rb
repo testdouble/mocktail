@@ -72,12 +72,11 @@ class SherbetTest < Minitest::Test
     stubs { |m| sherbet.lick(size: 2, sound: m.any) }.with { :skosh }
 
     T.assert_type!(sherbet.lick(size: 5), Symbol)
-    # T.unsafe(binding).irb
     assert_equal :tiny, sherbet.lick(size: 1)
-    #    assert_equal :tiny, sherbet.lick(size: T.unsafe(nil))
+    assert_nil sherbet.lick(size: T.unsafe(nil))
 
     assert_equal :skosh, sherbet.lick(size: 2, sound: "yum")
-    assert_equal :skosh, sherbet.lick(size: 2)
+    assert_equal :skosh, sherbet.lick(size: 2, sound: nil)
   end
 
   sig { void }

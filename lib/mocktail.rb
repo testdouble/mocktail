@@ -2,7 +2,6 @@
 
 require "sorbet-runtime"
 
-require_relative "mocktail/restore_sorbet_wrapped_methods"
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
 require_relative "mocktail/dsl"

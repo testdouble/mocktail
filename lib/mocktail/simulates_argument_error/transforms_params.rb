@@ -4,7 +4,15 @@ require_relative "../share/bind"
 
 module Mocktail
   class TransformsParams
-    def transform(dry_call, params: dry_call.original_method.parameters)
+    def initialize
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
+    end
+
+    def transform(dry_call, params: nil)
+      params ||= @grabs_original_method_parameters.grab(
+        dry_call.original_type,
+        dry_call.original_method.name
+      )
       params = name_unnamed_params(params)
 
       Signature.new(

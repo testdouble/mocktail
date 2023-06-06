@@ -8,6 +8,7 @@ module Mocktail
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
       @transforms_params = TransformsParams.new
       @stringifies_method_signature = StringifiesMethodSignature.new
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
     end
 
     def declare(type, instance_methods)
@@ -44,20 +45,20 @@ module Mocktail
     private
 
     def define_double_methods!(dry_class, type, instance_methods)
-      instance_methods.each do |method|
-        dry_class.undef_method(method) if dry_class.method_defined?(method)
-        parameters = type.instance_method(method).parameters
+      instance_methods.each do |method_name|
+        dry_class.undef_method(method_name) if dry_class.method_defined?(method_name)
+        parameters = @grabs_original_method_object.grab(type, method_name)
         signature = @transforms_params.transform(Call.new, params: parameters)
         method_signature = @stringifies_method_signature.stringify(signature)
         __mocktail_closure = {
           dry_class: dry_class,
           type: type,
-          method: method,
-          original_method: type.instance_method(method),
+          method: method_name,
+          original_method: type.instance_method(method_name),
           signature: signature
         }
 
-        dry_class.define_method method,
+        dry_class.define_method method_name,
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               ::Mocktail::Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!

@@ -11,6 +11,7 @@ module Mocktail
 
     def handle(type, args, kwargs, block)
       @validates_arguments.validate(Call.new(
+        original_type: type,
         original_method: type.instance_method(:initialize),
         args: args,
         kwargs: kwargs,

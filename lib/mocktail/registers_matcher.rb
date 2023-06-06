@@ -2,6 +2,10 @@
 
 module Mocktail
   class RegistersMatcher
+    def initialize
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
+    end
+
     def register(matcher_type)
       if invalid_type?(matcher_type)
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")
@@ -39,7 +43,7 @@ module Mocktail
     end
 
     def invalid_match?(matcher_type)
-      params = matcher_type.instance_method(:match?).parameters
+      params = @grabs_original_method_parameters.grab(matcher_type, :match?)
       params.size > 1 || ![:req, :opt].include?(params.first[0])
     rescue NameError
       true

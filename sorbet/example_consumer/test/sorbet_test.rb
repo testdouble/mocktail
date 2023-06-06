@@ -2,6 +2,7 @@
 
 require "test_helper"
 
+T::Configuration.default_checked_level = :never
 class SherbetTest < Minitest::Test
   class Sherbet
     extend T::Sig
@@ -9,8 +10,11 @@ class SherbetTest < Minitest::Test
     sig { returns(Symbol) }
     attr_reader :flavor
 
-    sig { params(size: Integer).returns(Symbol) }
-    def lick(size:)
+    sig { params(size: T.nilable(Integer), sound: T.untyped).returns(Symbol) }
+    def lick(size: nil, sound: nil)
+      return :none if size.nil?
+      puts "Stop making this sound #{sound.inspect}"
+
       if size > 10
         :big
       elsif size > 5
@@ -63,12 +67,17 @@ class SherbetTest < Minitest::Test
 
     stubs { |m|
       T.assert_type!(m, Mocktail::MatcherPresentation)
-      sherbet.lick(size: m.is_a?(Integer))
+      sherbet.lick(size: m.is_a(Integer))
     }.with { :tiny }
+    stubs { |m| sherbet.lick(size: 2, sound: m.any) }.with { :skosh }
 
     T.assert_type!(sherbet.lick(size: 5), Symbol)
+    # T.unsafe(binding).irb
     assert_equal :tiny, sherbet.lick(size: 1)
-    assert_equal :tiny, sherbet.lick(size: T.unsafe(nil))
+    #    assert_equal :tiny, sherbet.lick(size: T.unsafe(nil))
+
+    assert_equal :skosh, sherbet.lick(size: 2, sound: "yum")
+    assert_equal :skosh, sherbet.lick(size: 2)
   end
 
   sig { void }

@@ -2,3 +2,4 @@
 .
 --ignore=tmp/
 --ignore=vendor/
+--ignore=sorbet/example_consumer/

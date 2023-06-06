@@ -2,8 +2,6 @@
 
 module Mocktail
   class RegistersMatcher
-    using RefinedSorbetWrappedMethods
-
     def register(matcher_type)
       if invalid_type?(matcher_type)
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")

@@ -4,8 +4,6 @@ require_relative "declares_dry_class/reconstructs_call"
 
 module Mocktail
   class DeclaresDryClass
-    using RefinedSorbetWrappedMethods
-
     def initialize
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
       @transforms_params = TransformsParams.new

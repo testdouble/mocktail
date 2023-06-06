@@ -4,8 +4,6 @@ require_relative "../share/bind"
 
 module Mocktail
   class TransformsParams
-    using RefinedSorbetWrappedMethods
-
     def transform(dry_call, params: dry_call.original_method.parameters)
       params = name_unnamed_params(params)
 

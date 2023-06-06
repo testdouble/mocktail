@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 module Mocktail
   DoubleData = Struct.new(

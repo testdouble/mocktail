@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 require_relative "../../share/cleans_backtrace"
 require_relative "../../share/bind"

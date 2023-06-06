@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 module Mocktail
   FakeMethodData = Struct.new(

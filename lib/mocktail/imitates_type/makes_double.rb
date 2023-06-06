@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 require_relative "makes_double/declares_dry_class"
 require_relative "makes_double/gathers_fakeable_instance_methods"

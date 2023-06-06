@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 module Mocktail
   Call = Struct.new(

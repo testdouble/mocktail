@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 require_relative "value/cabinet"
 require_relative "value/call"

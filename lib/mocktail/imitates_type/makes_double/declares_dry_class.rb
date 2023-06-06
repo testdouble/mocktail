@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 require_relative "declares_dry_class/reconstructs_call"
 

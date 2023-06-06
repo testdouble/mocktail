@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 module Mocktail
   UnsatisfyingCall = Struct.new(

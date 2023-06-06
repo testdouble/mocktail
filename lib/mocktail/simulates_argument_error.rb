@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 require_relative "simulates_argument_error/transforms_params"
 require_relative "simulates_argument_error/reconciles_args_with_params"

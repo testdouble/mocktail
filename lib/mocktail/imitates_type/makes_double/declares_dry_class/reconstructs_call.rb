@@ -31,13 +31,9 @@ module Mocktail
       kwarg_names, kwrest_name = non_default_args(signature.keyword_params, default_args)
 
       kwarg_values = kwarg_names.to_h { |p| [p, call_binding.local_variable_get(p)] }
-      kwrest_value = if kwrest_name && kwrest_name != :**
-        call_binding.local_variable_get(kwrest_name) if kwrest_name
-      else
-        {}
-      end
+      kwrest_value = call_binding.local_variable_get(kwrest_name) if kwrest_name
 
-      kwarg_values.merge(kwrest_value)
+      kwarg_values.merge(kwrest_value || {})
     end
 
     def non_default_args(params, default_args)

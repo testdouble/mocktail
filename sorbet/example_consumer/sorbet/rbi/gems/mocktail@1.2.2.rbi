@@ -6,7 +6,7 @@
 
 # typed: true
 
-# source://mocktail//lib/mocktail/collects_calls.rb#3
+# source://mocktail//lib/mocktail/refined_sorbet_wrapped_methods.rb#1
 module Mocktail
   extend ::Mocktail::DSL
 
@@ -15,38 +15,38 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#89
+    # source://mocktail//lib/mocktail.rb#90
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#82
+    # source://mocktail//lib/mocktail.rb#83
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#52
+    # source://mocktail//lib/mocktail.rb#53
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#71
+    # source://mocktail//lib/mocktail.rb#72
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#75
+    # source://mocktail//lib/mocktail.rb#76
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#48
+    # source://mocktail//lib/mocktail.rb#49
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
-    # source://mocktail//lib/mocktail.rb#33
+    # source://mocktail//lib/mocktail.rb#34
     sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail.rb#39
+    # source://mocktail//lib/mocktail.rb#40
     sig do
       type_parameters(:T)
         .params(
@@ -58,7 +58,7 @@ module Mocktail
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#44
+    # source://mocktail//lib/mocktail.rb#45
     sig do
       type_parameters(:T)
         .params(
@@ -68,16 +68,16 @@ module Mocktail
     end
     def of_next_with_count(type, count:); end
 
-    # source://mocktail//lib/mocktail.rb#56
+    # source://mocktail//lib/mocktail.rb#57
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#62
+    # source://mocktail//lib/mocktail.rb#63
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#67
+    # source://mocktail//lib/mocktail.rb#68
     def reset; end
   end
 end
@@ -335,21 +335,21 @@ end
 class Mocktail::DeclaresDryClass
   # @return [DeclaresDryClass] a new instance of DeclaresDryClass
   #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#7
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#13
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#15
   def declare(type, instance_methods); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#75
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#77
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#46
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#48
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#95
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#97
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
 
@@ -1271,31 +1271,34 @@ class Mocktail::RedefinesSingletonMethods
   def redefine(type); end
 end
 
+# source://mocktail//lib/mocktail/refined_sorbet_wrapped_methods.rb#2
+module Mocktail::RefinedSorbetWrappedMethods; end
+
 # source://mocktail//lib/mocktail/registers_matcher.rb#4
 class Mocktail::RegistersMatcher
-  # source://mocktail//lib/mocktail/registers_matcher.rb#5
+  # source://mocktail//lib/mocktail/registers_matcher.rb#7
   def register(matcher_type); end
 
   private
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#48
+  # source://mocktail//lib/mocktail/registers_matcher.rb#50
   def invalid_flag?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#41
+  # source://mocktail//lib/mocktail/registers_matcher.rb#43
   def invalid_match?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#33
+  # source://mocktail//lib/mocktail/registers_matcher.rb#35
   def invalid_name?(matcher_type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#29
+  # source://mocktail//lib/mocktail/registers_matcher.rb#31
   def invalid_type?(matcher_type); end
 end
 
@@ -1628,12 +1631,12 @@ end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#6
 class Mocktail::TransformsParams
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#7
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#9
   def transform(dry_call, params: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#38
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#40
   def name_unnamed_params(params); end
 end
 

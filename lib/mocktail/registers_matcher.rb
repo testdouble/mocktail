@@ -43,7 +43,7 @@ module Mocktail
     end
 
     def invalid_match?(matcher_type)
-      params = @grabs_original_method_parameters.grab(matcher_type, :match?)
+      params = @grabs_original_method_parameters.grab(matcher_type.instance_method(:match?))
       params.size > 1 || ![:req, :opt].include?(params.first[0])
     rescue NameError
       true

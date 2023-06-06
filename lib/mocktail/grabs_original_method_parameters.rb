@@ -6,18 +6,20 @@ module Mocktail
     #
     # If the method isn't wrapped by Sorbet, this will return the #instance_method,
     # per usual
-    def grab(owner, method_name)
-      return owner.instance_method(method_name) unless defined?(::T::Private::Methods)
-
-      key = T::Private::Methods.send(:method_owner_and_name_to_key, owner, method_name)
-      sig_wrappers = T::Private::Methods.instance_variable_get(:@sig_wrappers)
-      method_object = if (wrapper = sig_wrappers[key])
-        wrapper.call.method
+    def grab(method)
+      if (wrapped_method = sorbet_wrapped_method(method))
+        wrapped_method.parameters
       else
-        owner.instance_method(method_name)
+        method.parameters
       end
+    end
 
-      method_object.parameters
+    private
+
+    def sorbet_wrapped_method(method)
+      return unless defined?(::T::Private::Methods)
+
+      T::Private::Methods.signature_for_method(method)
     end
   end
 end

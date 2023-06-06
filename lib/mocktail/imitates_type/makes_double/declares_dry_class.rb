@@ -47,7 +47,7 @@ module Mocktail
     def define_double_methods!(dry_class, type, instance_methods)
       instance_methods.each do |method_name|
         dry_class.undef_method(method_name) if dry_class.method_defined?(method_name)
-        parameters = @grabs_original_method_object.grab(type, method_name)
+        parameters = @grabs_original_method_parameters.grab(type.instance_method(method_name))
         signature = @transforms_params.transform(Call.new, params: parameters)
         method_signature = @stringifies_method_signature.stringify(signature)
         __mocktail_closure = {

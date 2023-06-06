@@ -9,10 +9,7 @@ module Mocktail
     end
 
     def transform(dry_call, params: nil)
-      params ||= @grabs_original_method_parameters.grab(
-        dry_call.original_type,
-        dry_call.original_method.name
-      )
+      params ||= @grabs_original_method_parameters.grab(dry_call.original_method)
       params = name_unnamed_params(params)
 
       Signature.new(

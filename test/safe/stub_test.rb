@@ -485,12 +485,12 @@ class StubTest < Minitest::Test
   def test_out_of_order_args_work
     thing = Mocktail.of(ThingWithBadlyOrderedArgs)
 
-    stubs { thing.positional(:a, :d, :e) }.with { :weird }
-    stubs { thing.positional(:a, :b, :d, :e) }.with { :less_weird }
+    stubs { T.unsafe(thing).positional(:a, :d, :e) }.with { :weird }
+    stubs { T.unsafe(thing).positional(:a, :b, :d, :e) }.with { :less_weird }
     stubs { thing.positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
 
-    assert_equal :weird, thing.positional(:a, :d, :e)
-    assert_equal :less_weird, thing.positional(:a, :b, :d, :e)
+    assert_equal :weird, T.unsafe(thing).positional(:a, :d, :e)
+    assert_equal :less_weird, T.unsafe(thing).positional(:a, :b, :d, :e)
     assert_equal :even_less_weird, thing.positional(:a, :b, :c, :d, :e)
 
     assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0].args

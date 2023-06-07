@@ -69,4 +69,12 @@ class Mocktail::MatcherPresentation
   }
   def is_a(expected)
   end
+
+  sig {
+    type_parameters(:T)
+      .params(expecteds: T.type_parameter(:T))
+      .returns(T::Enumerable[T.type_parameter(:T)])
+  }
+  def includes(*expecteds)
+  end
 end

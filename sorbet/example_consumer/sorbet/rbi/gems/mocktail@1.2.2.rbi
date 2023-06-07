@@ -293,17 +293,20 @@ Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
 module Mocktail::DSL
-  # @param ignore_block [Boolean, nil]
-  # @param ignore_extra_args [Boolean, nil]
-  # @param ignore_arity [Boolean, nil]
-  # @param times [Integer, nil]
-  # @param demo [T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))]
-  # @return [Mocktail::Stubbing[T.type_parameter(:T)]]
-  #
-  # source://sorbet-runtime/0.5.10847/lib/types/private/methods/_methods.rb#255
-  def stubs(*args, **_arg1, &blk); end
+  # source://mocktail//lib/mocktail/dsl.rb#5
+  sig do
+    type_parameters(:T)
+      .params(
+        ignore_block: T.nilable(T::Boolean),
+        ignore_extra_args: T.nilable(T::Boolean),
+        ignore_arity: T.nilable(T::Boolean),
+        times: T.nilable(Integer),
+        demo: T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
+      ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
+  end
+  def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 
-  # source://mocktail//lib/mocktail/dsl.rb#27
+  # source://mocktail//lib/mocktail/dsl.rb#14
   def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 end
 

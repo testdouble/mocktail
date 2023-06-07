@@ -7,19 +7,19 @@ module Mocktail::Matchers
     def test_includes_hash_is_an_alias
       assert_includes IncludesHash.ancestors, Includes
       assert_equal :includes_hash, IncludesHash.matcher_name
-      assert_equal IncludesHash.instance_method(:match?), Includes.instance_method(:match?)
+      assert_equal IncludesHash.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
     end
 
     def test_includes_key_is_an_alias
       assert_includes IncludesKey.ancestors, Includes
       assert_equal :includes_key, IncludesKey.matcher_name
-      assert_equal IncludesKey.instance_method(:match?), Includes.instance_method(:match?)
+      assert_equal IncludesKey.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
     end
 
     def test_includes_string_is_an_alias
       assert_includes IncludesString.ancestors, Includes
       assert_equal :includes_string, IncludesString.matcher_name
-      assert_equal IncludesString.instance_method(:match?), Includes.instance_method(:match?)
+      assert_equal IncludesString.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
     end
 
     def test_basic_includesing

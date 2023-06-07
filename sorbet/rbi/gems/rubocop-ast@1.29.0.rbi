@@ -2033,10 +2033,10 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether the dispatched method is an access modifier
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#53
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#64
   def access_modifier?; end
 
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#262
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#273
   def adjacent_def_modifier?(param0 = T.unsafe(nil)); end
 
   # Checks whether this node is an arithmetic operation
@@ -2044,14 +2044,14 @@ module RuboCop::AST::MethodDispatchNode
   # @return [Boolean] whether the dispatched method is an arithmetic
   #   operation
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#164
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#175
   def arithmetic_operation?; end
 
   # Checks whether the dispatched method is a setter method.
   #
   # @return [Boolean] whether the dispatched method is a setter
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#96
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#107
   def assignment?; end
 
   # Checks whether the dispatched method is a bare access modifier that
@@ -2060,10 +2060,10 @@ module RuboCop::AST::MethodDispatchNode
   # @return [Boolean] whether the dispatched method is a bare
   #   access modifier
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#62
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#73
   def bare_access_modifier?; end
 
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#267
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#278
   def bare_access_modifier_declaration?(param0 = T.unsafe(nil)); end
 
   # Checks whether this is a binary operation.
@@ -2073,14 +2073,14 @@ module RuboCop::AST::MethodDispatchNode
   #   foo + bar
   # @return [Boolean] whether this method is a binary operation
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#237
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#248
   def binary_operation?; end
 
   # Whether this method dispatch has an explicit block.
   #
   # @return [Boolean] whether the dispatched method has a block
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#156
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#167
   def block_literal?; end
 
   # The `block` or `numblock` node associated with this method dispatch, if any.
@@ -2088,7 +2088,7 @@ module RuboCop::AST::MethodDispatchNode
   # @return [BlockNode, nil] the `block` or `numblock` node associated with this method
   #   call or `nil`
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#35
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#46
   def block_node; end
 
   # Checks whether the name of the dispatched method matches the argument
@@ -2097,7 +2097,7 @@ module RuboCop::AST::MethodDispatchNode
   # @param name [Symbol, String] the method name to check for
   # @return [Boolean] whether the method name matches the argument
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#89
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#100
   def command?(name); end
 
   # Checks whether the *explicit* receiver of this method dispatch is a
@@ -2106,7 +2106,7 @@ module RuboCop::AST::MethodDispatchNode
   # @return [Boolean] whether the receiver of this method dispatch
   #   is a `const` node
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#141
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#152
   def const_receiver?; end
 
   # Checks if this node is part of a chain of `def` or `defs` modifiers.
@@ -2118,7 +2118,7 @@ module RuboCop::AST::MethodDispatchNode
   #   private def foo; end
   # @return [Node | nil] returns the `def|defs` node this is a modifier for,
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#188
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#199
   def def_modifier(node = T.unsafe(nil)); end
 
   # Checks if this node is part of a chain of `def` or `defs` modifiers.
@@ -2130,7 +2130,7 @@ module RuboCop::AST::MethodDispatchNode
   #   private def foo; end
   # @return [Boolean] whether the `def|defs` node is a modifier or not.
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#176
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#187
   def def_modifier?(node = T.unsafe(nil)); end
 
   # Checks whether the dispatched method uses a dot to connect the
@@ -2141,7 +2141,7 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether the method was called with a connecting dot
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#108
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#119
   def dot?; end
 
   # Checks whether the dispatched method uses a double colon to connect the
@@ -2149,7 +2149,7 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether the method was called with a connecting dot
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#116
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#127
   def double_colon?; end
 
   # Checks whether the method dispatch is the implicit form of `#call`,
@@ -2157,10 +2157,10 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether the method is the implicit form of `#call`
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#149
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#160
   def implicit_call?; end
 
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#246
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#257
   def in_macro_scope?(param0 = T.unsafe(nil)); end
 
   # Checks whether this is a lambda. Some versions of parser parses
@@ -2168,7 +2168,7 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether this method is a lambda
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#202
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#213
   def lambda?; end
 
   # Checks whether this is a lambda literal (stabby lambda.)
@@ -2178,7 +2178,7 @@ module RuboCop::AST::MethodDispatchNode
   #   -> (foo) { bar }
   # @return [Boolean] whether this method is a lambda literal
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#213
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#224
   def lambda_literal?; end
 
   # Checks whether the dispatched method is a macro method. A macro method
@@ -2188,7 +2188,7 @@ module RuboCop::AST::MethodDispatchNode
   # @note This does not include DSLs that use nested blocks, like RSpec
   # @return [Boolean] whether the dispatched method is a macro method
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#46
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#57
   def macro?; end
 
   # The name of the dispatched method as a symbol.
@@ -2204,10 +2204,10 @@ module RuboCop::AST::MethodDispatchNode
   # @return [Boolean] whether the dispatched method is a non-bare
   #   access modifier
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#71
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#82
   def non_bare_access_modifier?; end
 
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#272
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#283
   def non_bare_access_modifier_declaration?(param0 = T.unsafe(nil)); end
 
   # The receiving node of the method dispatch.
@@ -2222,22 +2222,29 @@ module RuboCop::AST::MethodDispatchNode
   #
   # @return [Boolean] whether the method was called with a connecting dot
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#124
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#135
   def safe_navigation?; end
+
+  # The source range for the method name or keyword that dispatches this call.
+  #
+  # @return [Parser::Source::Range] the source range for the method name or keyword
+  #
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#34
+  def selector; end
 
   # Checks whether the *explicit* receiver of this method dispatch is
   # `self`.
   #
   # @return [Boolean] whether the receiver of this method dispatch is `self`
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#132
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#143
   def self_receiver?; end
 
   # Checks whether the dispatched method is a setter method.
   #
   # @return [Boolean] whether the dispatched method is a setter
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#96
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#107
   def setter_method?; end
 
   # Checks whether the dispatched method is a bare `private` or `protected`
@@ -2246,7 +2253,7 @@ module RuboCop::AST::MethodDispatchNode
   # @return [Boolean] whether the dispatched method is a bare
   #   `private` or `protected` access modifier
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#80
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#91
   def special_modifier?; end
 
   # Checks whether this is a unary operation.
@@ -2256,7 +2263,7 @@ module RuboCop::AST::MethodDispatchNode
   #   -foo
   # @return [Boolean] whether this method is a unary operation
   #
-  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#224
+  # source://rubocop-ast//lib/rubocop/ast/node/mixin/method_dispatch_node.rb#235
   def unary_operation?; end
 end
 
@@ -5110,6 +5117,9 @@ RuboCop::AST::NodePattern::Sets::SET_ANY_ALL_NORETURN_ETC = T.let(T.unsafe(nil),
 RuboCop::AST::NodePattern::Sets::SET_ANY_EMPTY = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ANY_EMPTY_NONE_ETC = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ATTR_READER_ATTR_WRITER_ATTR_ACCESSOR = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5227,6 +5237,9 @@ RuboCop::AST::NodePattern::Sets::SET_MODULE_FUNCTION_RUBY2_KEYWORDS = T.let(T.un
 RuboCop::AST::NodePattern::Sets::SET_NEW_ = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_NEW_COMPILE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_NEW_OPEN = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5266,10 +5279,13 @@ RuboCop::AST::NodePattern::Sets::SET_READ_BINREAD = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_REDUCE_INJECT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_REJECT_REJECT = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_REJECT_DELETE_IF_REJECT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_REQUIRE_REQUIRE_RELATIVE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_SELECT_FILTER_FIND_ALL = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_SELECT_SELECT = T.let(T.unsafe(nil), Set)
@@ -5372,6 +5388,9 @@ RuboCop::AST::NodePattern::Sets::SET____ETC_2 = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET____ETC_3 = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET____ETC_4 = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_____2 = T.let(T.unsafe(nil), Set)

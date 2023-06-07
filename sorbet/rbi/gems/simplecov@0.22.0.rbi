@@ -214,36 +214,36 @@ module SimpleCov
     #
     # @return [Hash]
     #
-    # source://simplecov//lib/simplecov.rb#397
+    # source://simplecov//lib/simplecov.rb#399
     def adapt_coverage_result; end
 
     # Finds files that were to be tracked but were not loaded and initializes
     # the line-by-line coverage to zero (if relevant) or nil (comments / whitespace etc).
     #
-    # source://simplecov//lib/simplecov.rb#369
+    # source://simplecov//lib/simplecov.rb#371
     def add_not_loaded_files(result); end
 
     # source://simplecov//lib/simplecov.rb#302
     def initial_setup(profile, &block); end
 
-    # source://simplecov//lib/simplecov.rb#361
+    # source://simplecov//lib/simplecov.rb#363
     def lookup_corresponding_ruby_coverage_name(criterion); end
 
     # parallel_tests isn't always available, see: https://github.com/grosser/parallel_tests/issues/772
     #
-    # source://simplecov//lib/simplecov.rb#423
+    # source://simplecov//lib/simplecov.rb#425
     def make_parallel_tests_available; end
 
     # @return [Boolean]
     #
-    # source://simplecov//lib/simplecov.rb#432
+    # source://simplecov//lib/simplecov.rb#434
     def probably_running_parallel_tests?; end
 
     # Call steps that handle process coverage result
     #
     # @return [Hash]
     #
-    # source://simplecov//lib/simplecov.rb#386
+    # source://simplecov//lib/simplecov.rb#388
     def process_coverage_result; end
 
     # Filter coverage result
@@ -252,7 +252,7 @@ module SimpleCov
     #
     # @return [Hash]
     #
-    # source://simplecov//lib/simplecov.rb#408
+    # source://simplecov//lib/simplecov.rb#410
     def remove_useless_results; end
 
     # Initialize result with files that are not included by coverage
@@ -260,7 +260,7 @@ module SimpleCov
     #
     # @return [Hash]
     #
-    # source://simplecov//lib/simplecov.rb#418
+    # source://simplecov//lib/simplecov.rb#420
     def result_with_not_loaded_files; end
 
     # Trigger Coverage.start depends on given config coverage_criterion
@@ -643,7 +643,7 @@ module SimpleCov::Configuration
 
   # @return [Boolean]
   #
-  # source://simplecov//lib/simplecov/configuration.rb#432
+  # source://simplecov//lib/simplecov/configuration.rb#443
   def branch_coverage_supported?; end
 
   # source://simplecov//lib/simplecov/configuration.rb#424
@@ -703,6 +703,16 @@ module SimpleCov::Configuration
   # source://simplecov//lib/simplecov/configuration.rb#34
   def coverage_dir(dir = T.unsafe(nil)); end
 
+  # @return [Boolean]
+  #
+  # source://simplecov//lib/simplecov/configuration.rb#452
+  def coverage_for_eval_enabled?; end
+
+  # @return [Boolean]
+  #
+  # source://simplecov//lib/simplecov/configuration.rb#447
+  def coverage_for_eval_supported?; end
+
   # Returns the full path to the output directory using SimpleCov.root
   # and SimpleCov.coverage_dir, so you can adjust this by configuring those
   # values. Will create the directory if it's missing
@@ -717,6 +727,9 @@ module SimpleCov::Configuration
 
   # source://simplecov//lib/simplecov/configuration.rb#401
   def enable_coverage(criterion); end
+
+  # source://simplecov//lib/simplecov/configuration.rb#456
+  def enable_coverage_for_eval; end
 
   # gets or sets the enabled_for_subprocess configuration
   # when true, this will inject SimpleCov code into Process.fork
@@ -901,18 +914,18 @@ module SimpleCov::Configuration
 
   private
 
-  # source://simplecov//lib/simplecov/configuration.rb#464
+  # source://simplecov//lib/simplecov/configuration.rb#483
   def minimum_possible_coverage_exceeded(coverage_option); end
 
   # The actual filter processor. Not meant for direct use
   #
-  # source://simplecov//lib/simplecov/configuration.rb#471
+  # source://simplecov//lib/simplecov/configuration.rb#490
   def parse_filter(filter_argument = T.unsafe(nil), &filter_proc); end
 
-  # source://simplecov//lib/simplecov/configuration.rb#447
+  # source://simplecov//lib/simplecov/configuration.rb#466
   def raise_if_criterion_disabled(criterion); end
 
-  # source://simplecov//lib/simplecov/configuration.rb#456
+  # source://simplecov//lib/simplecov/configuration.rb#475
   def raise_if_criterion_unsupported(criterion); end
 end
 
@@ -1843,20 +1856,20 @@ class SimpleCov::SourceFile
 
   private
 
-  # source://simplecov//lib/simplecov/source_file.rb#340
+  # source://simplecov//lib/simplecov/source_file.rb#346
   def branch_coverage_statistics; end
 
-  # source://simplecov//lib/simplecov/source_file.rb#318
+  # source://simplecov//lib/simplecov/source_file.rb#324
   def build_branch(branch_data, hit_count, condition_start_line); end
 
   # Call recursive method that transform our static hash to array of objects
   #
   # @return [Array]
   #
-  # source://simplecov//lib/simplecov/source_file.rb#267
+  # source://simplecov//lib/simplecov/source_file.rb#273
   def build_branches; end
 
-  # source://simplecov//lib/simplecov/source_file.rb#304
+  # source://simplecov//lib/simplecov/source_file.rb#310
   def build_branches_from(condition, branches); end
 
   # Build full branches report
@@ -1865,10 +1878,10 @@ class SimpleCov::SourceFile
   #
   # @return [Hash]
   #
-  # source://simplecov//lib/simplecov/source_file.rb#256
+  # source://simplecov//lib/simplecov/source_file.rb#262
   def build_branches_report; end
 
-  # source://simplecov//lib/simplecov/source_file.rb#223
+  # source://simplecov//lib/simplecov/source_file.rb#229
   def build_lines; end
 
   # source://simplecov//lib/simplecov/source_file.rb#164
@@ -1876,16 +1889,16 @@ class SimpleCov::SourceFile
 
   # Warning to identify condition from Issue #56
   #
-  # source://simplecov//lib/simplecov/source_file.rb#245
+  # source://simplecov//lib/simplecov/source_file.rb#251
   def coverage_exceeding_source_warn; end
 
   # source://simplecov//lib/simplecov/source_file.rb#214
   def ensure_remove_undefs(file_lines); end
 
-  # source://simplecov//lib/simplecov/source_file.rb#330
+  # source://simplecov//lib/simplecov/source_file.rb#336
   def line_coverage_statistics; end
 
-  # source://simplecov//lib/simplecov/source_file.rb#240
+  # source://simplecov//lib/simplecov/source_file.rb#246
   def lines_strength; end
 
   # source://simplecov//lib/simplecov/source_file.rb#178
@@ -1896,10 +1909,10 @@ class SimpleCov::SourceFile
   # source://simplecov//lib/simplecov/source_file.rb#160
   def no_cov_chunks; end
 
-  # source://simplecov//lib/simplecov/source_file.rb#276
+  # source://simplecov//lib/simplecov/source_file.rb#282
   def process_skipped_branches(branches); end
 
-  # source://simplecov//lib/simplecov/source_file.rb#231
+  # source://simplecov//lib/simplecov/source_file.rb#237
   def process_skipped_lines(lines); end
 
   # source://simplecov//lib/simplecov/source_file.rb#198
@@ -1913,7 +1926,7 @@ class SimpleCov::SourceFile
   #
   # See #801
   #
-  # source://simplecov//lib/simplecov/source_file.rb#294
+  # source://simplecov//lib/simplecov/source_file.rb#300
   def restore_ruby_data_structure(structure); end
 
   # source://simplecov//lib/simplecov/source_file.rb#206

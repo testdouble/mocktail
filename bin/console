@@ -77,5 +77,4 @@ Shop.open!(42)
 
 Shop.close!(42)
 
-require "pry"
-Pry.start
+binding.irb

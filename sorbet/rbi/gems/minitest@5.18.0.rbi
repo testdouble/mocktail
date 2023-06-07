@@ -37,7 +37,7 @@ module Minitest
     # source://minitest//lib/minitest.rb#18
     def cattr_accessor(name); end
 
-    # source://minitest//lib/minitest.rb#1067
+    # source://minitest//lib/minitest.rb#1059
     def clock_time; end
 
     # source://minitest//lib/minitest.rb#19
@@ -95,7 +95,7 @@ module Minitest
     # source://minitest//lib/minitest.rb#140
     def run(args = T.unsafe(nil)); end
 
-    # source://minitest//lib/minitest.rb#1058
+    # source://minitest//lib/minitest.rb#1050
     def run_one_method(klass, method_name); end
 
     # source://minitest//lib/minitest.rb#19
@@ -162,20 +162,20 @@ end
 
 # Represents run failures.
 #
-# source://minitest//lib/minitest.rb#903
+# source://minitest//lib/minitest.rb#895
 class Minitest::Assertion < ::Exception
-  # source://minitest//lib/minitest.rb#904
+  # source://minitest//lib/minitest.rb#896
   def error; end
 
   # Where was this run before an assertion was raised?
   #
-  # source://minitest//lib/minitest.rb#911
+  # source://minitest//lib/minitest.rb#903
   def location; end
 
-  # source://minitest//lib/minitest.rb#920
+  # source://minitest//lib/minitest.rb#912
   def result_code; end
 
-  # source://minitest//lib/minitest.rb#924
+  # source://minitest//lib/minitest.rb#916
   def result_label; end
 end
 
@@ -283,6 +283,24 @@ module Minitest::Assertions
   # source://minitest//lib/minitest/assertions.rb#355
   def assert_path_exists(path, msg = T.unsafe(nil)); end
 
+  # For testing with pattern matching (only supported with Ruby 3.0 and later)
+  #
+  #   # pass
+  #   assert_pattern { [1,2,3] => [Integer, Integer, Integer] }
+  #
+  #   # fail "length mismatch (given 3, expected 1)"
+  #   assert_pattern { [1,2,3] => [Integer] }
+  #
+  # The bare <tt>=></tt> pattern will raise a NoMatchingPatternError on failure, which would
+  # normally be counted as a test error. This assertion rescues NoMatchingPatternError and
+  # generates a test failure. Any other exception will be raised as normal and generate a test
+  # error.
+  #
+  # @raise [NotImplementedError]
+  #
+  # source://minitest//lib/minitest/assertions.rb#374
+  def assert_pattern; end
+
   # For testing with predicates. Eg:
   #
   #   assert_predicate str, :empty?
@@ -291,7 +309,7 @@ module Minitest::Assertions
   #
   #   str.must_be :empty?
   #
-  # source://minitest//lib/minitest/assertions.rb#369
+  # source://minitest//lib/minitest/assertions.rb#395
   def assert_predicate(o1, op, msg = T.unsafe(nil)); end
 
   # Fails unless the block raises one of +exp+. Returns the
@@ -315,36 +333,36 @@ module Minitest::Assertions
   #
   #   assert_equal 'This is really bad', error.message
   #
-  # source://minitest//lib/minitest/assertions.rb#396
+  # source://minitest//lib/minitest/assertions.rb#422
   def assert_raises(*exp); end
 
   # Fails unless +obj+ responds to +meth+.
   #
-  # source://minitest//lib/minitest/assertions.rb#427
+  # source://minitest//lib/minitest/assertions.rb#453
   def assert_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
   # Fails unless +exp+ and +act+ are #equal?
   #
-  # source://minitest//lib/minitest/assertions.rb#437
+  # source://minitest//lib/minitest/assertions.rb#463
   def assert_same(exp, act, msg = T.unsafe(nil)); end
 
   # +send_ary+ is a receiver, message and arguments.
   #
   # Fails unless the call returns a true value
   #
-  # source://minitest//lib/minitest/assertions.rb#450
+  # source://minitest//lib/minitest/assertions.rb#476
   def assert_send(send_ary, m = T.unsafe(nil)); end
 
   # Fails if the block outputs anything to stderr or stdout.
   #
   # See also: #assert_output
   #
-  # source://minitest//lib/minitest/assertions.rb#466
+  # source://minitest//lib/minitest/assertions.rb#492
   def assert_silent; end
 
   # Fails unless the block throws +sym+
   #
-  # source://minitest//lib/minitest/assertions.rb#475
+  # source://minitest//lib/minitest/assertions.rb#501
   def assert_throws(sym, msg = T.unsafe(nil)); end
 
   # Captures $stdout and $stderr into strings:
@@ -361,7 +379,7 @@ module Minitest::Assertions
   # capture IO for subprocesses. Use #capture_subprocess_io for
   # that.
   #
-  # source://minitest//lib/minitest/assertions.rb#516
+  # source://minitest//lib/minitest/assertions.rb#542
   def capture_io; end
 
   # Captures $stdout and $stderr into strings, using Tempfile to
@@ -378,7 +396,7 @@ module Minitest::Assertions
   # NOTE: This method is approximately 10x slower than #capture_io so
   # only use it when you need to test the output of a subprocess.
   #
-  # source://minitest//lib/minitest/assertions.rb#549
+  # source://minitest//lib/minitest/assertions.rb#575
   def capture_subprocess_io; end
 
   # Returns a diff between +exp+ and +act+. If there is no known
@@ -393,24 +411,24 @@ module Minitest::Assertions
 
   # Returns details for exception +e+
   #
-  # source://minitest//lib/minitest/assertions.rb#581
+  # source://minitest//lib/minitest/assertions.rb#607
   def exception_details(e, msg); end
 
   # Fails after a given date (in the local time zone). This allows
   # you to put time-bombs in your tests if you need to keep
   # something around until a later date lest you forget about it.
   #
-  # source://minitest//lib/minitest/assertions.rb#597
+  # source://minitest//lib/minitest/assertions.rb#623
   def fail_after(y, m, d, msg); end
 
   # Fails with +msg+.
   #
-  # source://minitest//lib/minitest/assertions.rb#604
+  # source://minitest//lib/minitest/assertions.rb#630
   def flunk(msg = T.unsafe(nil)); end
 
   # Returns a proc that will output +msg+ along with the default message.
   #
-  # source://minitest//lib/minitest/assertions.rb#612
+  # source://minitest//lib/minitest/assertions.rb#638
   def message(msg = T.unsafe(nil), ending = T.unsafe(nil), &default); end
 
   # This returns a human-readable version of +obj+. By default
@@ -432,62 +450,62 @@ module Minitest::Assertions
 
   # used for counting assertions
   #
-  # source://minitest//lib/minitest/assertions.rb#623
+  # source://minitest//lib/minitest/assertions.rb#649
   def pass(_msg = T.unsafe(nil)); end
 
   # Fails if +test+ is truthy.
   #
-  # source://minitest//lib/minitest/assertions.rb#630
+  # source://minitest//lib/minitest/assertions.rb#656
   def refute(test, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ is empty.
   #
-  # source://minitest//lib/minitest/assertions.rb#638
+  # source://minitest//lib/minitest/assertions.rb#664
   def refute_empty(obj, msg = T.unsafe(nil)); end
 
   # Fails if <tt>exp == act</tt>.
   #
   # For floats use refute_in_delta.
   #
-  # source://minitest//lib/minitest/assertions.rb#649
+  # source://minitest//lib/minitest/assertions.rb#675
   def refute_equal(exp, act, msg = T.unsafe(nil)); end
 
   # For comparing Floats.  Fails if +exp+ is within +delta+ of +act+.
   #
   #   refute_in_delta Math::PI, (22.0 / 7.0)
   #
-  # source://minitest//lib/minitest/assertions.rb#661
+  # source://minitest//lib/minitest/assertions.rb#687
   def refute_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # For comparing Floats.  Fails if +exp+ and +act+ have a relative error
   # less than +epsilon+.
   #
-  # source://minitest//lib/minitest/assertions.rb#673
+  # source://minitest//lib/minitest/assertions.rb#699
   def refute_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # Fails if +collection+ includes +obj+.
   #
-  # source://minitest//lib/minitest/assertions.rb#680
+  # source://minitest//lib/minitest/assertions.rb#706
   def refute_includes(collection, obj, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ is an instance of +cls+.
   #
-  # source://minitest//lib/minitest/assertions.rb#691
+  # source://minitest//lib/minitest/assertions.rb#717
   def refute_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ is a kind of +cls+.
   #
-  # source://minitest//lib/minitest/assertions.rb#701
+  # source://minitest//lib/minitest/assertions.rb#727
   def refute_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
   # Fails if +matcher+ <tt>=~</tt> +obj+.
   #
-  # source://minitest//lib/minitest/assertions.rb#709
+  # source://minitest//lib/minitest/assertions.rb#735
   def refute_match(matcher, obj, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ is nil.
   #
-  # source://minitest//lib/minitest/assertions.rb#719
+  # source://minitest//lib/minitest/assertions.rb#745
   def refute_nil(obj, msg = T.unsafe(nil)); end
 
   # Fails if +o1+ is not +op+ +o2+. Eg:
@@ -495,13 +513,29 @@ module Minitest::Assertions
   #   refute_operator 1, :>, 2 #=> pass
   #   refute_operator 1, :<, 2 #=> fail
   #
-  # source://minitest//lib/minitest/assertions.rb#730
+  # source://minitest//lib/minitest/assertions.rb#780
   def refute_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # Fails if +path+ exists.
   #
-  # source://minitest//lib/minitest/assertions.rb#739
+  # source://minitest//lib/minitest/assertions.rb#789
   def refute_path_exists(path, msg = T.unsafe(nil)); end
+
+  # For testing with pattern matching (only supported with Ruby 3.0 and later)
+  #
+  #   # pass
+  #   refute_pattern { [1,2,3] => [String] }
+  #
+  #   # fail "NoMatchingPatternError expected, but nothing was raised."
+  #   refute_pattern { [1,2,3] => [Integer, Integer, Integer] }
+  #
+  # This assertion expects a NoMatchingPatternError exception, and will fail if none is raised. Any
+  # other exceptions will be raised as normal and generate a test error.
+  #
+  # @raise [NotImplementedError]
+  #
+  # source://minitest//lib/minitest/assertions.rb#762
+  def refute_pattern; end
 
   # For testing with predicates.
   #
@@ -511,17 +545,17 @@ module Minitest::Assertions
   #
   #   str.wont_be :empty?
   #
-  # source://minitest//lib/minitest/assertions.rb#753
+  # source://minitest//lib/minitest/assertions.rb#803
   def refute_predicate(o1, op, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ responds to the message +meth+.
   #
-  # source://minitest//lib/minitest/assertions.rb#761
+  # source://minitest//lib/minitest/assertions.rb#811
   def refute_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
   # Fails if +exp+ is the same (by object identity) as +act+.
   #
-  # source://minitest//lib/minitest/assertions.rb#770
+  # source://minitest//lib/minitest/assertions.rb#820
   def refute_same(exp, act, msg = T.unsafe(nil)); end
 
   # Skips the current run. If run in verbose-mode, the skipped run
@@ -530,7 +564,7 @@ module Minitest::Assertions
   #
   # @raise [Minitest::Skip]
   #
-  # source://minitest//lib/minitest/assertions.rb#783
+  # source://minitest//lib/minitest/assertions.rb#833
   def skip(msg = T.unsafe(nil), bt = T.unsafe(nil)); end
 
   # Skips the current run until a given date (in the local time
@@ -538,14 +572,14 @@ module Minitest::Assertions
   # date, but still holds you accountable and prevents you from
   # forgetting it.
   #
-  # source://minitest//lib/minitest/assertions.rb#795
+  # source://minitest//lib/minitest/assertions.rb#845
   def skip_until(y, m, d, msg); end
 
   # Was this testcase skipped? Meant for #teardown.
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest/assertions.rb#804
+  # source://minitest//lib/minitest/assertions.rb#854
   def skipped?; end
 
   # Returns things to diff [expect, butwas], or [nil, nil] if nothing to diff.
@@ -584,60 +618,60 @@ Minitest::Assertions::UNDEFINED = T.let(T.unsafe(nil), Object)
 #
 # See Minitest.backtrace_filter=.
 #
-# source://minitest//lib/minitest.rb#1035
+# source://minitest//lib/minitest.rb#1027
 class Minitest::BacktraceFilter
   # Filter +bt+ to something useful. Returns the whole thing if
   # $DEBUG (ruby) or $MT_DEBUG (env).
   #
-  # source://minitest//lib/minitest.rb#1043
+  # source://minitest//lib/minitest.rb#1035
   def filter(bt); end
 end
 
-# source://minitest//lib/minitest.rb#1037
+# source://minitest//lib/minitest.rb#1029
 Minitest::BacktraceFilter::MT_RE = T.let(T.unsafe(nil), Regexp)
 
 # Dispatch to multiple reporters as one.
 #
-# source://minitest//lib/minitest.rb#852
+# source://minitest//lib/minitest.rb#844
 class Minitest::CompositeReporter < ::Minitest::AbstractReporter
   # @return [CompositeReporter] a new instance of CompositeReporter
   #
-  # source://minitest//lib/minitest.rb#858
+  # source://minitest//lib/minitest.rb#850
   def initialize(*reporters); end
 
   # Add another reporter to the mix.
   #
-  # source://minitest//lib/minitest.rb#870
+  # source://minitest//lib/minitest.rb#862
   def <<(reporter); end
 
-  # source://minitest//lib/minitest.rb#863
+  # source://minitest//lib/minitest.rb#855
   def io; end
 
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#874
+  # source://minitest//lib/minitest.rb#866
   def passed?; end
 
-  # source://minitest//lib/minitest.rb#882
+  # source://minitest//lib/minitest.rb#874
   def prerecord(klass, name); end
 
-  # source://minitest//lib/minitest.rb#889
+  # source://minitest//lib/minitest.rb#881
   def record(result); end
 
-  # source://minitest//lib/minitest.rb#895
+  # source://minitest//lib/minitest.rb#887
   def report; end
 
   # The list of reporters to dispatch to.
   #
-  # source://minitest//lib/minitest.rb#856
+  # source://minitest//lib/minitest.rb#848
   def reporters; end
 
   # The list of reporters to dispatch to.
   #
-  # source://minitest//lib/minitest.rb#856
+  # source://minitest//lib/minitest.rb#848
   def reporters=(_arg0); end
 
-  # source://minitest//lib/minitest.rb#878
+  # source://minitest//lib/minitest.rb#870
   def start; end
 end
 
@@ -655,48 +689,48 @@ end
 #     # ... lots of test methods ...
 #   end
 #
-# source://minitest//lib/minitest.rb#979
+# source://minitest//lib/minitest.rb#971
 module Minitest::Guard
   # Is this running on jruby?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#984
+  # source://minitest//lib/minitest.rb#976
   def jruby?(platform = T.unsafe(nil)); end
 
   # Is this running on maglev?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#991
+  # source://minitest//lib/minitest.rb#983
   def maglev?(platform = T.unsafe(nil)); end
 
   # Is this running on mri?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#1001
+  # source://minitest//lib/minitest.rb#993
   def mri?(platform = T.unsafe(nil)); end
 
   # Is this running on macOS?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#1008
+  # source://minitest//lib/minitest.rb#1000
   def osx?(platform = T.unsafe(nil)); end
 
   # Is this running on rubinius?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#1015
+  # source://minitest//lib/minitest.rb#1007
   def rubinius?(platform = T.unsafe(nil)); end
 
   # Is this running on windows?
   #
   # @return [Boolean]
   #
-  # source://minitest//lib/minitest.rb#1025
+  # source://minitest//lib/minitest.rb#1017
   def windows?(platform = T.unsafe(nil)); end
 end
 
@@ -983,7 +1017,7 @@ class Minitest::Runnable
   def time_it; end
 
   class << self
-    # source://minitest//lib/minitest.rb#1077
+    # source://minitest//lib/minitest.rb#1069
     def inherited(klass); end
 
     # Returns all instance methods matching the pattern +re+.
@@ -1035,9 +1069,9 @@ Minitest::Runnable::SIGNALS = T.let(T.unsafe(nil), Hash)
 
 # Assertion raised when skipping a run.
 #
-# source://minitest//lib/minitest.rb#932
+# source://minitest//lib/minitest.rb#924
 class Minitest::Skip < ::Minitest::Assertion
-  # source://minitest//lib/minitest.rb#933
+  # source://minitest//lib/minitest.rb#925
   def result_label; end
 end
 
@@ -1222,11 +1256,6 @@ class Minitest::SummaryReporter < ::Minitest::StatisticsReporter
 
   # source://minitest//lib/minitest.rb#825
   def to_s; end
-
-  private
-
-  # source://minitest//lib/minitest.rb#843
-  def binary_string; end
 end
 
 # Subclass Test to create your own tests. Typically you'll want a
@@ -1244,27 +1273,27 @@ class Minitest::Test < ::Minitest::Runnable
 
   # LifecycleHooks
   #
-  # source://minitest//lib/minitest/test.rb#194
+  # source://minitest//lib/minitest/test.rb#198
   def capture_exceptions; end
 
   # source://minitest//lib/minitest/test.rb#15
   def class_name; end
 
-  # source://minitest//lib/minitest/test.rb#211
+  # source://minitest//lib/minitest/test.rb#215
   def neuter_exception(e); end
 
-  # source://minitest//lib/minitest/test.rb#222
+  # source://minitest//lib/minitest/test.rb#226
   def new_exception(klass, msg, bt, kill = T.unsafe(nil)); end
 
   # Runs a single test with setup/teardown hooks.
   #
-  # source://minitest//lib/minitest/test.rb#92
+  # source://minitest//lib/minitest/test.rb#94
   def run; end
 
-  # source://minitest//lib/minitest/test.rb#204
+  # source://minitest//lib/minitest/test.rb#208
   def sanitize_exception(e); end
 
-  # source://minitest//lib/minitest/test.rb#236
+  # source://minitest//lib/minitest/test.rb#240
   def with_info_handler(&block); end
 
   class << self
@@ -1272,19 +1301,19 @@ class Minitest::Test < ::Minitest::Runnable
     # positively need to have ordered tests. In doing so, you're
     # admitting that you suck and your tests are weak.
     #
-    # source://minitest//lib/minitest/test.rb#31
+    # source://minitest//lib/minitest/test.rb#35
     def i_suck_and_my_tests_are_order_dependent!; end
 
     # Returns the value of attribute io_lock.
     #
-    # source://minitest//lib/minitest/test.rb#22
+    # source://minitest//lib/minitest/test.rb#26
     def io_lock; end
 
     # Sets the attribute io_lock
     #
     # @param value the value to set the attribute io_lock to.
     #
-    # source://minitest//lib/minitest/test.rb#22
+    # source://minitest//lib/minitest/test.rb#26
     def io_lock=(_arg0); end
 
     # Make diffs for this Test use #pretty_inspect so that diff
@@ -1292,27 +1321,27 @@ class Minitest::Test < ::Minitest::Runnable
     # than the regular inspect but much more usable for complex
     # objects.
     #
-    # source://minitest//lib/minitest/test.rb#44
+    # source://minitest//lib/minitest/test.rb#48
     def make_my_diffs_pretty!; end
 
     # Call this at the top of your tests when you want to run your
     # tests in parallel. In doing so, you're admitting that you rule
     # and your tests are awesome.
     #
-    # source://minitest//lib/minitest/test.rb#55
+    # source://minitest//lib/minitest/test.rb#59
     def parallelize_me!; end
 
     # Returns all instance methods starting with "test_". Based on
     # #test_order, the methods are either sorted, randomized
     # (default), or run in parallel.
     #
-    # source://minitest//lib/minitest/test.rb#65
+    # source://minitest//lib/minitest/test.rb#69
     def runnable_methods; end
 
     # Defines the order to run tests (:random by default). Override
     # this or use a convenience method to change it for your tests.
     #
-    # source://minitest//lib/minitest/test.rb#83
+    # source://minitest//lib/minitest/test.rb#87
     def test_order; end
   end
 end
@@ -1321,7 +1350,7 @@ end
 # meant for library writers, NOT for regular test authors. See
 # #before_setup for an example.
 #
-# source://minitest//lib/minitest/test.rb#117
+# source://minitest//lib/minitest/test.rb#121
 module Minitest::Test::LifecycleHooks
   # Runs before every test, after setup. This hook is meant for
   # libraries to extend minitest. It is not meant to be used by
@@ -1329,7 +1358,7 @@ module Minitest::Test::LifecycleHooks
   #
   # See #before_setup for an example.
   #
-  # source://minitest//lib/minitest/test.rb#167
+  # source://minitest//lib/minitest/test.rb#171
   def after_setup; end
 
   # Runs after every test, after teardown. This hook is meant for
@@ -1338,7 +1367,7 @@ module Minitest::Test::LifecycleHooks
   #
   # See #before_setup for an example.
   #
-  # source://minitest//lib/minitest/test.rb#191
+  # source://minitest//lib/minitest/test.rb#195
   def after_teardown; end
 
   # Runs before every test, before setup. This hook is meant for
@@ -1373,7 +1402,7 @@ module Minitest::Test::LifecycleHooks
   #     include MyMinitestPlugin
   #   end
   #
-  # source://minitest//lib/minitest/test.rb#152
+  # source://minitest//lib/minitest/test.rb#156
   def before_setup; end
 
   # Runs after every test, before teardown. This hook is meant for
@@ -1382,54 +1411,57 @@ module Minitest::Test::LifecycleHooks
   #
   # See #before_setup for an example.
   #
-  # source://minitest//lib/minitest/test.rb#176
+  # source://minitest//lib/minitest/test.rb#180
   def before_teardown; end
 
   # Runs before every test. Use this to set up before each test
   # run.
   #
-  # source://minitest//lib/minitest/test.rb#158
+  # source://minitest//lib/minitest/test.rb#162
   def setup; end
 
   # Runs after every test. Use this to clean up after each test
   # run.
   #
-  # source://minitest//lib/minitest/test.rb#182
+  # source://minitest//lib/minitest/test.rb#186
   def teardown; end
 end
 
 # source://minitest//lib/minitest/test.rb#19
 Minitest::Test::PASSTHROUGH_EXCEPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://minitest//lib/minitest/test.rb#87
+# source://minitest//lib/minitest/test.rb#21
+Minitest::Test::SETUP_METHODS = T.let(T.unsafe(nil), Array)
+
+# source://minitest//lib/minitest/test.rb#23
 Minitest::Test::TEARDOWN_METHODS = T.let(T.unsafe(nil), Array)
 
 # Assertion wrapping an unexpected error that was raised during a run.
 #
-# source://minitest//lib/minitest.rb#941
+# source://minitest//lib/minitest.rb#933
 class Minitest::UnexpectedError < ::Minitest::Assertion
   # @return [UnexpectedError] a new instance of UnexpectedError
   #
-  # source://minitest//lib/minitest.rb#945
+  # source://minitest//lib/minitest.rb#937
   def initialize(error); end
 
-  # source://minitest//lib/minitest.rb#950
+  # source://minitest//lib/minitest.rb#942
   def backtrace; end
 
   # TODO: figure out how to use `cause` instead
   #
-  # source://minitest//lib/minitest.rb#943
+  # source://minitest//lib/minitest.rb#935
   def error; end
 
   # TODO: figure out how to use `cause` instead
   #
-  # source://minitest//lib/minitest.rb#943
+  # source://minitest//lib/minitest.rb#935
   def error=(_arg0); end
 
-  # source://minitest//lib/minitest.rb#954
+  # source://minitest//lib/minitest.rb#946
   def message; end
 
-  # source://minitest//lib/minitest.rb#959
+  # source://minitest//lib/minitest.rb#951
   def result_label; end
 end
 

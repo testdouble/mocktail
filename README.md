@@ -428,22 +428,22 @@ stubs { |m| email.send(m.is_a(String)) }.with { "I'm an email" }
 
 These matchers come out of the box:
 
-* `any` - Will match any value (even nil) in the given argument position or
+* `m.any` - Will match any value (even nil) in the given argument position or
   keyword
-* `is_a(type)` - Will match when its `type` passes an `is_a?` check against the
+* `m.is_a(type)` - Will match when its `type` passes an `is_a?` check against the
   actual argument
-* `includes(thing, [**more_things])` - Will match when all of its arguments are
+* `m.includes(thing, [**more_things])` - Will match when all of its arguments are
   contained by the corresponding argument—be it a string, array, hash, or
   anything that responds to `includes?`
-* `matches(pattern)` - Will match when the provided string or pattern passes
+* `m.matches(pattern)` - Will match when the provided string or pattern passes
   a `match?` test on the corresponding argument; usually used to match strings
   that contain a particular substring or pattern, but will work with any
   argument that responds to `match?`
-* `not(thing)` - Will only match when its argument _does not_ equal (via `!=`)
+* `m.not(thing)` - Will only match when its argument _does not_ equal (via `!=`)
   the actual argument
-* `numeric` - Will match when the actual argument is an instance of `Integer`,
+* `m.numeric` - Will match when the actual argument is an instance of `Integer`,
   `Float`, or (if loaded) `BigDecimal`
-* `that { |arg| … }` - Takes a block that will receive the actual argument. If
+* `m.that { |arg| … }` - Takes a block that will receive the actual argument. If
   the block returns truthy, it's considered a match; otherwise, it's not a
   match.
 

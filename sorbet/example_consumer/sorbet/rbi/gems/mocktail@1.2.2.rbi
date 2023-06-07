@@ -15,69 +15,69 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#90
+    # source://mocktail//lib/mocktail.rb#106
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#83
+    # source://mocktail//lib/mocktail.rb#99
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#53
+    # source://mocktail//lib/mocktail.rb#69
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#72
+    # source://mocktail//lib/mocktail.rb#88
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#76
+    # source://mocktail//lib/mocktail.rb#92
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#49
+    # source://mocktail//lib/mocktail.rb#65
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
-    # source://mocktail//lib/mocktail.rb#34
+    # source://mocktail//lib/mocktail.rb#40
     sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail.rb#40
+    # source://mocktail//lib/mocktail.rb#51
     sig do
       type_parameters(:T)
         .params(
           type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(Integer)
+          count: T.nilable(::Integer)
         ).returns(T.type_parameter(:T))
     end
     def of_next(type, count: T.unsafe(nil)); end
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#45
+    # source://mocktail//lib/mocktail.rb#61
     sig do
       type_parameters(:T)
         .params(
           type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(Integer)
+          count: T.nilable(::Integer)
         ).returns(T::Array[T.type_parameter(:T)])
     end
     def of_next_with_count(type, count:); end
 
-    # source://mocktail//lib/mocktail.rb#57
+    # source://mocktail//lib/mocktail.rb#73
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#63
+    # source://mocktail//lib/mocktail.rb#79
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#68
+    # source://mocktail//lib/mocktail.rb#84
     def reset; end
   end
 end

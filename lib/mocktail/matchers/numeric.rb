@@ -12,7 +12,7 @@ module Mocktail::Matchers
     end
 
     def match?(actual)
-      [Integer, Float, (BigDecimal if defined?(BigDecimal))].include?(actual.class)
+      actual.is_a?(::Numeric)
     end
 
     def inspect

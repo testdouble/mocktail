@@ -5,6 +5,8 @@ SimpleCov.start do
   add_filter "/test/"
 end
 
+require "sorbet-runtime"
+
 ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"] = "true"
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)

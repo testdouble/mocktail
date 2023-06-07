@@ -307,6 +307,16 @@ module Mocktail::DSL
   def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 
   # source://mocktail//lib/mocktail/dsl.rb#14
+  sig do
+    type_parameters(:T)
+      .params(
+        ignore_block: T.nilable(T::Boolean),
+        ignore_extra_args: T.nilable(T::Boolean),
+        ignore_arity: T.nilable(T::Boolean),
+        times: T.nilable(Integer),
+        demo: T.proc.params(matchers: Mocktail::MatcherPresentation).void
+      ).void
+  end
   def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 end
 
@@ -825,14 +835,45 @@ class Mocktail::MatcherPresentation
   sig { returns(T.untyped) }
   def any; end
 
-  sig { type_parameters(:T).params(expecteds: T.type_parameter(:T)).returns(T::Enumerable[T.type_parameter(:T)]) }
+  sig { type_parameters(:T).params(expecteds: T.type_parameter(:T)).returns(T::Array[T.type_parameter(:T)]) }
   def includes(*expecteds); end
+
+  sig do
+    type_parameters(:K, :V)
+      .params(
+        expecteds: T::Hash[T.type_parameter(:K), T.type_parameter(:V)]
+      ).returns(T::Hash[T.type_parameter(:K), T.type_parameter(:V)])
+  end
+  def includes_hash(*expecteds); end
+
+  sig do
+    type_parameters(:K, :V)
+      .params(
+        expecteds: T.type_parameter(:K)
+      ).returns(T::Hash[T.type_parameter(:K), T.type_parameter(:V)])
+  end
+  def includes_key(*expecteds); end
+
+  sig { type_parameters(:T).params(expecteds: T.type_parameter(:T)).returns(T.type_parameter(:T)) }
+  def includes_string(*expecteds); end
 
   sig { type_parameters(:T).params(expected: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
   def is_a(expected); end
 
+  sig { params(pattern: T.any(String, Regexp)).returns(String) }
+  def matches(pattern); end
+
   # source://mocktail//lib/mocktail/matcher_presentation.rb#9
   def method_missing(name, *args, **kwargs, &blk); end
+
+  sig { type_parameters(:T).params(unexpected: T.type_parameter(:T)).returns(T.type_parameter(:T)) }
+  def not(unexpected); end
+
+  sig { returns(T.untyped) }
+  def numeric; end
+
+  sig { params(blk: T.proc.params(arg: T.untyped).returns(T::Boolean)).returns(T.untyped) }
+  def that(&blk); end
 
   private
 
@@ -1003,6 +1044,30 @@ class Mocktail::Matchers::Includes < ::Mocktail::Matchers::Base
 
   class << self
     # source://mocktail//lib/mocktail/matchers/includes.rb#5
+    def matcher_name; end
+  end
+end
+
+# source://mocktail//lib/mocktail/matchers/includes_hash.rb#4
+class Mocktail::Matchers::IncludesHash < ::Mocktail::Matchers::Includes
+  class << self
+    # source://mocktail//lib/mocktail/matchers/includes_hash.rb#5
+    def matcher_name; end
+  end
+end
+
+# source://mocktail//lib/mocktail/matchers/includes_key.rb#4
+class Mocktail::Matchers::IncludesKey < ::Mocktail::Matchers::Includes
+  class << self
+    # source://mocktail//lib/mocktail/matchers/includes_key.rb#5
+    def matcher_name; end
+  end
+end
+
+# source://mocktail//lib/mocktail/matchers/includes_string.rb#4
+class Mocktail::Matchers::IncludesString < ::Mocktail::Matchers::Includes
+  class << self
+    # source://mocktail//lib/mocktail/matchers/includes_string.rb#5
     def matcher_name; end
   end
 end
@@ -1892,6 +1957,6 @@ class Mocktail::VerifiesCall
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/verifies_call.rb#26
+  # source://mocktail//lib/mocktail/verifies_call.rb#27
   def verification_satisfied?(verifiable_call_count, demo_config); end
 end

@@ -5,6 +5,7 @@ gem "mocktail", path: "../.."
 gem "standard"
 gem "minitest"
 gem "rake"
+gem "m"
 
 gem "sorbet"
 gem "sorbet-runtime"

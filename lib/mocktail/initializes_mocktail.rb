@@ -6,6 +6,9 @@ module Mocktail
       [
         Mocktail::Matchers::Any,
         Mocktail::Matchers::Includes,
+        Mocktail::Matchers::IncludesString,
+        Mocktail::Matchers::IncludesKey,
+        Mocktail::Matchers::IncludesHash,
         Mocktail::Matchers::IsA,
         Mocktail::Matchers::Matches,
         Mocktail::Matchers::Not,

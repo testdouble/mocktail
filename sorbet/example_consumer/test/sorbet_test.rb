@@ -79,6 +79,78 @@ class SherbetTest < Minitest::Test
     assert_equal :skosh, sherbet.lick(size: 2, sound: nil)
   end
 
+  class MatcherThing
+    extend T::Sig
+
+    sig { params(array: T::Array[Symbol]).void }
+    def takes_array(array)
+    end
+
+    sig { params(hash: T::Hash[Symbol, Integer]).void }
+    def takes_hash(hash)
+    end
+
+    sig { params(string: String).void }
+    def takes_string(string)
+    end
+
+    sig { params(integer: Integer).void }
+    def takes_integer(integer)
+    end
+  end
+
+  sig { void }
+  def test_matchers_more_precisely
+    thing = Mocktail.of(MatcherThing)
+
+    stubs { |m| thing.takes_array(m.includes(:ham)) }.with { nil }
+    stubs { |m| thing.takes_array(m.includes(:ham, :cheese)) }.with { nil }
+
+    stubs { |m| thing.takes_hash(m.includes_key(:ham)) }.with { nil }
+    stubs { |m| thing.takes_hash(m.includes_hash({cheese: 1}, {queso: 2})) }.with { nil }
+
+    stubs { |m| thing.takes_string(m.includes_string("s")) }.with { nil }
+    stubs { |m| thing.takes_string(m.includes_string("s", "t")) }.with { nil }
+
+    stubs { |m| thing.takes_string(m.matches("s")) }.with { nil }
+    stubs { |m| thing.takes_string(m.matches(/s/)) }.with { nil }
+
+    stubs { |m| thing.takes_integer(m.numeric) }.with { nil }
+
+    stubs { |m| thing.takes_integer(m.that { |i| i < 3 }) }.with { nil }
+
+    stubs { |m| thing.takes_integer(m.not(3)) }.with { nil }
+  end
+
+  class Wastebin
+    extend T::Sig
+
+    sig {
+      params(thing: Sherbet).void
+    }
+    def dump(thing)
+    end
+  end
+  sig { void }
+  def test_verify
+    wastebin = Mocktail.of(Wastebin)
+    sherbet = Mocktail.of(Sherbet)
+
+    wastebin.dump(sherbet)
+
+    verify { wastebin.dump(sherbet) }
+    verify(
+      ignore_block: true,
+      ignore_extra_args: true,
+      ignore_arity: nil,
+      times: 1
+    ) { wastebin.dump(sherbet) }
+    verify(
+      ignore_extra_args: true,
+      ignore_arity: true
+    ) { T.unsafe(wastebin).dump }
+  end
+
   sig { void }
   def test_of_next
     sherbet = Mocktail.of_next(Sherbet, count: 1)

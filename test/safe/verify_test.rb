@@ -270,4 +270,22 @@ class VerifyTest < Minitest::Test
 
     MSG
   end
+
+  class Hmm
+    def huh(idea)
+    end
+  end
+
+  def test_verify_arg_hack
+    hmm = Mocktail.of(Hmm)
+
+    hmm.huh(:a)
+    hmm.huh(:b)
+    hmm.huh(:c)
+
+    verify { |m| hmm.huh(:a) }
+    verify { |m| hmm.huh(:b) }
+    verify { |m| hmm.huh(:c) }
+    verify(ignore_arity: true, ignore_extra_args: true) { |m| T.unsafe(hmm).huh }
+  end
 end

@@ -14,11 +14,11 @@ module Mocktail::Matchers
       assert subject.match?(1)
       assert subject.match?(1.0)
       assert subject.match?(BigDecimal("1.0"))
-      assert subject.match?(Numeric.new)
+      assert subject.match?(::Numeric.new)
       refute subject.match?("Hi")
       refute subject.match?(Integer)
       refute subject.match?(BigDecimal)
-      refute subject.match?(Numeric)
+      refute subject.match?(::Numeric)
     end
   end
 end

@@ -428,24 +428,43 @@ stubs { |m| email.send(m.is_a(String)) }.with { "I'm an email" }
 
 These matchers come out of the box:
 
-* `m.any` - Will match any value (even nil) in the given argument position or
+##### m.any
+
+`m.any` - Will match any value (even nil) in the given argument position or
   keyword
-* `m.is_a(type)` - Will match when its `type` passes an `is_a?` check against the
+
+##### m.is_a
+
+`m.is_a(type)` - Will match when its `type` passes an `is_a?` check against the
   actual argument
-* `m.includes(thing, [**more_things])` - Will match when all of its arguments are
-  contained by the corresponding argument—be it a string, array, hash, or
-  anything that responds to `includes?`
-* `m.matches(pattern)` - Will match when the provided string or pattern passes
-  a `match?` test on the corresponding argument; usually used to match strings
-  that contain a particular substring or pattern, but will work with any
-  argument that responds to `match?`
-* `m.not(thing)` - Will only match when its argument _does not_ equal (via `!=`)
-  the actual argument
-* `m.numeric` - Will match when the actual argument is an instance of `Integer`,
-  `Float`, or (if loaded) `BigDecimal`
-* `m.that { |arg| … }` - Takes a block that will receive the actual argument. If
-  the block returns truthy, it's considered a match; otherwise, it's not a
-  match.
+
+##### m.includes
+
+`m.includes(thing, [**more_things])` - Will match when all of its arguments are
+contained by the corresponding argument—be it a string, array, hash, or anything
+that responds to `includes?`
+
+##### m.matches
+
+`m.matches(pattern)` - Will match when the provided string or pattern passes a
+`match?` test on the corresponding argument; usually used to match strings that
+contain a particular substring or pattern, but will work with any argument that
+responds to `match?`
+
+##### m.not
+
+`m.not(thing)` - Will only match when its argument _does not_ equal (via `!=`)
+the actual argument
+
+##### m.numeric
+
+`m.numeric` - Will match when the actual argument is an instance of `Integer`,
+`Float`, or (if loaded) `BigDecimal`
+
+##### m.that
+
+`m.that { |arg| … }` - Takes a block that will receive the actual argument. If
+the block returns truthy, it's considered a match; otherwise, it's not a match.
 
 #### Custom matchers
 
@@ -882,6 +901,23 @@ There are some limitations and caveats, however.
   the method signature is intentionally constrained to only returning a single
   mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to
   get an array back with type-checking in place
+* Many of Mocktail's built-in matchers need to be approached differently when
+  type-checking is enabled. Some become less necessary because they serve the
+  role of constraining types (in the absence of a type system like Sorbet) and
+  for others because they're so flexible (like `m.includes`) that creating a
+  sufficiently narrow type signature for their behavior would be impossible.
+  In general, even though the matchers' behavior is maximally flexible, each of
+  their Sorbet signatures has been narrowed to the greatest reasonable extent:
+    * [m.any](#many) checks return `T.untyped`
+    * [m.includes](#mincludes) is split into several declarations with specialized
+      signatures, even though they all share a single implementation:
+        * `m.includes(*element)` takes one or more array elements and returns an array
+          of that type
+        * `m.includes_key(*key)` takes one or more hash keys and returns a hash with that key type
+        * `m.includes_hash(*hash)` takes one or more hashes and returns a hash
+        * `m.includes_string(*string)` takes one or more substrings and returns a
+          string (genericized such that this could be anything that responds to `include?`)
+    * [m.matches](#mmatches) takes a regex or a substring and returns a string
 
 ## References
 

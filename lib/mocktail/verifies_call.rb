@@ -19,6 +19,7 @@ module Mocktail
       unless verification_satisfied?(verifiable_calls.size, demo_config)
         @raises_verification_error.raise(recording, verifiable_calls, demo_config)
       end
+      nil
     end
 
     private

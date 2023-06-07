@@ -3,8 +3,4 @@
 set -e
 
 cd sorbet/example_consumer
-
-rm -rf sorbet/rbi/gems/mocktail*
-bin/tapioca gems
-bundle exec srb tc
-bundle exec rake
+./script/test

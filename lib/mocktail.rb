@@ -28,36 +28,20 @@ require_relative "mocktail/verifies_call"
 require_relative "mocktail/version"
 
 module Mocktail
-  extend T::Sig
   extend DSL
 
   # Returns an instance of `type` whose implementation is mocked out
-  sig {
-    type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)])
-      .returns(T.type_parameter(:T))
-  }
   def self.of(type)
     ImitatesType.new.imitate(type)
   end
 
   # Returns an instance of `klass` whose implementation is mocked out AND
   # stubs its constructor to return that fake the next time klass.new is called
-  sig {
-    type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
-      .returns(T.type_parameter(:T))
-  }
   def self.of_next(type, count: 1)
     ReplacesNext.new.replace(type, count)
   end
 
   # An alias of of_next that always returns an array of fakes
-  sig {
-    type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
-      .returns(T::Array[T.type_parameter(:T)])
-  }
   def self.of_next_with_count(type, count:)
     Array(of_next(type, count: count))
   end

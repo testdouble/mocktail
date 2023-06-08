@@ -152,6 +152,19 @@ class SherbetTest < Minitest::Test
   end
 
   sig { void }
+  def test_captors
+    wastebin = Mocktail.of(Wastebin)
+    sherbet = Sherbet.new
+    captor = Mocktail.captor
+    T.assert_type!(captor, Mocktail::Matchers::Captor)
+
+    wastebin.dump(sherbet)
+
+    verify { wastebin.dump(captor.capture) }
+    assert_equal sherbet, captor.value
+  end
+
+  sig { void }
   def test_of_next
     sherbet = Mocktail.of_next(Sherbet, count: 1)
     T.assert_type!(sherbet, Sherbet)
@@ -170,5 +183,60 @@ class SherbetTest < Minitest::Test
     sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
 
     assert_equal 2, sherbets.size
+  end
+
+  module Button
+    extend T::Sig
+
+    sig { params(pressure: Integer, finger: T.any(String, Symbol)).void }
+    def self.push(pressure, finger:)
+    end
+  end
+
+  sig { void }
+  def test_replace
+    Mocktail.replace(Button)
+
+    Button.push(1, finger: :thumb)
+    Button.push(2, finger: :pinky)
+    Button.push(1, finger: "index finger")
+    assert_match(/redefines_singleton_methods/, Button.method(:push).source_location.first)
+
+    verify(times: 1) { |m| Button.push(1, finger: m.is_a(Symbol)) }
+    verify { |m| Button.push(1, finger: m.includes_string("index")) }
+  end
+
+  sig { void }
+  def test_explain
+    sherbet = Mocktail.of(Sherbet)
+
+    sherbet.flavor
+
+    explanation = Mocktail.explain(sherbet)
+
+    ref = explanation.reference
+    if !ref.is_a?(Sherbet)
+      assert_kind_of Mocktail::DoubleData, ref
+      T.assert_type!(ref.calls, T::Array[Mocktail::Call])
+      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+    end
+
+    explanation_2 = Mocktail.explain(sherbet.method(:flavor))
+    ref_2 = explanation_2.reference
+    if !ref_2.is_a?(Method)
+      assert_kind_of Mocktail::FakeMethodData, ref_2
+      T.assert_type!(ref_2.calls, T::Array[Mocktail::Call])
+      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+    end
+
+    Mocktail.replace(Button)
+
+    explanation_3 = Mocktail.explain(Button)
+    ref_3 = explanation_3.reference
+    if !ref_3.is_a?(Module)
+      assert_kind_of Mocktail::TypeReplacementData, ref_3
+      T.assert_type!(ref_3.calls, T::Array[Mocktail::Call])
+      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+    end
   end
 end

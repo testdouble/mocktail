@@ -1,3 +1,5 @@
+# typed: true
+
 require "sorbet-runtime"
 require "mocktail"
 require "minitest/autorun"
@@ -5,6 +7,8 @@ require "minitest/autorun"
 require "tempfile"
 require "open3"
 module SorbetInsurance
+  include Kernel
+
   def assert_type_failure(ruby_code, mode: "true")
     Tempfile.create do |file|
       file.write("# typed: strict\n\n" + ruby_code)

@@ -26,9 +26,11 @@ module Mocktail
     def calls(double, method_name = T.unsafe(nil)); end
 
     # source://mocktail//lib/mocktail.rb#51
+    sig { returns(Mocktail::Matchers::Captor) }
     def captor; end
 
     # source://mocktail//lib/mocktail.rb#70
+    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(Explanation[T.type_parameter(:T)]) }
     def explain(thing); end
 
     # source://mocktail//lib/mocktail.rb#74
@@ -75,9 +77,11 @@ module Mocktail
     # or included will also fake instance methods
     #
     # source://mocktail//lib/mocktail.rb#61
+    sig { params(type: T.any(Class, Module)).void }
     def replace(type); end
 
     # source://mocktail//lib/mocktail.rb#66
+    sig { void }
     def reset; end
   end
 end
@@ -514,6 +518,8 @@ end
 
 # source://mocktail//lib/mocktail/value/double_data.rb#4
 class Mocktail::DoubleData < ::Struct
+  include Mocktail::ExplanationData
+
   # Returns the value of attribute calls
   #
   # @return [Object] the current value of calls
@@ -568,7 +574,9 @@ class Mocktail::DoubleData < ::Struct
 end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#23
-class Mocktail::DoubleExplanation < ::Mocktail::Explanation; end
+class Mocktail::DoubleExplanation < ::Mocktail::Explanation
+  ThingType = type_member
+end
 
 # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#4
 class Mocktail::EnsuresImitationSupport
@@ -634,19 +642,37 @@ class Mocktail::Explanation
   # Returns the value of attribute message.
   #
   # source://mocktail//lib/mocktail/value/explanation.rb#5
+  sig { returns(String) }
   def message; end
 
   # Returns the value of attribute reference.
   #
   # source://mocktail//lib/mocktail/value/explanation.rb#5
+  sig { returns(T.any(ThingType, Mocktail::ExplanationData)) }
   def reference; end
 
   # source://mocktail//lib/mocktail/value/explanation.rb#12
   def type; end
+
+  ThingType = type_member
+end
+
+module Mocktail::ExplanationData
+  include Kernel
+
+  interface!
+
+  sig { abstract.returns(T::Array[Mocktail::Call]) }
+  def calls; end
+
+  sig { abstract.returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
+  def stubbings; end
 end
 
 # source://mocktail//lib/mocktail/value/fake_method_data.rb#4
 class Mocktail::FakeMethodData < ::Struct
+  include Mocktail::ExplanationData
+
   # Returns the value of attribute calls
   #
   # @return [Object] the current value of calls
@@ -690,7 +716,9 @@ class Mocktail::FakeMethodData < ::Struct
 end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#29
-class Mocktail::FakeMethodExplanation < ::Mocktail::Explanation; end
+class Mocktail::FakeMethodExplanation < ::Mocktail::Explanation
+  ThingType = type_member
+end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#6
 class Mocktail::FindsSatisfaction
@@ -1160,7 +1188,9 @@ end
 class Mocktail::MissingDemonstrationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#17
-class Mocktail::NoExplanation < ::Mocktail::Explanation; end
+class Mocktail::NoExplanation < ::Mocktail::Explanation
+  ThingType = type_member
+end
 
 # source://mocktail//lib/mocktail/value/signature.rb#19
 class Mocktail::Params < ::Struct
@@ -1402,7 +1432,9 @@ class Mocktail::RegistersStubbing
 end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#26
-class Mocktail::ReplacedTypeExplanation < ::Mocktail::Explanation; end
+class Mocktail::ReplacedTypeExplanation < ::Mocktail::Explanation
+  ThingType = type_member
+end
 
 # source://mocktail//lib/mocktail/replaces_next.rb#4
 class Mocktail::ReplacesNext
@@ -1417,14 +1449,14 @@ class Mocktail::ReplacesNext
   def replace(type, count); end
 end
 
-# source://mocktail//lib/mocktail/replaces_type.rb#7
+# source://mocktail//lib/mocktail/replaces_type.rb#8
 class Mocktail::ReplacesType
   # @return [ReplacesType] a new instance of ReplacesType
   #
-  # source://mocktail//lib/mocktail/replaces_type.rb#8
+  # source://mocktail//lib/mocktail/replaces_type.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type.rb#14
+  # source://mocktail//lib/mocktail/replaces_type.rb#16
   def replace(type); end
 end
 
@@ -1432,6 +1464,31 @@ end
 class Mocktail::ResetsState
   # source://mocktail//lib/mocktail/resets_state.rb#5
   def reset; end
+end
+
+# source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#2
+class Mocktail::RunsSorbetSigBlocksBeforeReplacement
+  # This is necessary because when Sorbet runs a sig block of a singleton
+  # method, it has the net effect of unwrapping/redefining the method. If
+  # we try to use Mocktail.replace(Foo) and Foo.bar has a Sorbet sig block,
+  # then we'll end up with three "versions" of the same method and no way
+  # to keep straight which one == which:
+  #
+  #  A - Foo.bar, as defined in the original class
+  #  B - Foo.bar, as redefined by RedefinesSingletonMethods
+  #  C - Foo.bar, as wrapped by sorbet-runtime
+  #
+  # Initially, Foo.method(:bar) would == C, but after the type
+  # replacement, it would == B (with a reference back to C as the original),
+  # but after while handling a single dry call, our invocation of
+  # GrabsOriginalMethodParameters.grab(Foo.method(:bar)) would invoke the
+  # Sorbet `sig` block, which has the net effect of redefining the method back
+  # to A.
+  #
+  # It's very fun and confusing and a great time.
+  #
+  # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#21
+  def run(type); end
 end
 
 # source://mocktail//lib/mocktail/value/signature.rb#4
@@ -1668,51 +1725,55 @@ class Mocktail::Stubbing < ::Struct
   MethodReturnType = type_member
 end
 
-# source://mocktail//lib/mocktail/value/top_shelf.rb#4
+# The TopShelf is where we keep all the more global, dangerous state.
+# In particular, this is where Mocktail manages state related to singleton
+# method replacements carried out with Mocktail.replace(ClassOrModule)
+#
+# source://mocktail//lib/mocktail/value/top_shelf.rb#7
 class Mocktail::TopShelf
   # @return [TopShelf] a new instance of TopShelf
   #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#12
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#15
   def initialize; end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#38
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#41
   def new_replaced?(type); end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#46
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#49
   def of_next_registered?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#34
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#37
   def register_new_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#42
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#45
   def register_of_next_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#54
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#57
   def register_singleton_method_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#30
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#33
   def reset_current_thread!; end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#58
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#61
   def singleton_methods_replaced?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#18
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#21
   def type_replacement_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#24
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#27
   def type_replacement_if_exists_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#50
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#53
   def unregister_of_next_replacement!(type); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/top_shelf.rb#5
+    # source://mocktail//lib/mocktail/value/top_shelf.rb#8
     def instance; end
   end
 end
@@ -1801,6 +1862,8 @@ end
 
 # source://mocktail//lib/mocktail/value/type_replacement_data.rb#4
 class Mocktail::TypeReplacementData < ::Struct
+  include Mocktail::ExplanationData
+
   # Returns the value of attribute calls
   #
   # @return [Object] the current value of calls
@@ -1905,7 +1968,9 @@ class Mocktail::UnsatisfyingCall < ::Struct
 end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#20
-class Mocktail::UnsatisfyingCallExplanation < ::Mocktail::Explanation; end
+class Mocktail::UnsatisfyingCallExplanation < ::Mocktail::Explanation
+  ThingType = type_member
+end
 
 # source://mocktail//lib/mocktail/errors.rb#8
 class Mocktail::UnsupportedMocktail < ::Mocktail::Error; end

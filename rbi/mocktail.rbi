@@ -27,6 +27,26 @@ module Mocktail
     }
     def of_next_with_count(type, count:)
     end
+
+    sig { returns(Mocktail::Matchers::Captor) }
+    def captor
+    end
+
+    sig { params(type: T.any(Class, Module)).void }
+    def replace(type)
+    end
+
+    sig { void }
+    def reset
+    end
+
+    sig {
+      type_parameters(:T)
+        .params(thing: T.type_parameter(:T))
+        .returns(Explanation[T.type_parameter(:T)])
+    }
+    def explain(thing)
+    end
   end
 end
 
@@ -142,4 +162,63 @@ class Mocktail::MatcherPresentation
   }
   def not(unexpected)
   end
+end
+
+class Mocktail::Explanation
+  ThingType = type_member
+
+  sig {
+    returns(T.any(ThingType, Mocktail::ExplanationData))
+  }
+  def reference
+  end
+
+  sig { returns(String) }
+  def message
+  end
+end
+
+class Mocktail::ReplacedTypeExplanation
+  ThingType = type_member
+end
+
+class Mocktail::DoubleExplanation
+  ThingType = type_member
+end
+
+class Mocktail::FakeMethodExplanation
+  ThingType = type_member
+end
+
+class Mocktail::NoExplanation
+  ThingType = type_member
+end
+
+class Mocktail::UnsatisfyingCallExplanation
+  ThingType = type_member
+end
+
+module Mocktail::ExplanationData
+  interface!
+  include Kernel
+
+  sig { abstract.returns T::Array[Mocktail::Call] }
+  def calls
+  end
+
+  sig { abstract.returns T::Array[Mocktail::Stubbing[T.untyped]] }
+  def stubbings
+  end
+end
+
+class Mocktail::TypeReplacementData
+  include Mocktail::ExplanationData
+end
+
+class Mocktail::DoubleData
+  include Mocktail::ExplanationData
+end
+
+class Mocktail::FakeMethodData
+  include Mocktail::ExplanationData
 end

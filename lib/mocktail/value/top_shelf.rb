@@ -1,6 +1,9 @@
 # typed: false
 
 module Mocktail
+  # The TopShelf is where we keep all the more global, dangerous state.
+  # In particular, this is where Mocktail manages state related to singleton
+  # method replacements carried out with Mocktail.replace(ClassOrModule)
   class TopShelf
     def self.instance
       Thread.current[:mocktail_top_shelf] ||= new

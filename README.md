@@ -898,26 +898,34 @@ will merge in.
 There are some limitations and caveats, however.
 
 * The `count` parameter of `Mocktail.of_next(Class, count:)` will not work, as
-  the method signature is intentionally constrained to only returning a single
-  mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to
-  get an array back with type-checking in place
+the method signature is intentionally constrained to only returning a single
+mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to get
+an array back with type-checking in place
 * Many of Mocktail's built-in matchers need to be approached differently when
-  type-checking is enabled. Some become less necessary because they serve the
-  role of constraining types (in the absence of a type system like Sorbet) and
-  for others because they're so flexible (like `m.includes`) that creating a
-  sufficiently narrow type signature for their behavior would be impossible.
-  In general, even though the matchers' behavior is maximally flexible, each of
-  their Sorbet signatures has been narrowed to the greatest reasonable extent:
-    * [m.any](#many) checks return `T.untyped`
-    * [m.includes](#mincludes) is split into several declarations with specialized
-      signatures, even though they all share a single implementation:
-        * `m.includes(*element)` takes one or more array elements and returns an array
-          of that type
-        * `m.includes_key(*key)` takes one or more hash keys and returns a hash with that key type
-        * `m.includes_hash(*hash)` takes one or more hashes and returns a hash
-        * `m.includes_string(*string)` takes one or more substrings and returns a
-          string (genericized such that this could be anything that responds to `include?`)
-    * [m.matches](#mmatches) takes a regex or a substring and returns a string
+type-checking is enabled. Some become less necessary because they serve the role
+of constraining types (in the absence of a type system like Sorbet) and for
+others because they're so flexible (like `m.includes`) that creating a
+sufficiently narrow type signature for their behavior would be impossible.  In
+general, even though the matchers' behavior is maximally flexible, each of their
+Sorbet signatures has been narrowed to the greatest reasonable extent:
+  * [m.any](#many) checks return `T.untyped` [m.includes](#mincludes) is split
+  * into several declarations with specialized
+  signatures, even though they all share a single implementation:
+  * `m.includes(*element)` takes one or more array elements and returns an array
+  of that type
+  * `m.includes_key(*key)` takes one or more hash keys and returns a hash with
+  * that key type `m.includes_hash(*hash)` takes one or more hashes and returns a
+  * hash `m.includes_string(*string)` takes one or more substrings and returns a
+  string (genericized such that this could be anything that responds to
+  `include?`)
+  * [m.matches](#mmatches) takes a regex or a substring and returns a string
+  * [m.not](#mnot) is genericized to return the type it receives [m.that](#mthat)
+  * and [m.numeric](#mnumeric) can't be expressed narrowly
+    enough in Sorbet due to its lack of support for generic [type
+    deduction](https://sorbet.org/docs/generics#generic-methods)
+  * [Mocktail.captor](#mocktailcaptor) (which is implemented as a matcher)
+    is also untyped, because there is no way to parameterize the value of
+    `captor.capture` by type deduction in Sorbet
 
 ## References
 

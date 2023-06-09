@@ -118,7 +118,7 @@ module Mocktail
     end
 
     def no_explanation(thing)
-      NoExplanation.new(thing,
+      NoExplanation.new(NoExplanationData.new(thing: thing),
         "Unfortunately, Mocktail doesn't know what this thing is: #{thing.inspect}")
     end
   end

@@ -8,6 +8,8 @@ module Mocktail
     :stubbings,
     keyword_init: true
   ) do
+    include ExplanationData
+
     def double
       type
     end

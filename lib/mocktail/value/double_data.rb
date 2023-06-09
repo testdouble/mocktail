@@ -7,5 +7,7 @@ module Mocktail
     :calls,
     :stubbings,
     keyword_init: true
-  )
+  ) do
+    include ExplanationData
+  end
 end

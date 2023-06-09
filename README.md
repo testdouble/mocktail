@@ -897,6 +897,10 @@ will merge in.
 
 There are some limitations and caveats, however.
 
+* `Mocktail.of(ClassOrModule)` takes a module or a class, but at present Sorbet
+  can only type-check classes in this case. For modules, you may need to create
+  a test-scoped class that does nothing but include the module and then pass
+  _that class_ into `Mocktail.of`
 * The `count` parameter of `Mocktail.of_next(Class, count:)` will not work, as
 the method signature is intentionally constrained to only returning a single
 mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to get

@@ -218,7 +218,7 @@ class SherbetTest < Minitest::Test
     if !ref.is_a?(Sherbet)
       assert_kind_of Mocktail::DoubleData, ref
       T.assert_type!(ref.calls, T::Array[Mocktail::Call])
-      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+      T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
     end
 
     explanation_2 = Mocktail.explain(sherbet.method(:flavor))
@@ -226,7 +226,7 @@ class SherbetTest < Minitest::Test
     if !ref_2.is_a?(Method)
       assert_kind_of Mocktail::FakeMethodData, ref_2
       T.assert_type!(ref_2.calls, T::Array[Mocktail::Call])
-      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+      T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
     end
 
     Mocktail.replace(Button)
@@ -236,7 +236,7 @@ class SherbetTest < Minitest::Test
     if !ref_3.is_a?(Module)
       assert_kind_of Mocktail::TypeReplacementData, ref_3
       T.assert_type!(ref_3.calls, T::Array[Mocktail::Call])
-      # T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
+      T.assert_type!(ref.stubbings, T::Array[Mocktail::Stubbing[T.untyped]])
     end
   end
 end

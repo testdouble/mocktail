@@ -2,7 +2,7 @@
 
 require "simplecov"
 SimpleCov.start do
-  add_filter "/test/"
+  SimpleCov.add_filter "/test/"
 end
 
 require "sorbet-runtime"

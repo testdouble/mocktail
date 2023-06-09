@@ -17,8 +17,8 @@ class StubTest < Minitest::Test
 
     assert_equal [:r1, :r2], thing.lol(42)
     assert_nil thing.lol(41)
-    assert_raises(ArgumentError) { thing.lol }
-    assert_raises(ArgumentError) { thing.lol(4, 2) }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol(4, 2) }
   end
 
   def test_non_dsl_is_also_fine
@@ -28,8 +28,8 @@ class StubTest < Minitest::Test
 
     assert_equal [:r1, :r2], thing.lol(42)
     assert_nil thing.lol(41)
-    assert_raises(ArgumentError) { thing.lol }
-    assert_raises(ArgumentError) { thing.lol(4, 2) }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol(4, 2) }
   end
 
   require "bigdecimal"
@@ -237,7 +237,7 @@ class StubTest < Minitest::Test
     thing = Mocktail.of(Thing)
 
     e = assert_raises(Mocktail::MissingDemonstrationError) do
-      stubs { thing }.with { [:r1, :r2] }
+      stubs { thing }.with { thing }
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
       `stubs` & `verify` expect an invocation of a mocked method by a passed
@@ -265,20 +265,20 @@ class StubTest < Minitest::Test
   def test_param_checking
     does_too_much = Mocktail.of(DoesTooMuch)
 
-    assert_raises(ArgumentError) { does_too_much.do }
-    assert_raises(ArgumentError) { does_too_much.do { 1 } }
-    assert_raises(ArgumentError) { does_too_much.do(1) }
-    assert_raises(ArgumentError) { does_too_much.do(and: 1) }
-    assert_raises(ArgumentError) { does_too_much.do(and: 1) { 2 } }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2) }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
-    assert_raises(ArgumentError) { does_too_much.do(1, also: 3) }
-    assert_raises(ArgumentError) { does_too_much.do(1, and: 2, fake_keyword: 4) }
-    assert_raises(ArgumentError) { does_too_much.splats(12) }
-    assert_raises(ArgumentError) { does_too_much.splats(b: 4) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do { 1 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(and: 1) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(and: 1) { 2 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) { 4 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, also: 3) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, and: 2, fake_keyword: 4) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).splats(12) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).splats(b: 4) }
 
-    e = assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
+    e = assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) { 4 } }
     # Make sure the backtrace doesn't contain gem library paths
     refute e.backtrace.any? { |frame|
       frame.include?("mocktail/lib")
@@ -355,7 +355,7 @@ class StubTest < Minitest::Test
   def test_stub_ignoring_arity_restrictions
     does_too_much = Mocktail.of(DoesTooMuch)
 
-    stubs(ignore_extra_args: true, ignore_arity: true) { does_too_much.do }.with { "yahtzee" }
+    stubs(ignore_extra_args: true, ignore_arity: true) { T.unsafe(does_too_much).do }.with { "yahtzee" }
 
     assert_equal "yahtzee", does_too_much.do(1, and: 2)
   end
@@ -400,7 +400,7 @@ class StubTest < Minitest::Test
     stubs { |m| subject.send(:respond_to_missing?, m.any, m.any) }.with { |call|
       call.args[0].start_with?("b")
     }
-    stubs(ignore_extra_args: true, ignore_arity: true) { subject.method_missing }.with { |call|
+    stubs(ignore_extra_args: true, ignore_arity: true) { T.unsafe(subject).method_missing }.with { |call|
       "#{call.method}|#{call.args.map(&:inspect).join(", ")}|#{call.kwargs.map { |k, v| "#{k}: #{v}" }.join(", ")}"
     }
     stubs { subject.real_method? }.with { :lol }
@@ -410,7 +410,7 @@ class StubTest < Minitest::Test
     assert_equal true, subject.respond_to?(:beta)
     assert_equal false, subject.respond_to?(:charlie)
 
-    assert_equal "method_missing|:beta, :panda|cool: 4", subject.beta(:panda, cool: 4)
+    assert_equal "method_missing|:beta, :panda|cool: 4", T.unsafe(subject).beta(:panda, cool: 4)
   end
 
   def test_unsatisfied_stubbings_are_falsey_lol_whoops
@@ -432,7 +432,7 @@ class StubTest < Minitest::Test
     methodless = Mocktail.of(Methodless)
 
     e = assert_raises(NoMethodError) {
-      stubs { methodless.do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
+      stubs { T.unsafe(methodless).do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
     }
     assert_match <<~MSG, e.message
       No method `StubTest::Methodless#do_stuff' exists for call:

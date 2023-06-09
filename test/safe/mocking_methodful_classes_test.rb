@@ -26,7 +26,7 @@ class MockingMethodfulClassesTest < Minitest::Test
   class OverridesEverything
     (instance_methods - [:__send__, :object_id]).each do |method|
       define_method method, ->(*args, **kwargs, &block) {
-        super
+        T.unsafe(self).super
       }
     end
 
@@ -49,9 +49,11 @@ class MockingMethodfulClassesTest < Minitest::Test
     verify { overrides_everything == 3 }
     verify(times: 0) { overrides_everything == 4 }
     explanation = Mocktail.explain(overrides_everything)
-    assert_equal explanation.reference.stubbings[0].satisfaction_count, 1
-    assert_equal explanation.reference.stubbings[1].satisfaction_count, 1
-    assert_equal explanation.reference.stubbings[2].satisfaction_count, 1
+
+    stubbings = explanation.reference.stubbings
+    assert_equal stubbings[0]&.satisfaction_count, 1
+    assert_equal stubbings[1]&.satisfaction_count, 1
+    assert_equal stubbings[2]&.satisfaction_count, 1
   end
 
   def test_passing_mocks_and_comparing_them

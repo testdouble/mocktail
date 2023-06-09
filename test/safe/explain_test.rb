@@ -82,6 +82,15 @@ class ExplainTest < Minitest::Test
     assert_nil a_nil
     assert_kind_of Mocktail::NoExplanation, explanation
     assert_equal Mocktail::NoExplanation, explanation.type
+    e1 = assert_raises(Mocktail::Error) { explanation.reference.calls }
+    assert_equal "No calls have been recorded for nil, because Mocktail doesn't know what it is.", e1.message
+    e2 = assert_raises(Mocktail::Error) { explanation.reference.stubbings }
+    assert_equal "No stubbings exist on nil, because Mocktail doesn't know what it is.", e2.message
+
+    ref = explanation.reference # Data type-specific data
+    if ref.is_a?(Mocktail::NoExplanationData)
+      assert_nil ref.thing
+    end
     assert_equal <<~MSG.tr("\n", ""), explanation.message
       Unfortunately, Mocktail doesn't know what this thing is: nil
     MSG
@@ -190,9 +199,13 @@ class ExplainTest < Minitest::Test
 
         do
     MSG
-    assert_equal thing, result.reference.receiver
     assert_equal [], result.reference.stubbings
     assert_equal 1, result.reference.calls.size
+
+    ref = result.reference
+    if ref.is_a?(Mocktail::FakeMethodData)
+      assert_equal thing, ref.receiver
+    end
   end
 
   def test_explain_method_calls_on_singleton
@@ -209,8 +222,11 @@ class ExplainTest < Minitest::Test
 
       `ExplainTest::Training.teach' has no calls.
     MSG
-    assert_equal Training, result.reference.receiver
     assert_equal 1, result.reference.stubbings.size
     assert_equal [], result.reference.calls
+    ref = result.reference
+    if ref.is_a?(Mocktail::FakeMethodData)
+      assert_equal Training, ref.receiver
+    end
   end
 end

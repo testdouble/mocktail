@@ -77,7 +77,7 @@ class ReplaceTest < Minitest::Test
     assert_equal 4, house.id
     assert_equal 8, other_house.id
 
-    stubs { House.new(:lol) }.with { :wat }
+    stubs { T.unsafe(House).new(:lol) }.with { :wat }
 
     assert_equal :wat, House.new(:lol)
 
@@ -150,7 +150,7 @@ class ReplaceTest < Minitest::Test
   end
 
   def test_not_a_module_or_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { Mocktail.replace(42) }
+    e = assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).replace(42) }
     assert_equal <<~MSG.chomp, e.message
       Mocktail.replace() only supports classes and modules
     MSG

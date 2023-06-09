@@ -83,7 +83,7 @@ class Mocktail::Stubbing < ::Struct
   extend T::Generic
   MethodReturnType = type_member
 
-  sig { params(block: T.proc.returns(MethodReturnType)).void }
+  sig { params(block: T.proc.params(call: Mocktail::Call).returns(MethodReturnType)).void }
   def with(&block)
   end
 end
@@ -168,7 +168,7 @@ class Mocktail::Explanation
   ThingType = type_member
 
   sig {
-    returns(T.any(ThingType, Mocktail::ExplanationData))
+    returns(Mocktail::ExplanationData)
   }
   def reference
   end
@@ -209,16 +209,4 @@ module Mocktail::ExplanationData
   sig { abstract.returns T::Array[Mocktail::Stubbing[T.untyped]] }
   def stubbings
   end
-end
-
-class Mocktail::TypeReplacementData
-  include Mocktail::ExplanationData
-end
-
-class Mocktail::DoubleData
-  include Mocktail::ExplanationData
-end
-
-class Mocktail::FakeMethodData
-  include Mocktail::ExplanationData
 end

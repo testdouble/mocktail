@@ -64,7 +64,8 @@ class OfNextTest < Minitest::Test
 
   def test_of_next_multiples_then_returns_to_replaced_version
     Mocktail.replace(Neato)
-    three_neats = Mocktail.of_next(Neato, count: 3)
+    # of_next is still supported even though of_next_with_count is typesafe:
+    three_neats = T.unsafe(Mocktail).of_next(Neato, count: 3)
 
     assert_equal three_neats[0], Neato.new
     assert_equal three_neats[1], Neato.new
@@ -76,7 +77,7 @@ class OfNextTest < Minitest::Test
   end
 
   def test_not_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { Mocktail.of_next(AModule) }
+    e = assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of_next(AModule) }
     assert_equal <<~MSG.chomp, e.message
       Mocktail.of_next() only supports classes
     MSG
@@ -85,7 +86,7 @@ class OfNextTest < Minitest::Test
   def test_multiple_threads
     [
       thread do
-        mock_neatos = Mocktail.of_next(Neato, count: 3)
+        mock_neatos = Mocktail.of_next_with_count(Neato, count: 3)
         sleep 0.001
         assert_equal mock_neatos[0], Neato.new
         sleep 0.001

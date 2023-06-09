@@ -1,3 +1,12 @@
+# Unreleased
+
+* **Breaking change (you won't care about)** - When an unknown object is passed
+  to `Mocktail.explain`, the returned object's `reference` will now be set to a
+  `NoExplanationData` instead of the thing that was passed. To access that
+  unknown thing, you can call `NoExplanationData#thing`, (i.e.
+  `Mocktail.explain(lol_not_a_mock).reference.thing` and get a reference back to
+  `lol_not_a_mock`.)
+
 # 1.2.2
 
 * As promised in 1.2.1, there were bugs. [#19](https://github.com/testdouble/mocktail/pull/19)

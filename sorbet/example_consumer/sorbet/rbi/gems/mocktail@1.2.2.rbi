@@ -518,7 +518,7 @@ end
 
 # source://mocktail//lib/mocktail/value/double_data.rb#4
 class Mocktail::DoubleData < ::Struct
-  include Mocktail::ExplanationData
+  include ::Mocktail::ExplanationData
 
   # Returns the value of attribute calls
   #
@@ -648,7 +648,7 @@ class Mocktail::Explanation
   # Returns the value of attribute reference.
   #
   # source://mocktail//lib/mocktail/value/explanation.rb#5
-  sig { returns(T.any(ThingType, Mocktail::ExplanationData)) }
+  sig { returns(Mocktail::ExplanationData) }
   def reference; end
 
   # source://mocktail//lib/mocktail/value/explanation.rb#12
@@ -657,6 +657,7 @@ class Mocktail::Explanation
   ThingType = type_member
 end
 
+# source://mocktail//lib/mocktail/value/explanation_data.rb#2
 module Mocktail::ExplanationData
   include Kernel
 
@@ -671,7 +672,7 @@ end
 
 # source://mocktail//lib/mocktail/value/fake_method_data.rb#4
 class Mocktail::FakeMethodData < ::Struct
-  include Mocktail::ExplanationData
+  include ::Mocktail::ExplanationData
 
   # Returns the value of attribute calls
   #
@@ -1192,6 +1193,40 @@ class Mocktail::NoExplanation < ::Mocktail::Explanation
   ThingType = type_member
 end
 
+# source://mocktail//lib/mocktail/value/no_explanation_data.rb#2
+class Mocktail::NoExplanationData < ::Struct
+  include ::Mocktail::ExplanationData
+
+  # @raise [Error]
+  #
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#8
+  def calls; end
+
+  # @raise [Error]
+  #
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#12
+  def stubbings; end
+
+  # Returns the value of attribute thing
+  #
+  # @return [Object] the current value of thing
+  def thing; end
+
+  # Sets the attribute thing
+  #
+  # @param value [Object] the value to set the attribute thing to.
+  # @return [Object] the newly set value
+  def thing=(_); end
+
+  class << self
+    def [](*_arg0); end
+    def inspect; end
+    def keyword_init?; end
+    def members; end
+    def new(*_arg0); end
+  end
+end
+
 # source://mocktail//lib/mocktail/value/signature.rb#19
 class Mocktail::Params < ::Struct
   # @return [Params] a new instance of Params
@@ -1649,7 +1684,7 @@ class Mocktail::Stubbing < ::Struct
 
   # @return [Stubbing] a new instance of Stubbing
   #
-  # source://mocktail//lib/mocktail/value/stubbing.rb#12
+  # source://mocktail//lib/mocktail/value/stubbing.rb#23
   def initialize(**kwargs); end
 
   # Returns the value of attribute demo_config
@@ -1707,15 +1742,17 @@ class Mocktail::Stubbing < ::Struct
   # @return [Object] the newly set value
   def satisfaction_count=(_); end
 
-  # source://mocktail//lib/mocktail/value/stubbing.rb#17
+  # source://mocktail//lib/mocktail/value/stubbing.rb#28
   def satisfied!; end
 
-  # source://mocktail//lib/mocktail/value/stubbing.rb#21
-  sig { params(block: T.proc.returns(MethodReturnType)).void }
+  # source://mocktail//lib/mocktail/value/stubbing.rb#32
+  sig { params(block: T.proc.params(call: Mocktail::Call).returns(MethodReturnType)).void }
   def with(&block); end
 
   class << self
-    def [](*_arg0); end
+    # source://mocktail//lib/mocktail/value/stubbing.rb#19
+    def [](generic_type_for_sorbet_runtime = T.unsafe(nil)); end
+
     def inspect; end
     def keyword_init?; end
     def members; end
@@ -1862,7 +1899,7 @@ end
 
 # source://mocktail//lib/mocktail/value/type_replacement_data.rb#4
 class Mocktail::TypeReplacementData < ::Struct
-  include Mocktail::ExplanationData
+  include ::Mocktail::ExplanationData
 
   # Returns the value of attribute calls
   #
@@ -1875,7 +1912,7 @@ class Mocktail::TypeReplacementData < ::Struct
   # @return [Object] the newly set value
   def calls=(_); end
 
-  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#11
+  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#13
   def double; end
 
   # Returns the value of attribute replaced_method_names

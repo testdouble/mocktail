@@ -134,7 +134,7 @@ class VerifyTest < Minitest::Test
     # imagine we don't care about b, c, or d
     complex_arg = {a: 1, b: 2, c: 3, d: 4}
 
-    syn.ack(complex_arg)
+    T.unsafe(syn).ack(complex_arg)
 
     captor = Mocktail.captor
     refute captor.captured?

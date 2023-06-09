@@ -8,5 +8,4 @@ bundle exec rake
 echo "-----> Type-checking Mocktail itself"
 bundle exec srb tc
 
-echo "-----> Verifying Sorbet type-checking works"
 ./script/test_sorbet_example

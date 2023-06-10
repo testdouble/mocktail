@@ -1603,7 +1603,7 @@ end
 # source://mocktail//lib/mocktail/value/stubbing.rb#4
 class Mocktail::Stubbing < ::T::Struct
   extend T::Generic
-
+  MethodReturnType = type_member
   const :demonstration, T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(MethodReturnType)
   const :demo_config, ::Mocktail::DemoConfig
   prop :satisfaction_count, ::Integer, default: T.unsafe(nil)

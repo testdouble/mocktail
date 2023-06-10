@@ -5,6 +5,9 @@ set -e
 echo "-----> [Sorbet Example Project] Nuking and regenerating Mocktail RBI files"
 rm -rf sorbet/rbi/gems/mocktail*
 bin/tapioca gems
+# TODO HACK https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686419185397299
+sed -i '' '1606i\
+  \MethodReturnType = type_member' sorbet/rbi/gems/mocktail@1.2.2.rbi
 
 echo "-----> [Sorbet Example Project] Type-checking"
 bundle exec srb tc

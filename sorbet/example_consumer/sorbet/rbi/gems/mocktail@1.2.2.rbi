@@ -424,57 +424,15 @@ class Mocktail::DeterminesMatchingCalls
 end
 
 # source://mocktail//lib/mocktail/value/double.rb#4
-class Mocktail::Double < ::Struct
-  # Returns the value of attribute dry_instance
-  #
-  # @return [Object] the current value of dry_instance
-  def dry_instance; end
-
-  # Sets the attribute dry_instance
-  #
-  # @param value [Object] the value to set the attribute dry_instance to.
-  # @return [Object] the newly set value
-  def dry_instance=(_); end
-
-  # Returns the value of attribute dry_methods
-  #
-  # @return [Object] the current value of dry_methods
-  def dry_methods; end
-
-  # Sets the attribute dry_methods
-  #
-  # @param value [Object] the value to set the attribute dry_methods to.
-  # @return [Object] the newly set value
-  def dry_methods=(_); end
-
-  # Returns the value of attribute dry_type
-  #
-  # @return [Object] the current value of dry_type
-  def dry_type; end
-
-  # Sets the attribute dry_type
-  #
-  # @param value [Object] the value to set the attribute dry_type to.
-  # @return [Object] the newly set value
-  def dry_type=(_); end
-
-  # Returns the value of attribute original_type
-  #
-  # @return [Object] the current value of original_type
-  def original_type; end
-
-  # Sets the attribute original_type
-  #
-  # @param value [Object] the value to set the attribute original_type to.
-  # @return [Object] the newly set value
-  def original_type=(_); end
+class Mocktail::Double < ::T::Struct
+  const :original_type, T.any(::Class, ::Module)
+  const :dry_type, ::Class
+  const :dry_instance, T.anything
+  const :dry_methods, T::Array[::Symbol]
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 

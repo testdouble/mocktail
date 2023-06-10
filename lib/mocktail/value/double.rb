@@ -1,11 +1,10 @@
-# typed: false
+# typed: true
 
 module Mocktail
-  Double = Struct.new(
-    :original_type,
-    :dry_type,
-    :dry_instance,
-    :dry_methods,
-    keyword_init: true
-  )
+  class Double < T::Struct
+    const :original_type, T.any(Class, Module)
+    const :dry_type, Class
+    const :dry_instance, T.anything
+    const :dry_methods, T::Array[Symbol]
+  end
 end

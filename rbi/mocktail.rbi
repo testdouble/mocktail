@@ -56,7 +56,7 @@ module Mocktail
     def explain(thing)
     end
 
-    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::Call]]) }
+    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::UnsatisfyingCall]]) }
     def explain_nils
     end
 

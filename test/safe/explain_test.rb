@@ -40,6 +40,7 @@ class ExplainTest < Minitest::Test
       No stubbings were configured on this method.
 
     MSG
+    T.assert_type!(explanation.reference, Mocktail::UnsatisfyingCall)
   end
 
   def test_explain_stub_returned_nil_with_stubbings

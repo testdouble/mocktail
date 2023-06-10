@@ -1644,175 +1644,57 @@ class Mocktail::TransformsParams
 end
 
 # source://mocktail//lib/mocktail/value/type_replacement.rb#4
-class Mocktail::TypeReplacement < ::Struct
-  # Returns the value of attribute original_methods
-  #
-  # @return [Object] the current value of original_methods
-  def original_methods; end
-
-  # Sets the attribute original_methods
-  #
-  # @param value [Object] the value to set the attribute original_methods to.
-  # @return [Object] the newly set value
-  def original_methods=(_); end
-
-  # Returns the value of attribute original_new
-  #
-  # @return [Object] the current value of original_new
-  def original_new; end
-
-  # Sets the attribute original_new
-  #
-  # @param value [Object] the value to set the attribute original_new to.
-  # @return [Object] the newly set value
-  def original_new=(_); end
-
-  # Returns the value of attribute replacement_methods
-  #
-  # @return [Object] the current value of replacement_methods
-  def replacement_methods; end
-
-  # Sets the attribute replacement_methods
-  #
-  # @param value [Object] the value to set the attribute replacement_methods to.
-  # @return [Object] the newly set value
-  def replacement_methods=(_); end
-
-  # Returns the value of attribute replacement_new
-  #
-  # @return [Object] the current value of replacement_new
-  def replacement_new; end
-
-  # Sets the attribute replacement_new
-  #
-  # @param value [Object] the value to set the attribute replacement_new to.
-  # @return [Object] the newly set value
-  def replacement_new=(_); end
-
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  def type; end
-
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  def type=(_); end
+class Mocktail::TypeReplacement < ::T::Struct
+  const :type, T.any(::Module, T::Class[T.anything])
+  prop :original_methods, T.nilable(T::Array[::Method])
+  prop :replacement_methods, T.nilable(T::Array[::Method])
+  prop :original_new, T.nilable(::Method)
+  prop :replacement_new, T.nilable(::Method)
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
 # source://mocktail//lib/mocktail/value/type_replacement_data.rb#4
-class Mocktail::TypeReplacementData < ::Struct
+class Mocktail::TypeReplacementData < ::T::Struct
   include ::Mocktail::ExplanationData
 
-  # Returns the value of attribute calls
-  #
-  # @return [Object] the current value of calls
-  def calls; end
+  const :type, T.any(::Module, T::Class[T.anything])
+  const :replaced_method_names, T::Array[::Symbol]
+  const :calls, T::Array[::Mocktail::Call]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
 
-  # Sets the attribute calls
-  #
-  # @param value [Object] the value to set the attribute calls to.
-  # @return [Object] the newly set value
-  def calls=(_); end
-
-  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#13
+  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#15
+  sig { returns(T.any(::Module, T::Class[T.anything])) }
   def double; end
 
-  # Returns the value of attribute replaced_method_names
-  #
-  # @return [Object] the current value of replaced_method_names
-  def replaced_method_names; end
-
-  # Sets the attribute replaced_method_names
-  #
-  # @param value [Object] the value to set the attribute replaced_method_names to.
-  # @return [Object] the newly set value
-  def replaced_method_names=(_); end
-
-  # Returns the value of attribute stubbings
-  #
-  # @return [Object] the current value of stubbings
-  def stubbings; end
-
-  # Sets the attribute stubbings
-  #
-  # @param value [Object] the value to set the attribute stubbings to.
-  # @return [Object] the newly set value
-  def stubbings=(_); end
-
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  def type; end
-
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  def type=(_); end
-
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
 # source://mocktail//lib/mocktail/errors.rb#6
 class Mocktail::UnexpectedError < ::Mocktail::Error; end
 
-# source://mocktail//lib/mocktail/value/unsatisfying_call.rb#4
-class Mocktail::UnsatisfyingCall < ::Struct
-  # Returns the value of attribute backtrace
-  #
-  # @return [Object] the current value of backtrace
-  def backtrace; end
-
-  # Sets the attribute backtrace
-  #
-  # @param value [Object] the value to set the attribute backtrace to.
-  # @return [Object] the newly set value
-  def backtrace=(_); end
-
-  # Returns the value of attribute call
-  #
-  # @return [Object] the current value of call
-  def call; end
-
-  # Sets the attribute call
-  #
-  # @param value [Object] the value to set the attribute call to.
-  # @return [Object] the newly set value
-  def call=(_); end
-
-  # Returns the value of attribute other_stubbings
-  #
-  # @return [Object] the current value of other_stubbings
-  def other_stubbings; end
-
-  # Sets the attribute other_stubbings
-  #
-  # @param value [Object] the value to set the attribute other_stubbings to.
-  # @return [Object] the newly set value
-  def other_stubbings=(_); end
+# UnsatisfyingCall = Struct.new(
+#   :call,
+#   :other_stubbings,
+#   :backtrace,
+#   keyword_init: true
+# )
+#
+# source://mocktail//lib/mocktail/value/unsatisfying_call.rb#11
+class Mocktail::UnsatisfyingCall < ::T::Struct
+  const :call, ::Mocktail::Call
+  const :other_stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
+  const :backtrace, T::Array[::String]
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 

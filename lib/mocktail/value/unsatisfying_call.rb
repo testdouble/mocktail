@@ -1,10 +1,9 @@
-# typed: false
+# typed: strict
 
 module Mocktail
-  UnsatisfyingCall = Struct.new(
-    :call,
-    :other_stubbings,
-    :backtrace,
-    keyword_init: true
-  )
+  class UnsatisfyingCall < T::Struct
+    const :call, Call
+    const :other_stubbings, T::Array[Stubbing[T.untyped]]
+    const :backtrace, T::Array[String]
+  end
 end

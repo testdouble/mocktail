@@ -534,15 +534,21 @@ class Mocktail::Explanation
   def type; end
 end
 
-# source://mocktail//lib/mocktail/value/explanation_data.rb#2
+# @abstract Subclasses must implement the `abstract` methods below.
+#
+# source://mocktail//lib/mocktail/value/explanation_data.rb#4
 module Mocktail::ExplanationData
-  include Kernel
-
   interface!
 
-  sig { abstract.returns(T::Array[Mocktail::Call]) }
+  # @abstract
+  #
+  # source://mocktail//lib/mocktail/value/explanation_data.rb#12
+  sig { abstract.returns(T::Array[::Mocktail::Call]) }
   def calls; end
 
+  # @abstract
+  #
+  # source://mocktail//lib/mocktail/value/explanation_data.rb#16
   sig { abstract.returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
   def stubbings; end
 end

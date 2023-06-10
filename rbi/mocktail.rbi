@@ -213,16 +213,3 @@ class Mocktail::UnsatisfyingCallExplanation
   def reference
   end
 end
-
-module Mocktail::ExplanationData
-  interface!
-  include Kernel
-
-  sig { abstract.returns T::Array[Mocktail::Call] }
-  def calls
-  end
-
-  sig { abstract.returns T::Array[Mocktail::Stubbing[T.untyped]] }
-  def stubbings
-  end
-end

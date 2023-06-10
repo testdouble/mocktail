@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     mocktail (1.2.2)
+      sorbet-runtime (~> 0.5.9204)
 
 GEM
   remote: https://rubygems.org/
@@ -19,8 +20,10 @@ GEM
     minitest (5.18.0)
     netrc (0.11.0)
     parallel (1.23.0)
-    parser (3.2.2.1)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
+      racc
+    racc (1.7.0)
     rainbow (3.1.1)
     rake (13.0.6)
     rbi (0.0.16)
@@ -28,7 +31,7 @@ GEM
       parser (>= 2.6.4.0)
       sorbet-runtime (>= 0.5.9204)
       unparser
-    regexp_parser (2.8.0)
+    regexp_parser (2.8.1)
     rexml (3.2.5)
     rubocop (1.52.0)
       json (~> 2.3)
@@ -54,22 +57,22 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    sorbet (0.5.10868)
-      sorbet-static (= 0.5.10868)
-    sorbet-runtime (0.5.10868)
-    sorbet-static (0.5.10868-universal-darwin-14)
-    sorbet-static (0.5.10868-universal-darwin-15)
-    sorbet-static (0.5.10868-universal-darwin-16)
-    sorbet-static (0.5.10868-universal-darwin-17)
-    sorbet-static (0.5.10868-universal-darwin-18)
-    sorbet-static (0.5.10868-universal-darwin-19)
-    sorbet-static (0.5.10868-universal-darwin-20)
-    sorbet-static (0.5.10868-universal-darwin-21)
-    sorbet-static (0.5.10868-universal-darwin-22)
-    sorbet-static (0.5.10868-x86_64-linux)
-    sorbet-static-and-runtime (0.5.10868)
-      sorbet (= 0.5.10868)
-      sorbet-runtime (= 0.5.10868)
+    sorbet (0.5.10875)
+      sorbet-static (= 0.5.10875)
+    sorbet-runtime (0.5.10875)
+    sorbet-static (0.5.10875-universal-darwin-14)
+    sorbet-static (0.5.10875-universal-darwin-15)
+    sorbet-static (0.5.10875-universal-darwin-16)
+    sorbet-static (0.5.10875-universal-darwin-17)
+    sorbet-static (0.5.10875-universal-darwin-18)
+    sorbet-static (0.5.10875-universal-darwin-19)
+    sorbet-static (0.5.10875-universal-darwin-20)
+    sorbet-static (0.5.10875-universal-darwin-21)
+    sorbet-static (0.5.10875-universal-darwin-22)
+    sorbet-static (0.5.10875-x86_64-linux)
+    sorbet-static-and-runtime (0.5.10875)
+      sorbet (= 0.5.10875)
+      sorbet-runtime (= 0.5.10875)
     spoom (1.2.1)
       sorbet (>= 0.5.10187)
       sorbet-runtime (>= 0.5.9204)
@@ -115,7 +118,7 @@ DEPENDENCIES
   rake
   rubocop-sorbet
   simplecov
-  sorbet-static-and-runtime
+  sorbet-static
   spoom
   standard
   tapioca

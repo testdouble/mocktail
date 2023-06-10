@@ -1,34 +1,23 @@
-# typed: false
+# typed: true
 
 module Mocktail
-  Stubbing = Struct.new(
-    :demonstration,
-    :demo_config,
-    :satisfaction_count,
-    :recording,
-    :effect,
-    keyword_init: true
-  ) do
-    class << self
-      # Struct defines self.[], but we need to redefine it so that
-      # sorbet-runtime can tolerate generic typechecks.
-      # See: sorbet/example_consumer/test/sorbet_test.rb
-      undef_method(:[])
-    end
+  class Stubbing < T::Struct
+    extend T::Sig
+    extend T::Generic
+    MethodReturnType = type_member
 
-    def self.[](*types)
-      self
-    end
+    const :demonstration, T.proc.params(matchers: Mocktail::MatcherPresentation).returns(MethodReturnType)
+    const :demo_config, DemoConfig
+    prop :satisfaction_count, Integer, default: 0
+    const :recording, Call
+    prop :effect, T.nilable(T.proc.params(call: Mocktail::Call).returns(MethodReturnType))
 
-    def initialize(**kwargs)
-      super
-      self.satisfaction_count ||= 0
-    end
-
+    sig { void }
     def satisfied!
       self.satisfaction_count += 1
     end
 
+    sig { params(block: T.proc.params(call: Mocktail::Call).returns(MethodReturnType)).void }
     def with(&block)
       self.effect = block
       nil

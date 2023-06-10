@@ -98,15 +98,6 @@ module Mocktail::DSL
   end
 end
 
-class Mocktail::Stubbing < ::Struct
-  extend T::Generic
-  MethodReturnType = type_member
-
-  sig { params(block: T.proc.params(call: Mocktail::Call).returns(MethodReturnType)).void }
-  def with(&block)
-  end
-end
-
 class Mocktail::MatcherPresentation
   sig {
     returns(T.untyped)

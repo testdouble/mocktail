@@ -372,57 +372,15 @@ class Mocktail::DeclaresDryClass
 end
 
 # source://mocktail//lib/mocktail/value/demo_config.rb#4
-class Mocktail::DemoConfig < ::Struct
-  # Returns the value of attribute ignore_arity
-  #
-  # @return [Object] the current value of ignore_arity
-  def ignore_arity; end
-
-  # Sets the attribute ignore_arity
-  #
-  # @param value [Object] the value to set the attribute ignore_arity to.
-  # @return [Object] the newly set value
-  def ignore_arity=(_); end
-
-  # Returns the value of attribute ignore_block
-  #
-  # @return [Object] the current value of ignore_block
-  def ignore_block; end
-
-  # Sets the attribute ignore_block
-  #
-  # @param value [Object] the value to set the attribute ignore_block to.
-  # @return [Object] the newly set value
-  def ignore_block=(_); end
-
-  # Returns the value of attribute ignore_extra_args
-  #
-  # @return [Object] the current value of ignore_extra_args
-  def ignore_extra_args; end
-
-  # Sets the attribute ignore_extra_args
-  #
-  # @param value [Object] the value to set the attribute ignore_extra_args to.
-  # @return [Object] the newly set value
-  def ignore_extra_args=(_); end
-
-  # Returns the value of attribute times
-  #
-  # @return [Object] the current value of times
-  def times; end
-
-  # Sets the attribute times
-  #
-  # @param value [Object] the value to set the attribute times to.
-  # @return [Object] the newly set value
-  def times=(_); end
+class Mocktail::DemoConfig < ::T::Struct
+  const :ignore_block, T.nilable(T::Boolean)
+  const :ignore_extra_args, T.nilable(T::Boolean)
+  const :ignore_arity, T.nilable(T::Boolean)
+  const :times, T.nilable(::Integer)
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
@@ -520,60 +478,18 @@ class Mocktail::Double < ::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/double_data.rb#4
-class Mocktail::DoubleData < ::Struct
+# source://mocktail//lib/mocktail/value/double_data.rb#7
+class Mocktail::DoubleData < ::T::Struct
   include ::Mocktail::ExplanationData
 
-  # Returns the value of attribute calls
-  #
-  # @return [Object] the current value of calls
-  def calls; end
-
-  # Sets the attribute calls
-  #
-  # @param value [Object] the value to set the attribute calls to.
-  # @return [Object] the newly set value
-  def calls=(_); end
-
-  # Returns the value of attribute double
-  #
-  # @return [Object] the current value of double
-  def double; end
-
-  # Sets the attribute double
-  #
-  # @param value [Object] the value to set the attribute double to.
-  # @return [Object] the newly set value
-  def double=(_); end
-
-  # Returns the value of attribute stubbings
-  #
-  # @return [Object] the current value of stubbings
-  def stubbings; end
-
-  # Sets the attribute stubbings
-  #
-  # @param value [Object] the value to set the attribute stubbings to.
-  # @return [Object] the newly set value
-  def stubbings=(_); end
-
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
-  def type; end
-
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
-  def type=(_); end
+  const :type, T.any(::Class, ::Module)
+  const :double, T.anything
+  const :calls, T::Array[::Mocktail::Call]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
@@ -1685,87 +1601,27 @@ class Mocktail::StringifiesMethodSignature
 end
 
 # source://mocktail//lib/mocktail/value/stubbing.rb#4
-class Mocktail::Stubbing < ::Struct
+class Mocktail::Stubbing < ::T::Struct
   extend T::Generic
 
-  # @return [Stubbing] a new instance of Stubbing
-  #
-  # source://mocktail//lib/mocktail/value/stubbing.rb#23
-  def initialize(**kwargs); end
+  const :demonstration, T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(MethodReturnType)
+  const :demo_config, ::Mocktail::DemoConfig
+  prop :satisfaction_count, ::Integer, default: T.unsafe(nil)
+  const :recording, ::Mocktail::Call
+  prop :effect, T.nilable(T.proc.params(call: ::Mocktail::Call).returns(MethodReturnType))
 
-  # Returns the value of attribute demo_config
-  #
-  # @return [Object] the current value of demo_config
-  def demo_config; end
-
-  # Sets the attribute demo_config
-  #
-  # @param value [Object] the value to set the attribute demo_config to.
-  # @return [Object] the newly set value
-  def demo_config=(_); end
-
-  # Returns the value of attribute demonstration
-  #
-  # @return [Object] the current value of demonstration
-  def demonstration; end
-
-  # Sets the attribute demonstration
-  #
-  # @param value [Object] the value to set the attribute demonstration to.
-  # @return [Object] the newly set value
-  def demonstration=(_); end
-
-  # Returns the value of attribute effect
-  #
-  # @return [Object] the current value of effect
-  def effect; end
-
-  # Sets the attribute effect
-  #
-  # @param value [Object] the value to set the attribute effect to.
-  # @return [Object] the newly set value
-  def effect=(_); end
-
-  # Returns the value of attribute recording
-  #
-  # @return [Object] the current value of recording
-  def recording; end
-
-  # Sets the attribute recording
-  #
-  # @param value [Object] the value to set the attribute recording to.
-  # @return [Object] the newly set value
-  def recording=(_); end
-
-  # Returns the value of attribute satisfaction_count
-  #
-  # @return [Object] the current value of satisfaction_count
-  def satisfaction_count; end
-
-  # Sets the attribute satisfaction_count
-  #
-  # @param value [Object] the value to set the attribute satisfaction_count to.
-  # @return [Object] the newly set value
-  def satisfaction_count=(_); end
-
-  # source://mocktail//lib/mocktail/value/stubbing.rb#28
+  # source://mocktail//lib/mocktail/value/stubbing.rb#16
+  sig { void }
   def satisfied!; end
 
-  # source://mocktail//lib/mocktail/value/stubbing.rb#32
-  sig { params(block: T.proc.params(call: Mocktail::Call).returns(MethodReturnType)).void }
+  # source://mocktail//lib/mocktail/value/stubbing.rb#21
+  sig { params(block: T.proc.params(call: ::Mocktail::Call).returns(MethodReturnType)).void }
   def with(&block); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/stubbing.rb#19
-    def [](*types); end
-
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
-
-  MethodReturnType = type_member
 end
 
 # The TopShelf is where we keep all the more global, dangerous state.

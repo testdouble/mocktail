@@ -2,7 +2,6 @@
 
 require "test_helper"
 
-T::Configuration.default_checked_level = :never
 class SherbetTest < Minitest::Test
   class Sherbet
     extend T::Sig

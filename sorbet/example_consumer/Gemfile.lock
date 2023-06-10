@@ -2,6 +2,7 @@ PATH
   remote: ../..
   specs:
     mocktail (1.2.2)
+      sorbet-runtime (~> 0.5.9204)
 
 GEM
   remote: https://rubygems.org/

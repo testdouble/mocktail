@@ -23,6 +23,7 @@ module Mocktail
     # calls to that method
     #
     # source://mocktail//lib/mocktail.rb#81
+    sig { params(double: T.anything, method_name: T.nilable(T.any(String, Symbol))).returns(T::Array[Mocktail::Call]) }
     def calls(double, method_name = T.unsafe(nil)); end
 
     # source://mocktail//lib/mocktail.rb#51
@@ -34,9 +35,11 @@ module Mocktail
     def explain(thing); end
 
     # source://mocktail//lib/mocktail.rb#74
+    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::Call]]) }
     def explain_nils; end
 
     # source://mocktail//lib/mocktail.rb#47
+    sig { returns(Mocktail::MatcherPresentation) }
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
@@ -71,6 +74,7 @@ module Mocktail
     def of_next_with_count(type, count:); end
 
     # source://mocktail//lib/mocktail.rb#55
+    sig { params(matcher: Mocktail::Matchers::Base).void }
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
@@ -1751,7 +1755,7 @@ class Mocktail::Stubbing < ::Struct
 
   class << self
     # source://mocktail//lib/mocktail/value/stubbing.rb#19
-    def [](generic_type_for_sorbet_runtime = T.unsafe(nil)); end
+    def [](*types); end
 
     def inspect; end
     def keyword_init?; end

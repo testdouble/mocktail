@@ -493,8 +493,8 @@ class StubTest < Minitest::Test
     assert_equal :less_weird, T.unsafe(thing).positional(:a, :b, :d, :e)
     assert_equal :even_less_weird, thing.positional(:a, :b, :c, :d, :e)
 
-    assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0].args
-    assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1].args
-    assert_equal [:a, :b, :c, :d, :e], Mocktail.calls(thing, :positional)[2].args
+    assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0]&.args
+    assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1]&.args
+    assert_equal [:a, :b, :c, :d, :e], Mocktail.calls(thing, :positional)[2]&.args
   end
 end

@@ -22,6 +22,7 @@ class ExplainTest < Minitest::Test
 
     assert_equal 1, explanations.size
     explanation = explanations.first
+    raise "Expected explanation not to be nil" if explanation.nil?
     assert_kind_of Mocktail::UnsatisfyingCallExplanation, explanation
     assert_equal Mocktail::UnsatisfyingCallExplanation, explanation.type
     assert_equal <<~MSG, explanation.message
@@ -51,6 +52,7 @@ class ExplainTest < Minitest::Test
 
     assert_equal 1, explanations.size
     explanation = explanations.first
+    raise "Expected explanation not to be nil" if explanation.nil?
     assert_kind_of Mocktail::UnsatisfyingCallExplanation, explanation
     assert_equal Mocktail::UnsatisfyingCallExplanation, explanation.type
     # As for what's on this object, that's unspecified and may change. Don't rely on this!
@@ -65,7 +67,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:47:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:48:in `test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 

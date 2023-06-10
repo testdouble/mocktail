@@ -28,8 +28,16 @@ module Mocktail
     def of_next_with_count(type, count:)
     end
 
+    sig { returns(Mocktail::MatcherPresentation) }
+    def matchers
+    end
+
     sig { returns(Mocktail::Matchers::Captor) }
     def captor
+    end
+
+    sig { params(matcher: Mocktail::Matchers::Base).void }
+    def register_matcher(matcher)
     end
 
     sig { params(type: T.any(Class, Module)).void }
@@ -46,6 +54,17 @@ module Mocktail
         .returns(Explanation[T.type_parameter(:T)])
     }
     def explain(thing)
+    end
+
+    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::Call]]) }
+    def explain_nils
+    end
+
+    sig {
+      params(double: T.anything, method_name: T.nilable(T.any(String, Symbol)))
+        .returns(T::Array[Mocktail::Call])
+    }
+    def calls(double, method_name = T.unsafe(nil))
     end
   end
 end
@@ -167,9 +186,7 @@ end
 class Mocktail::Explanation
   ThingType = type_member
 
-  sig {
-    returns(Mocktail::ExplanationData)
-  }
+  sig { returns(Mocktail::ExplanationData) }
   def reference
   end
 

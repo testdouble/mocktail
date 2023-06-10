@@ -7,7 +7,7 @@ class RegistersMatcherTest < Minitest::Test
     @subject = Mocktail::RegistersMatcher.new
   end
 
-  class ValidMatcher
+  class ValidMatcher < Mocktail::Matchers::Base
     def initialize(expected)
       @expected = expected
     end
@@ -32,8 +32,8 @@ class RegistersMatcherTest < Minitest::Test
   def test_works_fine_if_the_matcher_is_legit
     @subject.register(ValidMatcher)
 
-    matching_pants = Mocktail.matchers.is_pants("pants")
-    not_matching_pants = Mocktail.matchers.is_pants("trousers")
+    matching_pants = T.unsafe(Mocktail.matchers).is_pants("pants")
+    not_matching_pants = T.unsafe(Mocktail.matchers).is_pants("trousers")
 
     assert matching_pants.match?("pants")
     refute matching_pants.match?("trousers")

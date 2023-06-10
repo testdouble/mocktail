@@ -930,6 +930,11 @@ Sorbet signatures has been narrowed to the greatest reasonable extent:
   * [Mocktail.captor](#mocktailcaptor) (which is implemented as a matcher)
     is also untyped, because there is no way to parameterize the value of
     `captor.capture` by type deduction in Sorbet
+  * [Custom matchers](#custom-matchers) are also tricky, as the [DSL is
+  implemented with `method_missing`](/lib/mocktail/matcher_presentation.rb), so
+  you may need to define [`Mocktail::MatcherPresentation` signatures that lie
+  about the return value](/rbi/mocktail.rbi) for each custom matcher you create
+
 
 ## References
 

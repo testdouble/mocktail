@@ -31,11 +31,11 @@ module Mocktail
     def captor; end
 
     # source://mocktail//lib/mocktail.rb#70
-    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(Explanation[T.type_parameter(:T)]) }
+    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(Explanation) }
     def explain(thing); end
 
     # source://mocktail//lib/mocktail.rb#74
-    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::Call]]) }
+    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
     # source://mocktail//lib/mocktail.rb#47
@@ -579,7 +579,8 @@ end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#23
 class Mocktail::DoubleExplanation < ::Mocktail::Explanation
-  ThingType = type_member
+  sig { returns(Mocktail::DoubleData) }
+  def reference; end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#4
@@ -657,8 +658,6 @@ class Mocktail::Explanation
 
   # source://mocktail//lib/mocktail/value/explanation.rb#12
   def type; end
-
-  ThingType = type_member
 end
 
 # source://mocktail//lib/mocktail/value/explanation_data.rb#2
@@ -722,7 +721,8 @@ end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#29
 class Mocktail::FakeMethodExplanation < ::Mocktail::Explanation
-  ThingType = type_member
+  sig { returns(Mocktail::FakeMethodData) }
+  def reference; end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#6
@@ -1194,7 +1194,8 @@ class Mocktail::MissingDemonstrationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#17
 class Mocktail::NoExplanation < ::Mocktail::Explanation
-  ThingType = type_member
+  sig { returns(Mocktail::NoExplanationData) }
+  def reference; end
 end
 
 # source://mocktail//lib/mocktail/value/no_explanation_data.rb#2
@@ -1472,7 +1473,8 @@ end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#26
 class Mocktail::ReplacedTypeExplanation < ::Mocktail::Explanation
-  ThingType = type_member
+  sig { returns(Mocktail::TypeReplacementData) }
+  def reference; end
 end
 
 # source://mocktail//lib/mocktail/replaces_next.rb#4
@@ -2010,7 +2012,8 @@ end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#20
 class Mocktail::UnsatisfyingCallExplanation < ::Mocktail::Explanation
-  ThingType = type_member
+  sig { returns(Mocktail::UnsatisfyingCall) }
+  def reference; end
 end
 
 # source://mocktail//lib/mocktail/errors.rb#8

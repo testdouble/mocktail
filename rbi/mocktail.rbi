@@ -51,12 +51,12 @@ module Mocktail
     sig {
       type_parameters(:T)
         .params(thing: T.type_parameter(:T))
-        .returns(Explanation[T.type_parameter(:T)])
+        .returns(Explanation)
     }
     def explain(thing)
     end
 
-    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation[Mocktail::UnsatisfyingCall]]) }
+    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils
     end
 
@@ -184,8 +184,6 @@ class Mocktail::MatcherPresentation
 end
 
 class Mocktail::Explanation
-  ThingType = type_member
-
   sig { returns(Mocktail::ExplanationData) }
   def reference
   end
@@ -196,23 +194,33 @@ class Mocktail::Explanation
 end
 
 class Mocktail::ReplacedTypeExplanation
-  ThingType = type_member
+  sig { returns(Mocktail::TypeReplacementData) }
+  def reference
+  end
 end
 
 class Mocktail::DoubleExplanation
-  ThingType = type_member
+  sig { returns(Mocktail::DoubleData) }
+  def reference
+  end
 end
 
 class Mocktail::FakeMethodExplanation
-  ThingType = type_member
+  sig { returns(Mocktail::FakeMethodData) }
+  def reference
+  end
 end
 
 class Mocktail::NoExplanation
-  ThingType = type_member
+  sig { returns(Mocktail::NoExplanationData) }
+  def reference
+  end
 end
 
 class Mocktail::UnsatisfyingCallExplanation
-  ThingType = type_member
+  sig { returns(Mocktail::UnsatisfyingCall) }
+  def reference
+  end
 end
 
 module Mocktail::ExplanationData

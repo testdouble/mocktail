@@ -550,48 +550,16 @@ module Mocktail::ExplanationData
 end
 
 # source://mocktail//lib/mocktail/value/fake_method_data.rb#4
-class Mocktail::FakeMethodData < ::Struct
+class Mocktail::FakeMethodData < ::T::Struct
   include ::Mocktail::ExplanationData
 
-  # Returns the value of attribute calls
-  #
-  # @return [Object] the current value of calls
-  def calls; end
-
-  # Sets the attribute calls
-  #
-  # @param value [Object] the value to set the attribute calls to.
-  # @return [Object] the newly set value
-  def calls=(_); end
-
-  # Returns the value of attribute receiver
-  #
-  # @return [Object] the current value of receiver
-  def receiver; end
-
-  # Sets the attribute receiver
-  #
-  # @param value [Object] the value to set the attribute receiver to.
-  # @return [Object] the newly set value
-  def receiver=(_); end
-
-  # Returns the value of attribute stubbings
-  #
-  # @return [Object] the current value of stubbings
-  def stubbings; end
-
-  # Sets the attribute stubbings
-  #
-  # @param value [Object] the value to set the attribute stubbings to.
-  # @return [Object] the newly set value
-  def stubbings=(_); end
+  const :receiver, T.anything
+  const :calls, T::Array[::Mocktail::Call]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 

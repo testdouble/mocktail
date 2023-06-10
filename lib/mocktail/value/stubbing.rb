@@ -16,8 +16,8 @@ module Mocktail
       undef_method(:[])
     end
 
-    def self.[](generic_type_for_sorbet_runtime = nil)
-      generic_type_for_sorbet_runtime
+    def self.[](*types)
+      self
     end
 
     def initialize(**kwargs)

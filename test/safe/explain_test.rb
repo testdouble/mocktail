@@ -194,7 +194,7 @@ class ExplainTest < Minitest::Test
 
     result = Mocktail.explain(thing.method(:do))
 
-    assert_equal 1, Mocktail.explain(thing).reference.calls { |c| c.method == :do }.size
+    assert_equal 1, Mocktail.explain(thing).reference.calls.count { |c| c.method == :do }
     assert_equal <<~MSG, result.message
       `ExplainTest::Thing#do' has no stubbings.
 
@@ -217,7 +217,7 @@ class ExplainTest < Minitest::Test
 
     result = Mocktail.explain(Training.method(:teach))
 
-    assert_equal 1, Mocktail.explain(Training).reference.stubbings { |c| c.method == :do }.size
+    assert_equal 1, Mocktail.explain(Training).reference.stubbings.size
     assert_equal <<~MSG, result.message
       `ExplainTest::Training.teach' stubbings:
 

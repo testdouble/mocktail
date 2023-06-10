@@ -451,9 +451,14 @@ class Mocktail::DoubleData < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#28
+# source://mocktail//lib/mocktail/value/explanation.rb#36
 class Mocktail::DoubleExplanation < ::Mocktail::Explanation
-  sig { returns(Mocktail::DoubleData) }
+  # source://mocktail//lib/mocktail/value/explanation.rb#41
+  sig { params(reference: ::Mocktail::DoubleData, message: ::String).void }
+  def initialize(reference, message); end
+
+  # source://mocktail//lib/mocktail/value/explanation.rb#38
+  sig { override.returns(::Mocktail::DoubleData) }
   def reference; end
 end
 
@@ -563,9 +568,14 @@ class Mocktail::FakeMethodData < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#34
+# source://mocktail//lib/mocktail/value/explanation.rb#58
 class Mocktail::FakeMethodExplanation < ::Mocktail::Explanation
-  sig { returns(Mocktail::FakeMethodData) }
+  # source://mocktail//lib/mocktail/value/explanation.rb#63
+  sig { params(reference: ::Mocktail::FakeMethodData, message: ::String).void }
+  def initialize(reference, message); end
+
+  # source://mocktail//lib/mocktail/value/explanation.rb#60
+  sig { override.returns(::Mocktail::FakeMethodData) }
   def reference; end
 end
 
@@ -762,19 +772,21 @@ end
 
 # source://mocktail//lib/mocktail/value/matcher_registry.rb#4
 class Mocktail::MatcherRegistry
-  # @return [MatcherRegistry] a new instance of MatcherRegistry
-  #
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#9
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#13
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#13
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#18
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).void }
   def add(matcher_type); end
 
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#17
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#23
+  sig { params(name: ::Symbol).returns(T.nilable(T.class_of(Mocktail::Matchers::Base))) }
   def get(name); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/matcher_registry.rb#5
+    # source://mocktail//lib/mocktail/value/matcher_registry.rb#8
+    sig { returns(::Mocktail::MatcherRegistry) }
     def instance; end
   end
 end
@@ -1038,7 +1050,12 @@ class Mocktail::MissingDemonstrationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#25
 class Mocktail::NoExplanation < ::Mocktail::Explanation
-  sig { returns(Mocktail::NoExplanationData) }
+  # source://mocktail//lib/mocktail/value/explanation.rb#30
+  sig { params(reference: ::Mocktail::NoExplanationData, message: ::String).void }
+  def initialize(reference, message); end
+
+  # source://mocktail//lib/mocktail/value/explanation.rb#27
+  sig { override.returns(::Mocktail::NoExplanationData) }
   def reference; end
 end
 
@@ -1315,9 +1332,14 @@ class Mocktail::RegistersStubbing
   def register(demonstration, demo_config); end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#31
+# source://mocktail//lib/mocktail/value/explanation.rb#47
 class Mocktail::ReplacedTypeExplanation < ::Mocktail::Explanation
-  sig { returns(Mocktail::TypeReplacementData) }
+  # source://mocktail//lib/mocktail/value/explanation.rb#52
+  sig { params(reference: ::Mocktail::TypeReplacementData, message: ::String).void }
+  def initialize(reference, message); end
+
+  # source://mocktail//lib/mocktail/value/explanation.rb#49
+  sig { override.returns(::Mocktail::TypeReplacementData) }
   def reference; end
 end
 

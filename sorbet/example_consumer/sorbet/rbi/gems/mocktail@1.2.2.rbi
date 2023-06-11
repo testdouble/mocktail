@@ -15,43 +15,43 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#88
+    # source://mocktail//lib/mocktail.rb#90
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#81
+    # source://mocktail//lib/mocktail.rb#83
     sig { params(double: T.anything, method_name: T.nilable(T.any(String, Symbol))).returns(T::Array[Mocktail::Call]) }
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#51
+    # source://mocktail//lib/mocktail.rb#53
     sig { returns(Mocktail::Matchers::Captor) }
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#70
+    # source://mocktail//lib/mocktail.rb#72
     sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(Explanation) }
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#74
+    # source://mocktail//lib/mocktail.rb#76
     sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#47
+    # source://mocktail//lib/mocktail.rb#49
     sig { returns(Mocktail::MatcherPresentation) }
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
-    # source://mocktail//lib/mocktail.rb#32
+    # source://mocktail//lib/mocktail.rb#34
     sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail.rb#38
+    # source://mocktail//lib/mocktail.rb#40
     sig do
       type_parameters(:T)
         .params(
@@ -63,7 +63,7 @@ module Mocktail
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#43
+    # source://mocktail//lib/mocktail.rb#45
     sig do
       type_parameters(:T)
         .params(
@@ -73,18 +73,18 @@ module Mocktail
     end
     def of_next_with_count(type, count:); end
 
-    # source://mocktail//lib/mocktail.rb#55
+    # source://mocktail//lib/mocktail.rb#57
     sig { params(matcher: Mocktail::Matchers::Base).void }
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#61
+    # source://mocktail//lib/mocktail.rb#63
     sig { params(type: T.any(Class, Module)).void }
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#66
+    # source://mocktail//lib/mocktail.rb#68
     sig { void }
     def reset; end
   end
@@ -161,112 +161,35 @@ class Mocktail::Cabinet
 end
 
 # source://mocktail//lib/mocktail/value/call.rb#4
-class Mocktail::Call < ::Struct
-  # Returns the value of attribute args
-  #
-  # @return [Object] the current value of args
-  def args; end
+class Mocktail::Call < ::T::Struct
+  const :singleton, T.nilable(T::Boolean)
+  const :double, T.nilable(T.anything)
+  const :original_type, T.nilable(T.any(::Module, T::Class[T.anything]))
+  const :dry_type, T.nilable(T.any(::Module, T::Class[T.anything]))
+  const :method, T.nilable(::Symbol)
+  const :original_method, T.nilable(T.any(::Method, ::UnboundMethod))
+  const :args, T::Array[T.untyped], default: T.unsafe(nil)
+  const :kwargs, T::Hash[::Symbol, T.untyped], default: T.unsafe(nil)
+  const :block, T.nilable(T.anything)
 
-  # Sets the attribute args
+  # Because T::Struct compares with referential equality, we need
+  # to redefine the equality methods to compare the values of the attributes.
   #
-  # @param value [Object] the value to set the attribute args to.
-  # @return [Object] the newly set value
-  def args=(_); end
+  # source://mocktail//lib/mocktail/value/call.rb#27
+  sig { params(other: T.nilable(T.anything)).returns(T::Boolean) }
+  def ==(other); end
 
-  # Returns the value of attribute block
-  #
-  # @return [Object] the current value of block
-  def block; end
+  # source://mocktail//lib/mocktail/value/call.rb#32
+  sig { params(other: T.untyped).returns(T::Boolean) }
+  def eql?(other); end
 
-  # Sets the attribute block
-  #
-  # @param value [Object] the value to set the attribute block to.
-  # @return [Object] the newly set value
-  def block=(_); end
-
-  # Returns the value of attribute double
-  #
-  # @return [Object] the current value of double
-  def double; end
-
-  # Sets the attribute double
-  #
-  # @param value [Object] the value to set the attribute double to.
-  # @return [Object] the newly set value
-  def double=(_); end
-
-  # Returns the value of attribute dry_type
-  #
-  # @return [Object] the current value of dry_type
-  def dry_type; end
-
-  # Sets the attribute dry_type
-  #
-  # @param value [Object] the value to set the attribute dry_type to.
-  # @return [Object] the newly set value
-  def dry_type=(_); end
-
-  # Returns the value of attribute kwargs
-  #
-  # @return [Object] the current value of kwargs
-  def kwargs; end
-
-  # Sets the attribute kwargs
-  #
-  # @param value [Object] the value to set the attribute kwargs to.
-  # @return [Object] the newly set value
-  def kwargs=(_); end
-
-  # Returns the value of attribute method
-  #
-  # @return [Object] the current value of method
-  def method; end
-
-  # Sets the attribute method
-  #
-  # @param value [Object] the value to set the attribute method to.
-  # @return [Object] the newly set value
-  def method=(_); end
-
-  # Returns the value of attribute original_method
-  #
-  # @return [Object] the current value of original_method
-  def original_method; end
-
-  # Sets the attribute original_method
-  #
-  # @param value [Object] the value to set the attribute original_method to.
-  # @return [Object] the newly set value
-  def original_method=(_); end
-
-  # Returns the value of attribute original_type
-  #
-  # @return [Object] the current value of original_type
-  def original_type; end
-
-  # Sets the attribute original_type
-  #
-  # @param value [Object] the value to set the attribute original_type to.
-  # @return [Object] the newly set value
-  def original_type=(_); end
-
-  # Returns the value of attribute singleton
-  #
-  # @return [Object] the current value of singleton
-  def singleton; end
-
-  # Sets the attribute singleton
-  #
-  # @param value [Object] the value to set the attribute singleton to.
-  # @return [Object] the newly set value
-  def singleton=(_); end
+  # source://mocktail//lib/mocktail/value/call.rb#42
+  sig { returns(::Integer) }
+  def hash; end
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
@@ -1679,14 +1602,7 @@ end
 # source://mocktail//lib/mocktail/errors.rb#6
 class Mocktail::UnexpectedError < ::Mocktail::Error; end
 
-# UnsatisfyingCall = Struct.new(
-#   :call,
-#   :other_stubbings,
-#   :backtrace,
-#   keyword_init: true
-# )
-#
-# source://mocktail//lib/mocktail/value/unsatisfying_call.rb#11
+# source://mocktail//lib/mocktail/value/unsatisfying_call.rb#4
 class Mocktail::UnsatisfyingCall < ::T::Struct
   const :call, ::Mocktail::Call
   const :other_stubbings, T::Array[Mocktail::Stubbing[T.untyped]]

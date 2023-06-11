@@ -24,7 +24,7 @@ class MockingMethodfulClassesTest < Minitest::Test
   end
 
   class OverridesEverything
-    (instance_methods - [:__send__, :object_id]).each do |method|
+    (instance_methods - [:__send__, :object_id, :nil?]).each do |method|
       define_method method, ->(*args, **kwargs, &block) {
         T.unsafe(self).super
       }
@@ -63,5 +63,23 @@ class MockingMethodfulClassesTest < Minitest::Test
     stubs { mock_1.normal_method(mock_2) }.with { :great_success }
 
     assert_equal mock_1.normal_method(mock_2), :great_success
+  end
+
+  class OverridesNil
+    def nil?
+      false
+    end
+  end
+
+  def test_overrides_nil?
+    skip "Can't quite figure out how to fix this"
+    # This fails because when an attribute is set to a T::Struct that overrides
+    # `nil?` (and just returns `nil?`), this check here kicks off an infinite
+    # recursion:
+    #
+    # https://github.com/sorbet/sorbet/blob/master/gems/sorbet-runtime/lib/types/props/private/setter_factory.rb#L116
+    overrides_nil = Mocktail.of(OverridesNil)
+
+    overrides_nil.nil?
   end
 end

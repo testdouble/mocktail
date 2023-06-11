@@ -1,5 +1,7 @@
 # typed: false
 
+require "sorbet-runtime"
+
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
 require_relative "mocktail/dsl"

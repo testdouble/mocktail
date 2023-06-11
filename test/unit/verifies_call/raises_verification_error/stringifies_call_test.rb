@@ -43,8 +43,8 @@ module Mocktail
 
     private
 
-    def invoke(args: nil, kwargs: nil, &block)
-      @subject.stringify(Call.new(method: "hi", args: args, kwargs: kwargs, block: block))
+    def invoke(args: [], kwargs: {}, &block)
+      @subject.stringify(Call.new(method: :hi, args: args, kwargs: kwargs, block: block))
     end
   end
 end

@@ -1,11 +1,15 @@
 # Unreleased
 
-* **Breaking change (you won't care about)** - When an unknown object is passed
-  to `Mocktail.explain`, the returned object's `reference` will now be set to a
-  `NoExplanationData` instead of the thing that was passed. To access that
-  unknown thing, you can call `NoExplanationData#thing`, (i.e.
+* **Breaking change (you probably won't care about)** - When an unknown object
+  is passed to `Mocktail.explain`, the returned object's `reference` will now be
+  set to a `NoExplanationData` instead of the thing that was passed. To access
+  that unknown thing, you can call `NoExplanationData#thing`, (i.e.
   `Mocktail.explain(lol_not_a_mock).reference.thing` and get a reference back to
   `lol_not_a_mock`.)
+* **Breaking change (you probably won't care about)** - If you fake a class with
+  module that overloads `nil?` you _may_ get an infinite recursion if you
+  override it due to an implementation detail in sorbet's `T::Struct` type. See
+  [this skipped test](/test/safe/mocking_methodful_classes_test.rb)
 
 # 1.2.2
 

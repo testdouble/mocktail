@@ -462,8 +462,6 @@ end
 #
 # source://mocktail//lib/mocktail/value/explanation_data.rb#4
 module Mocktail::ExplanationData
-  requires_ancestor { Kernel }
-
   interface!
 
   # @abstract
@@ -1687,6 +1685,10 @@ class Mocktail::VerifiesCall
   #
   # source://mocktail//lib/mocktail/verifies_call.rb#27
   def verification_satisfied?(verifiable_call_count, demo_config); end
+end
+
+module Mocktail::ExplanationData
+  include Kernel
 end
 
 class Mocktail::Stubbing

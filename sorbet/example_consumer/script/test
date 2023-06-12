@@ -9,6 +9,10 @@ bin/tapioca gems
 # https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686419185397299
 cat << EOF >> sorbet/rbi/gems/mocktail@1.2.2.rbi
 
+module Mocktail::ExplanationData
+  include Kernel
+end
+
 class Mocktail::Stubbing
   MethodReturnType = type_member
 end

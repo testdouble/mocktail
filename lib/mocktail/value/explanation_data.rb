@@ -6,7 +6,7 @@ module Mocktail
     extend T::Sig
 
     interface!
-    requires_ancestor { Kernel }
+    include Kernel
 
     sig { abstract.returns T::Array[Mocktail::Call] }
     def calls

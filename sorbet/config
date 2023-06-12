@@ -3,4 +3,3 @@
 --ignore=tmp/
 --ignore=vendor/
 --ignore=sorbet/example_consumer/
---enable-experimental-requires-ancestor

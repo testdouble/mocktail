@@ -936,6 +936,17 @@ Sorbet signatures has been narrowed to the greatest reasonable extent:
   you may need to define [`Mocktail::MatcherPresentation` signatures that lie
   about the return value](/rbi/mocktail.rbi) for each custom matcher you create
 
+### I'm seeing a TypeError and it has to do with Sorbet and I don't care about Sorbet
+
+If you're not using Sorbet and you see any type-related errors and you want them to go away,
+you can add set the ENV var `SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL` to "never".
+
+You can also set this programmatically:
+
+```ruby
+require "sorbet-runtime"
+T::Configuration.default_checked_level = :never
+```
 
 ## References
 

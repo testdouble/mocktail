@@ -585,8 +585,9 @@ which way, so Mocktail tries to make it a little easier on you. In addition to
 returning useful messages throughout the API, the gem also includes an
 introspection method `Mocktail.explain(thing)`, which returns a human-readable
 `message` and a `reference` object with useful attributes (that vary depending
-on the type of fake `thing` you pass in. Below are some things `explain()` can
-do.
+on the type of fake `thing` you pass in.
+
+Below are some things `explain()` can do.
 
 #### Fake instances created by Mocktail
 

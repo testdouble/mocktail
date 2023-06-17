@@ -36,7 +36,7 @@ class ReplaceTest < Minitest::Test
   def test_replace_class
     return_value = Mocktail.replace(House)
 
-    assert_nil return_value
+    assert_nil_or_void return_value
 
     # None of these call through, so none blow up
     House.room("living")
@@ -150,7 +150,9 @@ class ReplaceTest < Minitest::Test
   end
 
   def test_not_a_module_or_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).replace(42) }
+    e = SorbetOverride.disable_call_validation_checks do
+      assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).replace(42) }
+    end
     assert_equal <<~MSG.chomp, e.message
       Mocktail.replace() only supports classes and modules
     MSG

@@ -50,9 +50,11 @@ class OfTest < Minitest::Test
   end
 
   def test_module
-    # This SEEMS not expressable in Sorbet
-    # See: https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686331001121759
-    not_a_class = T.unsafe(Mocktail).of(NotAClass)
+    not_a_class = SorbetOverride.disable_call_validation_checks do
+      # This SEEMS not expressable in Sorbet
+      # See: https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686331001121759
+      T.unsafe(Mocktail).of(NotAClass)
+    end
 
     assert_match(/^#<Mocktail of OfTest::NotAClass:0x[0-9a-f]+>$/, not_a_class.inspect)
     assert_equal not_a_class.inspect, not_a_class.to_s
@@ -70,7 +72,9 @@ class OfTest < Minitest::Test
   end
 
   def test_not_a_module_or_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of(Object.new) }
+    e = SorbetOverride.disable_call_validation_checks do
+      assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of(Object.new) }
+    end
     assert_equal <<~MSG.tr("\n", " "), e.message
       Mocktail.of() can only mix mocktail instances of modules and classes.
     MSG

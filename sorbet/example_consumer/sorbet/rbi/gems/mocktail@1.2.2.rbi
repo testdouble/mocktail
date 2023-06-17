@@ -15,76 +15,81 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#90
+    # source://mocktail//lib/mocktail.rb#121
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#83
-    sig { params(double: T.anything, method_name: T.nilable(T.any(String, Symbol))).returns(T::Array[Mocktail::Call]) }
+    # source://mocktail//lib/mocktail.rb#114
+    sig do
+      params(
+        double: T.anything,
+        method_name: T.nilable(T.any(::String, ::Symbol))
+      ).returns(T::Array[::Mocktail::Call])
+    end
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#53
-    sig { returns(Mocktail::Matchers::Captor) }
+    # source://mocktail//lib/mocktail.rb#71
+    sig { returns(::Mocktail::Matchers::Captor) }
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#72
-    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(Explanation) }
+    # source://mocktail//lib/mocktail.rb#98
+    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(::Mocktail::Explanation) }
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#76
-    sig { returns(T::Array[Mocktail::UnsatisfyingCallExplanation]) }
+    # source://mocktail//lib/mocktail.rb#103
+    sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#49
-    sig { returns(Mocktail::MatcherPresentation) }
+    # source://mocktail//lib/mocktail.rb#66
+    sig { returns(::Mocktail::MatcherPresentation) }
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
-    # source://mocktail//lib/mocktail.rb#34
+    # source://mocktail//lib/mocktail.rb#40
     sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail.rb#40
+    # source://mocktail//lib/mocktail.rb#51
     sig do
       type_parameters(:T)
         .params(
           type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(Integer)
+          count: T.nilable(::Integer)
         ).returns(T.type_parameter(:T))
     end
     def of_next(type, count: T.unsafe(nil)); end
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#45
+    # source://mocktail//lib/mocktail.rb#61
     sig do
       type_parameters(:T)
         .params(
           type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(Integer)
+          count: T.nilable(::Integer)
         ).returns(T::Array[T.type_parameter(:T)])
     end
     def of_next_with_count(type, count:); end
 
-    # source://mocktail//lib/mocktail.rb#57
-    sig { params(matcher: Mocktail::Matchers::Base).void }
+    # source://mocktail//lib/mocktail.rb#76
+    sig { params(matcher: T.class_of(Mocktail::Matchers::Base)).void }
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#63
-    sig { params(type: T.any(Class, Module)).void }
+    # source://mocktail//lib/mocktail.rb#83
+    sig { params(type: T.any(::Class, ::Module)).void }
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#68
+    # source://mocktail//lib/mocktail.rb#89
     sig { void }
     def reset; end
   end
@@ -224,29 +229,28 @@ Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
 module Mocktail::DSL
-  # source://mocktail//lib/mocktail/dsl.rb#5
+  # source://mocktail//lib/mocktail/dsl.rb#18
   sig do
     type_parameters(:T)
       .params(
         ignore_block: T.nilable(T::Boolean),
         ignore_extra_args: T.nilable(T::Boolean),
         ignore_arity: T.nilable(T::Boolean),
-        times: T.nilable(Integer),
-        demo: T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
+        times: T.nilable(::Integer),
+        demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
       ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
   end
   def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 
-  # source://mocktail//lib/mocktail/dsl.rb#14
+  # source://mocktail//lib/mocktail/dsl.rb#37
   sig do
-    type_parameters(:T)
-      .params(
-        ignore_block: T.nilable(T::Boolean),
-        ignore_extra_args: T.nilable(T::Boolean),
-        ignore_arity: T.nilable(T::Boolean),
-        times: T.nilable(Integer),
-        demo: T.proc.params(matchers: Mocktail::MatcherPresentation).void
-      ).void
+    params(
+      ignore_block: T.nilable(T::Boolean),
+      ignore_extra_args: T.nilable(T::Boolean),
+      ignore_arity: T.nilable(T::Boolean),
+      times: T.nilable(::Integer),
+      demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).void
+    ).void
   end
   def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 end

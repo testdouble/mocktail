@@ -77,7 +77,9 @@ class OfNextTest < Minitest::Test
   end
 
   def test_not_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of_next(AModule) }
+    e = SorbetOverride.disable_call_validation_checks do
+      assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of_next(AModule) }
+    end
     assert_equal <<~MSG.chomp, e.message
       Mocktail.of_next() only supports classes
     MSG

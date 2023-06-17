@@ -723,20 +723,17 @@ module Mocktail::Matchers; end
 
 # source://mocktail//lib/mocktail/matchers/any.rb#4
 class Mocktail::Matchers::Any < ::Mocktail::Matchers::Base
-  # Change this comment to a descriptive one once this is merged:
-  # https://github.com/rubocop/rubocop/pull/10551
-  #
   # @return [Any] a new instance of Any
   #
-  # source://mocktail//lib/mocktail/matchers/any.rb#11
+  # source://mocktail//lib/mocktail/matchers/any.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/any.rb#18
+  # source://mocktail//lib/mocktail/matchers/any.rb#17
   def inspect; end
 
   # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/matchers/any.rb#14
+  # source://mocktail//lib/mocktail/matchers/any.rb#13
   def match?(actual); end
 
   class << self

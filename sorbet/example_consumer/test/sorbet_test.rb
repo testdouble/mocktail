@@ -121,6 +121,41 @@ class SherbetTest < Minitest::Test
     stubs { |m| thing.takes_integer(m.not(3)) }.with { nil }
   end
 
+  class Is5Matcher < Mocktail::Matchers::Base
+    extend T::Sig
+
+    sig { returns(Symbol) }
+    def self.matcher_name
+      :is_5
+    end
+
+    sig { void }
+    def initialize
+      # Empty initialize is necessary b/c Base default expects an argument
+    end
+
+    sig { params(actual: T.untyped).returns(T::Boolean) }
+    def match?(actual)
+      actual == 5
+    end
+
+    sig { returns(String) }
+    def inspect
+      "is_5"
+    end
+  end
+  Mocktail.register_matcher(Is5Matcher)
+
+  sig { void }
+  def test_custom_matchers
+    thing = Mocktail.of(MatcherThing)
+
+    stubs { |m| thing.takes_integer(m.is_5) }.with { 8 }
+
+    assert_equal 8, thing.takes_integer(5)
+    assert_nil thing.takes_integer(9)
+  end
+
   class Wastebin
     extend T::Sig
 

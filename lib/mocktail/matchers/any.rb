@@ -6,9 +6,8 @@ module Mocktail::Matchers
       :any
     end
 
-    # Change this comment to a descriptive one once this is merged:
-    # https://github.com/rubocop/rubocop/pull/10551
-    def initialize # standard:disable Style/RedundantInitialize
+    def initialize
+      # Empty initialize is necessary b/c Base default expects an argument
     end
 
     def match?(actual)

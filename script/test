@@ -5,6 +5,9 @@ set -e
 echo "-----> Running Mocktail's tests"
 bundle exec rake
 
+echo "-----> Running Mocktail's tests with Sorbet runtime checks DISABLED"
+SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL=never bundle exec rake test
+
 echo "-----> Type-checking Mocktail itself"
 bundle exec srb tc
 

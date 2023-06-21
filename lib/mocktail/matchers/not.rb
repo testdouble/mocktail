@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Mocktail::Matchers
   class Not < Base

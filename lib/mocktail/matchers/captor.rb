@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Mocktail::Matchers
   # Captors are conceptually complex implementations, but with a simple usage/purpose:

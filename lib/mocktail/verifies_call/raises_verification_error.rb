@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require_relative "raises_verification_error/gathers_calls_of_method"
 require_relative "../share/stringifies_method_name"
@@ -6,12 +6,16 @@ require_relative "../share/stringifies_call"
 
 module Mocktail
   class RaisesVerificationError
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @gathers_calls_of_method = GathersCallsOfMethod.new
-      @stringifies_method_name = StringifiesMethodName.new
-      @stringifies_call = StringifiesCall.new
+      @gathers_calls_of_method = T.let(GathersCallsOfMethod.new, GathersCallsOfMethod)
+      @stringifies_method_name = T.let(StringifiesMethodName.new, StringifiesMethodName)
+      @stringifies_call = T.let(StringifiesCall.new, StringifiesCall)
     end
 
+    sig { params(recording: Call, verifiable_calls: T::Array[Call], demo_config: DemoConfig).void }
     def raise(recording, verifiable_calls, demo_config)
       Kernel.raise VerificationError.new <<~MSG
         Expected mocktail of `#{@stringifies_method_name.stringify(recording)}' to be called like:
@@ -31,6 +35,7 @@ module Mocktail
 
     private
 
+    sig { params(demo_config: DemoConfig, count: Integer).returns(T.nilable(String)) }
     def describe_verifiable_times_called(demo_config, count)
       return if demo_config.times.nil?
 
@@ -41,6 +46,7 @@ module Mocktail
       end
     end
 
+    sig { params(recording: Call, verifiable_calls: T::Array[Call], demo_config: DemoConfig).returns(T.nilable(String)) }
     def describe_other_calls(recording, verifiable_calls, demo_config)
       calls_of_method = @gathers_calls_of_method.gather(recording) - verifiable_calls
       if calls_of_method.size == 0
@@ -56,6 +62,7 @@ module Mocktail
       end
     end
 
+    sig { params(s: String, count: T.nilable(Integer)).returns(String) }
     def pl(s, count)
       if count == 1
         s

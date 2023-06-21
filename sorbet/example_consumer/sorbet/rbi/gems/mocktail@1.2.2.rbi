@@ -573,12 +573,12 @@ end
 
 # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#6
 class Mocktail::FindsVerifiableCalls
-  # @return [FindsVerifiableCalls] a new instance of FindsVerifiableCalls
-  #
-  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#7
+  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#10
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#11
+  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#15
+  sig { params(recording: ::Mocktail::Call, demo_config: ::Mocktail::DemoConfig).returns(T::Array[::Mocktail::Call]) }
   def find(recording, demo_config); end
 end
 
@@ -605,7 +605,8 @@ end
 
 # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#4
 class Mocktail::GathersCallsOfMethod
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#5
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#8
+  sig { params(dry_call: ::Mocktail::Call).returns(T::Array[::Mocktail::Call]) }
   def gather(dry_call); end
 end
 
@@ -1125,23 +1126,38 @@ end
 
 # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#8
 class Mocktail::RaisesVerificationError
-  # @return [RaisesVerificationError] a new instance of RaisesVerificationError
-  #
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#9
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#12
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#15
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#19
+  sig do
+    params(
+      recording: ::Mocktail::Call,
+      verifiable_calls: T::Array[::Mocktail::Call],
+      demo_config: ::Mocktail::DemoConfig
+    ).void
+  end
   def raise(recording, verifiable_calls, demo_config); end
 
   private
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#44
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#50
+  sig do
+    params(
+      recording: ::Mocktail::Call,
+      verifiable_calls: T::Array[::Mocktail::Call],
+      demo_config: ::Mocktail::DemoConfig
+    ).returns(T.nilable(::String))
+  end
   def describe_other_calls(recording, verifiable_calls, demo_config); end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#34
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#39
+  sig { params(demo_config: ::Mocktail::DemoConfig, count: ::Integer).returns(T.nilable(::String)) }
   def describe_verifiable_times_called(demo_config, count); end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#59
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#66
+  sig { params(s: ::String, count: T.nilable(::Integer)).returns(::String) }
   def pl(s, count); end
 end
 

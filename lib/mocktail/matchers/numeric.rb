@@ -1,20 +1,25 @@
-# typed: true
+# typed: strict
 
 module Mocktail::Matchers
   class Numeric < Base
+    extend T::Sig
+
+    sig { returns(Symbol) }
     def self.matcher_name
       :numeric
     end
 
-    # Change this comment to a descriptive one once this is merged:
-    # https://github.com/rubocop/rubocop/pull/10551
-    def initialize # standard:disable Style/RedundantInitialize
+    sig { void }
+    def initialize
+      # Empty initialize is necessary b/c Base default expects an argument
     end
 
+    sig { params(actual: T.untyped).returns(T::Boolean) }
     def match?(actual)
       actual.is_a?(::Numeric)
     end
 
+    sig { returns(String) }
     def inspect
       "numeric"
     end

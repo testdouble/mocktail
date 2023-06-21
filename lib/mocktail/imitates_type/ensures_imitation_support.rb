@@ -1,7 +1,10 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class EnsuresImitationSupport
+    extend T::Sig
+
+    sig { params(type: T.any(T::Class[T.anything], Module)).void }
     def ensure(type)
       unless type.is_a?(Class) || type.is_a?(Module)
         raise UnsupportedMocktail.new <<~MSG.tr("\n", " ")

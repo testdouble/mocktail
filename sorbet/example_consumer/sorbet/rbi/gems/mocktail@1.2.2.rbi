@@ -420,7 +420,8 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#4
 class Mocktail::EnsuresImitationSupport
-  # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#5
+  # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#8
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def ensure(type); end
 end
 
@@ -668,12 +669,12 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#7
 class Mocktail::MakesDouble
-  # @return [MakesDouble] a new instance of MakesDouble
-  #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#8
+  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#11
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#13
+  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#17
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(::Mocktail::Double) }
   def make(type); end
 end
 
@@ -756,53 +757,55 @@ module Mocktail::Matchers; end
 
 # source://mocktail//lib/mocktail/matchers/any.rb#4
 class Mocktail::Matchers::Any < ::Mocktail::Matchers::Base
-  # @return [Any] a new instance of Any
-  #
-  # source://mocktail//lib/mocktail/matchers/any.rb#9
+  # source://mocktail//lib/mocktail/matchers/any.rb#13
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/any.rb#17
+  # source://mocktail//lib/mocktail/matchers/any.rb#23
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/any.rb#13
+  # source://mocktail//lib/mocktail/matchers/any.rb#18
+  sig { params(actual: T.anything).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/any.rb#5
+    # source://mocktail//lib/mocktail/matchers/any.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+#
 # source://mocktail//lib/mocktail/matchers/base.rb#4
 class Mocktail::Matchers::Base
   # Custom matchers can receive any args, kwargs, or block they want. Usually
   # single-argument, though, so that's defaulted here and in #insepct
   #
-  # @return [Base] a new instance of Base
-  #
-  # source://mocktail//lib/mocktail/matchers/base.rb#7
+  # source://mocktail//lib/mocktail/matchers/base.rb#13
+  sig { params(expected: T.untyped).void }
   def initialize(expected); end
 
-  # source://mocktail//lib/mocktail/matchers/base.rb#19
+  # source://mocktail//lib/mocktail/matchers/base.rb#28
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/base.rb#23
+  # source://mocktail//lib/mocktail/matchers/base.rb#33
+  sig { returns(::TrueClass) }
   def is_mocktail_matcher?; end
 
   # @raise [Mocktail::Error]
-  # @return [Boolean]
   #
-  # source://mocktail//lib/mocktail/matchers/base.rb#15
+  # source://mocktail//lib/mocktail/matchers/base.rb#23
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
     # @raise [Mocktail::Error]
     #
-    # source://mocktail//lib/mocktail/matchers/base.rb#11
+    # source://mocktail//lib/mocktail/matchers/base.rb#18
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
@@ -823,73 +826,73 @@ end
 #
 # source://mocktail//lib/mocktail/matchers/captor.rb#17
 class Mocktail::Matchers::Captor
-  # @return [Captor] a new instance of Captor
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#46
+  # source://mocktail//lib/mocktail/matchers/captor.rb#62
+  sig { void }
   def initialize; end
 
-  # Returns the value of attribute capture.
+  # This T.untyped is intentional. Even though a Capture is surely returned,
+  # in order for a verification demonstration to pass its own type check,
+  # it needs to think it's being returned whatever parameter is expected
   #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#45
+  # source://mocktail//lib/mocktail/matchers/captor.rb#59
+  sig { returns(T.untyped) }
   def capture; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#50
+  # source://mocktail//lib/mocktail/matchers/captor.rb#67
+  sig { returns(T::Boolean) }
   def captured?; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#54
+  # source://mocktail//lib/mocktail/matchers/captor.rb#72
+  sig { returns(T.untyped) }
   def value; end
 end
 
-# source://mocktail//lib/mocktail/matchers/captor.rb#18
+# source://mocktail//lib/mocktail/matchers/captor.rb#20
 class Mocktail::Matchers::Captor::Capture < ::Mocktail::Matchers::Base
-  # @return [Capture] a new instance of Capture
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#25
+  # source://mocktail//lib/mocktail/matchers/captor.rb#32
+  sig { void }
   def initialize; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#36
+  # source://mocktail//lib/mocktail/matchers/captor.rb#45
+  sig { returns(T::Boolean) }
   def captured?; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#40
+  # source://mocktail//lib/mocktail/matchers/captor.rb#50
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#30
+  # source://mocktail//lib/mocktail/matchers/captor.rb#38
+  sig { params(actual: T.untyped).returns(::TrueClass) }
   def match?(actual); end
 
-  # Returns the value of attribute value.
-  #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#23
+  # source://mocktail//lib/mocktail/matchers/captor.rb#29
+  sig { returns(T.untyped) }
   def value; end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/captor.rb#19
+    # source://mocktail//lib/mocktail/matchers/captor.rb#24
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/includes.rb#4
 class Mocktail::Matchers::Includes < ::Mocktail::Matchers::Base
-  # @return [Includes] a new instance of Includes
-  #
-  # source://mocktail//lib/mocktail/matchers/includes.rb#9
+  # source://mocktail//lib/mocktail/matchers/includes.rb#13
+  sig { params(expecteds: T.untyped).void }
   def initialize(*expecteds); end
 
-  # source://mocktail//lib/mocktail/matchers/includes.rb#22
+  # source://mocktail//lib/mocktail/matchers/includes.rb#28
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/includes.rb#13
+  # source://mocktail//lib/mocktail/matchers/includes.rb#18
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes.rb#5
+    # source://mocktail//lib/mocktail/matchers/includes.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
@@ -897,7 +900,8 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_hash.rb#4
 class Mocktail::Matchers::IncludesHash < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_hash.rb#5
+    # source://mocktail//lib/mocktail/matchers/includes_hash.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
@@ -905,7 +909,8 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_key.rb#4
 class Mocktail::Matchers::IncludesKey < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_key.rb#5
+    # source://mocktail//lib/mocktail/matchers/includes_key.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
@@ -913,91 +918,89 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_string.rb#4
 class Mocktail::Matchers::IncludesString < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_string.rb#5
+    # source://mocktail//lib/mocktail/matchers/includes_string.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/is_a.rb#4
 class Mocktail::Matchers::IsA < ::Mocktail::Matchers::Base
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/is_a.rb#9
+  # source://mocktail//lib/mocktail/matchers/is_a.rb#13
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/is_a.rb#5
+    # source://mocktail//lib/mocktail/matchers/is_a.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/matches.rb#4
 class Mocktail::Matchers::Matches < ::Mocktail::Matchers::Base
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/matches.rb#9
+  # source://mocktail//lib/mocktail/matchers/matches.rb#13
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/matches.rb#5
+    # source://mocktail//lib/mocktail/matchers/matches.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/not.rb#4
 class Mocktail::Matchers::Not < ::Mocktail::Matchers::Base
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/not.rb#9
+  # source://mocktail//lib/mocktail/matchers/not.rb#13
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/not.rb#5
+    # source://mocktail//lib/mocktail/matchers/not.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/numeric.rb#4
 class Mocktail::Matchers::Numeric < ::Mocktail::Matchers::Base
-  # Change this comment to a descriptive one once this is merged:
-  # https://github.com/rubocop/rubocop/pull/10551
-  #
-  # @return [Numeric] a new instance of Numeric
-  #
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#11
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#13
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#18
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#23
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#14
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#18
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/numeric.rb#5
+    # source://mocktail//lib/mocktail/matchers/numeric.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/that.rb#4
 class Mocktail::Matchers::That < ::Mocktail::Matchers::Base
-  # @return [That] a new instance of That
-  #
-  # source://mocktail//lib/mocktail/matchers/that.rb#9
+  # source://mocktail//lib/mocktail/matchers/that.rb#13
+  sig { params(blk: T.nilable(T.proc.params(actual: T.untyped).returns(T.untyped))).void }
   def initialize(&blk); end
 
-  # source://mocktail//lib/mocktail/matchers/that.rb#22
+  # source://mocktail//lib/mocktail/matchers/that.rb#28
+  sig { returns(::String) }
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matchers/that.rb#16
+  # source://mocktail//lib/mocktail/matchers/that.rb#21
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/that.rb#5
+    # source://mocktail//lib/mocktail/matchers/that.rb#8
+    sig { returns(::Symbol) }
     def matcher_name; end
   end
 end

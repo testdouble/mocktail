@@ -24,8 +24,12 @@ class Minitest::Test
     end
   end
 
+  def runtime_type_checking_disabled?
+    T::Private::RuntimeLevels.default_checked_level == :never
+  end
+
   def assert_nil_or_void(thing)
-    if T::Private::RuntimeLevels.default_checked_level == :never
+    if runtime_type_checking_disabled?
       assert_nil(thing)
     else
       assert_same thing, T::Private::Types::Void::VOID

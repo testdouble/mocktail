@@ -1163,18 +1163,50 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#4
 class Mocktail::ReconstructsCall
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#5
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#19
+  sig do
+    params(
+      double: T.anything,
+      call_binding: ::Binding,
+      default_args: T.nilable(T::Hash[::Symbol, T.untyped]),
+      dry_class: T::Class[T.anything],
+      type: T.any(::Module, T::Class[T.anything]),
+      method: ::Symbol,
+      original_method: T.any(::Method, ::UnboundMethod),
+      signature: ::Mocktail::Signature
+    ).returns(::Mocktail::Call)
+  end
   def reconstruct(double:, call_binding:, default_args:, dry_class:, type:, method:, original_method:, signature:); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#21
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#39
+  sig do
+    params(
+      signature: ::Mocktail::Signature,
+      call_binding: ::Binding,
+      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
+    ).returns(T::Array[T.untyped])
+  end
   def args_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#30
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#52
+  sig do
+    params(
+      signature: ::Mocktail::Signature,
+      call_binding: ::Binding,
+      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
+    ).returns(T::Hash[::Symbol, T.untyped])
+  end
   def kwargs_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#39
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#62
+  sig do
+    params(
+      params: ::Mocktail::Params,
+      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
+    ).returns([T::Array[::Symbol], T.nilable(::Symbol)])
+  end
   def non_default_args(params, default_args); end
 end
 

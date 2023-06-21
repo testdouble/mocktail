@@ -1,7 +1,21 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class ReconstructsCall
+    extend T::Sig
+
+    sig {
+      params(
+        double: T.anything,
+        call_binding: Binding,
+        default_args: T.nilable(T::Hash[Symbol, T.untyped]),
+        dry_class: T::Class[T.anything],
+        type: T.any(Module, T::Class[T.anything]),
+        method: Symbol,
+        original_method: T.any(UnboundMethod, Method),
+        signature: Signature
+      ).returns(Call)
+    }
     def reconstruct(double:, call_binding:, default_args:, dry_class:, type:, method:, original_method:, signature:)
       Call.new(
         singleton: false,
@@ -18,6 +32,10 @@ module Mocktail
 
     private
 
+    sig {
+      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.untyped]))
+        .returns(T::Array[T.untyped])
+    }
     def args_for(signature, call_binding, default_args)
       arg_names, rest_name = non_default_args(signature.positional_params, default_args)
 
@@ -27,6 +45,10 @@ module Mocktail
       arg_values + (rest_value || [])
     end
 
+    sig {
+      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.untyped]))
+        .returns(T::Hash[Symbol, T.untyped])
+    }
     def kwargs_for(signature, call_binding, default_args)
       kwarg_names, kwrest_name = non_default_args(signature.keyword_params, default_args)
 
@@ -36,6 +58,7 @@ module Mocktail
       kwarg_values.merge(kwrest_value || {})
     end
 
+    sig { params(params: Params, default_args: T.nilable(T::Hash[Symbol, T.untyped])).returns([T::Array[Symbol], T.nilable(Symbol)]) }
     def non_default_args(params, default_args)
       named_args = params.allowed
         .reject { |p| default_args&.key?(p) }

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "records_demonstration"
 require_relative "verifies_call/finds_verifiable_calls"

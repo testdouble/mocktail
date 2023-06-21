@@ -15,8 +15,8 @@ module Mocktail
 
       result = @subject.transform(call)
 
-      assert_equal ["unnamed_arg_1"], result.positional_params.all
-      assert_equal "unnamed_arg_1", result.positional_params.rest
+      assert_equal [:unnamed_arg_1], result.positional_params.all
+      assert_equal :unnamed_arg_1, result.positional_params.rest
     end
 
     def test_multiple_args
@@ -26,8 +26,8 @@ module Mocktail
 
       result = @subject.transform(call)
 
-      assert_equal ["unnamed_arg_1", "unnamed_arg_2"], result.positional_params.all
-      assert_equal ["unnamed_arg_1", "unnamed_arg_2"], result.positional_params.required
+      assert_equal [:unnamed_arg_1, :unnamed_arg_2], result.positional_params.all
+      assert_equal [:unnamed_arg_1, :unnamed_arg_2], result.positional_params.required
     end
 
     class Funk
@@ -41,8 +41,8 @@ module Mocktail
 
       result = @subject.transform(call)
 
-      assert_equal ["unnamed_arg_1"], result.positional_params.all
-      assert_equal ["unnamed_arg_1"], result.positional_params.required
+      assert_equal [:unnamed_arg_1], result.positional_params.all
+      assert_equal [:unnamed_arg_1], result.positional_params.required
     end
   end
 end

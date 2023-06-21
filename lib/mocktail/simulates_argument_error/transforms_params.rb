@@ -43,7 +43,7 @@ module Mocktail
     def name_unnamed_params(params)
       params.map.with_index { |param, i|
         if param.size == 1
-          param + ["unnamed_arg_#{i + 1}"]
+          param + ["unnamed_arg_#{i + 1}".to_sym]
         else
           param
         end

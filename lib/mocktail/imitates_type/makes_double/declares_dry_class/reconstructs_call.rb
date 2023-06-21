@@ -62,7 +62,8 @@ module Mocktail
     def non_default_args(params, default_args)
       named_args = params.allowed
         .reject { |p| default_args&.key?(p) }
-      rest_arg = if params.rest && !default_args&.key?(params.rest)
+      rest_param = params.rest
+      rest_arg = if rest_param && !default_args&.key?(rest_param)
         params.rest
       end
 

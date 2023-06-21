@@ -1020,71 +1020,24 @@ class Mocktail::NoExplanationData < ::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/signature.rb#19
-class Mocktail::Params < ::Struct
-  # @return [Params] a new instance of Params
-  #
-  # source://mocktail//lib/mocktail/value/signature.rb#26
-  def initialize(**params); end
+# source://mocktail//lib/mocktail/value/signature.rb#4
+class Mocktail::Params < ::T::Struct
+  prop :all, T::Array[::Symbol], default: T.unsafe(nil)
+  prop :required, T::Array[::Symbol], default: T.unsafe(nil)
+  prop :optional, T::Array[::Symbol], default: T.unsafe(nil)
+  prop :rest, T.nilable(::Symbol)
 
-  # Returns the value of attribute all
-  #
-  # @return [Object] the current value of all
-  def all; end
-
-  # Sets the attribute all
-  #
-  # @param value [Object] the value to set the attribute all to.
-  # @return [Object] the newly set value
-  def all=(_); end
-
-  # source://mocktail//lib/mocktail/value/signature.rb#33
+  # source://mocktail//lib/mocktail/value/signature.rb#13
+  sig { returns(T::Array[::Symbol]) }
   def allowed; end
 
-  # Returns the value of attribute optional
-  #
-  # @return [Object] the current value of optional
-  def optional; end
-
-  # Sets the attribute optional
-  #
-  # @param value [Object] the value to set the attribute optional to.
-  # @return [Object] the newly set value
-  def optional=(_); end
-
-  # Returns the value of attribute required
-  #
-  # @return [Object] the current value of required
-  def required; end
-
-  # Sets the attribute required
-  #
-  # @param value [Object] the value to set the attribute required to.
-  # @return [Object] the newly set value
-  def required=(_); end
-
-  # Returns the value of attribute rest
-  #
-  # @return [Object] the current value of rest
-  def rest; end
-
-  # Sets the attribute rest
-  #
-  # @param value [Object] the value to set the attribute rest to.
-  # @return [Object] the newly set value
-  def rest=(_); end
-
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/value/signature.rb#37
+  # source://mocktail//lib/mocktail/value/signature.rb#18
+  sig { returns(T::Boolean) }
   def rest?; end
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
@@ -1357,90 +1310,28 @@ class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   def run(type); end
 end
 
-# source://mocktail//lib/mocktail/value/signature.rb#4
-class Mocktail::Signature < ::Struct
-  # Returns the value of attribute block_arg
-  #
-  # @return [Object] the current value of block_arg
-  def block_arg; end
-
-  # Sets the attribute block_arg
-  #
-  # @param value [Object] the value to set the attribute block_arg to.
-  # @return [Object] the newly set value
-  def block_arg=(_); end
-
-  # Returns the value of attribute block_param
-  #
-  # @return [Object] the current value of block_param
-  def block_param; end
-
-  # Sets the attribute block_param
-  #
-  # @param value [Object] the value to set the attribute block_param to.
-  # @return [Object] the newly set value
-  def block_param=(_); end
-
-  # Returns the value of attribute keyword_args
-  #
-  # @return [Object] the current value of keyword_args
-  def keyword_args; end
-
-  # Sets the attribute keyword_args
-  #
-  # @param value [Object] the value to set the attribute keyword_args to.
-  # @return [Object] the newly set value
-  def keyword_args=(_); end
-
-  # Returns the value of attribute keyword_params
-  #
-  # @return [Object] the current value of keyword_params
-  def keyword_params; end
-
-  # Sets the attribute keyword_params
-  #
-  # @param value [Object] the value to set the attribute keyword_params to.
-  # @return [Object] the newly set value
-  def keyword_params=(_); end
-
-  # Returns the value of attribute positional_args
-  #
-  # @return [Object] the current value of positional_args
-  def positional_args; end
-
-  # Sets the attribute positional_args
-  #
-  # @param value [Object] the value to set the attribute positional_args to.
-  # @return [Object] the newly set value
-  def positional_args=(_); end
-
-  # Returns the value of attribute positional_params
-  #
-  # @return [Object] the current value of positional_params
-  def positional_params; end
-
-  # Sets the attribute positional_params
-  #
-  # @param value [Object] the value to set the attribute positional_params to.
-  # @return [Object] the newly set value
-  def positional_params=(_); end
+# source://mocktail//lib/mocktail/value/signature.rb#23
+class Mocktail::Signature < ::T::Struct
+  const :positional_params, ::Mocktail::Params
+  const :positional_args, T::Array[T.untyped]
+  const :keyword_params, ::Mocktail::Params
+  const :keyword_args, T::Hash[::Symbol, T.untyped]
+  const :block_param, T.nilable(::Symbol)
+  const :block_arg, T.untyped, default: T.unsafe(nil)
 
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
-# source://mocktail//lib/mocktail/value/signature.rb#16
+# source://mocktail//lib/mocktail/value/signature.rb#33
 Mocktail::Signature::DEFAULT_BLOCK_PARAM = T.let(T.unsafe(nil), String)
 
-# source://mocktail//lib/mocktail/value/signature.rb#14
+# source://mocktail//lib/mocktail/value/signature.rb#31
 Mocktail::Signature::DEFAULT_REST_ARGS = T.let(T.unsafe(nil), String)
 
-# source://mocktail//lib/mocktail/value/signature.rb#15
+# source://mocktail//lib/mocktail/value/signature.rb#32
 Mocktail::Signature::DEFAULT_REST_KWARGS = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/simulates_argument_error.rb#10

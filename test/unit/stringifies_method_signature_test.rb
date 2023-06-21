@@ -120,7 +120,7 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), *args, **kwargs, &blk)", result
     end
 
-    def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: false)
+    def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: nil)
       Signature.new(
         positional_params: positional_params,
         positional_args: [],

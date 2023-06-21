@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "fulfills_stubbing/finds_satisfaction"
 require_relative "fulfills_stubbing/describes_unsatisfied_stubbing"

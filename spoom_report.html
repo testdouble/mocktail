@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>mocktail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+  <style>
+    .card {
+      margin: 30px 0 0 0;
+    }
+
+    .footer {
+      color: #6c757d;
+      text-align: center;
+      margin: 30px 0 0 0;
+    }
+
+    svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tooltip {
+  font: 12px Arial, sans-serif;
+  color: #fff;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 5px;
+  border: 0px;
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.label {
+  font: 14px Arial, sans-serif;
+  font-weight: bold;
+  fill: #fff;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.label .small {
+  font-size: 10px;
+}
+
+.pie .title {
+  font: 18px Arial, sans-serif;
+  font-weight: bold;
+  fill: #212529;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.pie .arc {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  stroke: #333;
+  stroke-width: 1px;
+}
+
+.label.dir {
+  fill: #333;
+}
+
+.label.file {
+  font: 12px Arial, sans-serif;
+}
+
+.node.root, .node.file {
+  pointer-events: none;
+}
+
+.domain {
+  stroke: transparent;
+}
+
+.grid line {
+  stroke: #ccc;
+}
+
+.axis text {
+  font: 12px Arial, sans-serif;
+  fill: #333;
+  text-anchor: right;
+  pointer-events: none;
+}
+
+.area {
+  fill-opacity: 0.5;
+}
+
+.line {
+  stroke-width: 2;
+  fill: transparent;
+}
+
+.dot {
+  r: 2;
+  fill: #888;
+}
+
+.inverted .grid line {
+  stroke: #777;
+}
+
+.inverted .area {
+  fill-opacity: 0.9;
+}
+
+.inverted .axis text {
+  fill: #fff;
+}
+
+.inverted .axis line {
+  stroke: #fff;
+}
+
+.inverted .dot {
+  fill: #fff;
+}
+
+
+  </style>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <script>
+    var parseDate = d3.timeParse("%s");
+
+function strictnessColor(strictness) {
+  switch(strictness) {
+    case "ignore":
+      return "#999";
+    case "false":
+      return "#db4437";
+    case "true":
+      return "#0f9d58";
+    case "strict":
+      return "#0a7340";
+    case "strong":
+      return "#064828";
+  }
+  return "#db4437";
+}
+
+function toPercent(value, sum) {
+  return value ? Math.round(value * 100 / sum) : 0;
+}
+
+var tooltip = d3.select("body")
+  .append("div")
+    .append("div")
+      .attr("class", "tooltip");
+
+function moveTooltip(d) {
+  return tooltip
+    .style("left", (d3.event.pageX + 20) + "px")
+    .style("top", (d3.event.pageY) + "px")
+}
+
+function tooltipPie(d, title, kind, sum) {
+  moveTooltip(d)
+    .html("<b>" + title + "</b><br><br>"
+      + "<b>" + d.data.value + "</b> " + kind + "<br>"
+      + "<b>" + toPercent(d.data.value, sum) + "</b>%")
+}
+
+function treeHeight(root, height = 0) {
+  height += 1;
+  if (root.children && root.children.length > 0)
+    return Math.max(...root.children.map(child => treeHeight(child, height)));
+  else
+    return height;
+}
+
+function tooltipMap(d) {
+  moveTooltip(d)
+    .html("<b>" + d.data.name + "</b>")
+}
+
+var parseVersion = function(version) {
+  if (!version) {
+    return null;
+  }
+  return parseFloat(version.replaceAll("0.", ""));
+}
+
+function tooltipTimeline(d, kind) {
+  moveTooltip(d)
+    .html("commit <b>" + d.data.commit + "</b><br>"
+      + d3.timeFormat("%y/%m/%d")(parseDate(d.data.timestamp)) + "<br><br>"
+      + "<b>typed: " + d.key + "</b><br><br>"
+      + "<b>" + (d.data.values[d.key] ? d.data.values[d.key] : 0) + "</b> " + kind +"<br>"
+      + "<b>" + toPercent(d.data.values[d.key] ? d.data.values[d.key] : 0, d.data.total) + "%")
+}
+
+
+  </script>
+
+  <div class="px-5 py-4 container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-md-12 col-lg-9 col-xl-8">
+        <div class="header">
+          <h1 class="display-3">
+  mocktail
+  <span class="badge badge-pill badge-dark" style="font-size: 20%;">24b1c92</span>
+</h1>
+
+        </div>
+        <div class="body">
+          <div class="card">
+  
+    <h5 class="card-header">Snapshot</h5>
+  
+  <div class="card-body">
+    <div class="container-fluid">
+      <div class="row justify-content-md-center">
+        <div class="col-12 col-sm-4 col-xl-3">
+          <svg id="pie_sigils"></svg>
+<script>function tooltip_pie_sigils(d) {
+  tooltipPie(d, "typed: " + d.data.key, "files excluding RBIs", sum_pie_sigils);
+}
+
+
+var json_pie_sigils = {"false":57,"true":45,"strict":13};
+var pie_pie_sigils = d3.pie().value((d) => d.value);
+var data_pie_sigils = pie_pie_sigils(d3.entries(json_pie_sigils));
+var sum_pie_sigils = d3.sum(data_pie_sigils, (d) => d.data.value);
+var title_pie_sigils = "Sigils";
+
+function draw_pie_sigils() {
+  var pieSize_pie_sigils = document.getElementById("pie_sigils").clientWidth - 10;
+
+  var arcGenerator_pie_sigils = d3.arc()
+    .innerRadius(pieSize_pie_sigils / 4)
+    .outerRadius(pieSize_pie_sigils / 2);
+
+  d3.select("#pie_sigils").selectAll("*").remove()
+
+  var svg_pie_sigils = d3.select("#pie_sigils")
+    .attr("width", pieSize_pie_sigils)
+    .attr("height", pieSize_pie_sigils)
+    .attr("class", "pie")
+    .append("g")
+      .attr("transform", "translate(" + pieSize_pie_sigils / 2 + "," + pieSize_pie_sigils / 2 + ")");
+
+  svg_pie_sigils.selectAll("arcs")
+    .data(data_pie_sigils)
+    .enter()
+      .append('path')
+        .attr("class", "arc")
+        .attr('fill', (d) => strictnessColor(d.data.key))
+        .attr('d', arcGenerator_pie_sigils)
+        .on("mouseover", (d) => tooltip.style("opacity", 1))
+        .on("mousemove", tooltip_pie_sigils)
+        .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+  svg_pie_sigils.selectAll("labels")
+    .data(data_pie_sigils)
+    .enter()
+      .append('text')
+      .attr("class", "label")
+      .attr("transform", (d) => "translate(" + arcGenerator_pie_sigils.centroid(d) + ")")
+      .filter(d => (d.endAngle - d.startAngle) > 0.25)
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", -3)
+        .text((d) => d.data.value)
+          .append("tspan")
+          .attr("class", "small")
+          .attr("x", 0)
+          .attr("y", 13)
+          .text((d) => toPercent(d.data.value, sum_pie_sigils) + "%");
+
+  svg_pie_sigils
+    .append("text")
+    .attr("class", "title")
+    .append("tspan")
+      .attr("y", 7)
+      .text(title_pie_sigils);
+}
+
+draw_pie_sigils();
+window.addEventListener("resize", draw_pie_sigils);
+</script>
+
+        </div>
+        <div class="d-none d-xl-block col-xl-1"></div>
+        <div class="col-12 col-sm-4 col-xl-3">
+          <svg id="pie_calls"></svg>
+<script>function tooltip_pie_calls(d) {
+  tooltipPie(d, d.data.key == "true" ? " checked" : " unchecked", "calls", sum_pie_calls)
+}
+
+
+var json_pie_calls = {"true":2265,"false":1231};
+var pie_pie_calls = d3.pie().value((d) => d.value);
+var data_pie_calls = pie_pie_calls(d3.entries(json_pie_calls));
+var sum_pie_calls = d3.sum(data_pie_calls, (d) => d.data.value);
+var title_pie_calls = "Calls";
+
+function draw_pie_calls() {
+  var pieSize_pie_calls = document.getElementById("pie_calls").clientWidth - 10;
+
+  var arcGenerator_pie_calls = d3.arc()
+    .innerRadius(pieSize_pie_calls / 4)
+    .outerRadius(pieSize_pie_calls / 2);
+
+  d3.select("#pie_calls").selectAll("*").remove()
+
+  var svg_pie_calls = d3.select("#pie_calls")
+    .attr("width", pieSize_pie_calls)
+    .attr("height", pieSize_pie_calls)
+    .attr("class", "pie")
+    .append("g")
+      .attr("transform", "translate(" + pieSize_pie_calls / 2 + "," + pieSize_pie_calls / 2 + ")");
+
+  svg_pie_calls.selectAll("arcs")
+    .data(data_pie_calls)
+    .enter()
+      .append('path')
+        .attr("class", "arc")
+        .attr('fill', (d) => strictnessColor(d.data.key))
+        .attr('d', arcGenerator_pie_calls)
+        .on("mouseover", (d) => tooltip.style("opacity", 1))
+        .on("mousemove", tooltip_pie_calls)
+        .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+  svg_pie_calls.selectAll("labels")
+    .data(data_pie_calls)
+    .enter()
+      .append('text')
+      .attr("class", "label")
+      .attr("transform", (d) => "translate(" + arcGenerator_pie_calls.centroid(d) + ")")
+      .filter(d => (d.endAngle - d.startAngle) > 0.25)
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", -3)
+        .text((d) => d.data.value)
+          .append("tspan")
+          .attr("class", "small")
+          .attr("x", 0)
+          .attr("y", 13)
+          .text((d) => toPercent(d.data.value, sum_pie_calls) + "%");
+
+  svg_pie_calls
+    .append("text")
+    .attr("class", "title")
+    .append("tspan")
+      .attr("y", 7)
+      .text(title_pie_calls);
+}
+
+draw_pie_calls();
+window.addEventListener("resize", draw_pie_calls);
+</script>
+
+        </div>
+        <div class="d-none d-xl-block col-xl-1"></div>
+        <div class="col-12 col-sm-4 col-xl-3">
+          <svg id="pie_sigs"></svg>
+<script>function tooltip_pie_sigs(d) {
+  tooltipPie(
+    d,
+    (d.data.key == "true" ? " with" : " without") + " a signature", "methods excluding RBIs", sum_pie_sigs
+  )
+}
+
+
+var json_pie_sigs = {"true":118,"false":754};
+var pie_pie_sigs = d3.pie().value((d) => d.value);
+var data_pie_sigs = pie_pie_sigs(d3.entries(json_pie_sigs));
+var sum_pie_sigs = d3.sum(data_pie_sigs, (d) => d.data.value);
+var title_pie_sigs = "Sigs";
+
+function draw_pie_sigs() {
+  var pieSize_pie_sigs = document.getElementById("pie_sigs").clientWidth - 10;
+
+  var arcGenerator_pie_sigs = d3.arc()
+    .innerRadius(pieSize_pie_sigs / 4)
+    .outerRadius(pieSize_pie_sigs / 2);
+
+  d3.select("#pie_sigs").selectAll("*").remove()
+
+  var svg_pie_sigs = d3.select("#pie_sigs")
+    .attr("width", pieSize_pie_sigs)
+    .attr("height", pieSize_pie_sigs)
+    .attr("class", "pie")
+    .append("g")
+      .attr("transform", "translate(" + pieSize_pie_sigs / 2 + "," + pieSize_pie_sigs / 2 + ")");
+
+  svg_pie_sigs.selectAll("arcs")
+    .data(data_pie_sigs)
+    .enter()
+      .append('path')
+        .attr("class", "arc")
+        .attr('fill', (d) => strictnessColor(d.data.key))
+        .attr('d', arcGenerator_pie_sigs)
+        .on("mouseover", (d) => tooltip.style("opacity", 1))
+        .on("mousemove", tooltip_pie_sigs)
+        .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+  svg_pie_sigs.selectAll("labels")
+    .data(data_pie_sigs)
+    .enter()
+      .append('text')
+      .attr("class", "label")
+      .attr("transform", (d) => "translate(" + arcGenerator_pie_sigs.centroid(d) + ")")
+      .filter(d => (d.endAngle - d.startAngle) > 0.25)
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", -3)
+        .text((d) => d.data.value)
+          .append("tspan")
+          .attr("class", "small")
+          .attr("x", 0)
+          .attr("y", 13)
+          .text((d) => toPercent(d.data.value, sum_pie_sigs) + "%");
+
+  svg_pie_sigs
+    .append("text")
+    .attr("class", "title")
+    .append("tspan")
+      .attr("y", 7)
+      .text(title_pie_sigs);
+}
+
+draw_pie_sigs();
+window.addEventListener("resize", draw_pie_sigs);
+</script>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Strictness Map</h5>
+  
+  <div class="card-body">
+    <svg id="map_sigils"></svg>
+<script>var root = {children: [{"name":"lib","children":[{"name":"mocktail.rb","strictness":"true"},{"name":"mocktail","children":[{"name":"collects_calls.rb","strictness":"false"},{"name":"debug.rb","strictness":"false"},{"name":"dsl.rb","strictness":"true"},{"name":"errors.rb","strictness":"false"},{"name":"explains_nils.rb","strictness":"false"},{"name":"explains_thing.rb","strictness":"true"},{"name":"grabs_original_method_parameters.rb","strictness":null},{"name":"handles_dry_call.rb","strictness":"true"},{"name":"handles_dry_call","children":[{"name":"fulfills_stubbing.rb","strictness":"true"},{"name":"fulfills_stubbing","children":[{"name":"describes_unsatisfied_stubbing.rb","strictness":"true"},{"name":"finds_satisfaction.rb","strictness":"true"}],"score":1.0},{"name":"logs_call.rb","strictness":"true"},{"name":"validates_arguments.rb","strictness":"true"}],"score":1.0},{"name":"handles_dry_new_call.rb","strictness":"true"},{"name":"imitates_type.rb","strictness":"false"},{"name":"imitates_type","children":[{"name":"ensures_imitation_support.rb","strictness":"false"},{"name":"makes_double.rb","strictness":"false"},{"name":"makes_double","children":[{"name":"declares_dry_class.rb","strictness":"false"},{"name":"declares_dry_class","children":[{"name":"reconstructs_call.rb","strictness":"false"}],"score":0.0},{"name":"gathers_fakeable_instance_methods.rb","strictness":"false"}],"score":0.0}],"score":0.0},{"name":"initializes_mocktail.rb","strictness":"false"},{"name":"matcher_presentation.rb","strictness":"false"},{"name":"matchers.rb","strictness":"false"},{"name":"matchers","children":[{"name":"any.rb","strictness":"false"},{"name":"base.rb","strictness":"false"},{"name":"captor.rb","strictness":"false"},{"name":"includes.rb","strictness":"false"},{"name":"includes_hash.rb","strictness":"false"},{"name":"includes_key.rb","strictness":"false"},{"name":"includes_string.rb","strictness":"false"},{"name":"is_a.rb","strictness":"false"},{"name":"matches.rb","strictness":"false"},{"name":"not.rb","strictness":"false"},{"name":"numeric.rb","strictness":"false"},{"name":"that.rb","strictness":"false"}],"score":0.0},{"name":"raises_neato_no_method_error.rb","strictness":"false"},{"name":"records_demonstration.rb","strictness":"false"},{"name":"registers_matcher.rb","strictness":"false"},{"name":"registers_stubbing.rb","strictness":"false"},{"name":"replaces_next.rb","strictness":"false"},{"name":"replaces_type.rb","strictness":"false"},{"name":"replaces_type","children":[{"name":"redefines_new.rb","strictness":"true"},{"name":"redefines_singleton_methods.rb","strictness":"false"},{"name":"runs_sorbet_sig_blocks_before_replacement.rb","strictness":null}],"score":0.3333333333333333},{"name":"resets_state.rb","strictness":"false"},{"name":"share","children":[{"name":"bind.rb","strictness":"false"},{"name":"cleans_backtrace.rb","strictness":"false"},{"name":"creates_identifier.rb","strictness":"false"},{"name":"determines_matching_calls.rb","strictness":"false"},{"name":"stringifies_call.rb","strictness":"false"},{"name":"stringifies_method_name.rb","strictness":"false"}],"score":0.0},{"name":"simulates_argument_error.rb","strictness":"false"},{"name":"simulates_argument_error","children":[{"name":"reconciles_args_with_params.rb","strictness":"false"},{"name":"recreates_message.rb","strictness":"false"},{"name":"transforms_params.rb","strictness":"false"}],"score":0.0},{"name":"stringifies_method_signature.rb","strictness":"false"},{"name":"value.rb","strictness":"false"},{"name":"value","children":[{"name":"cabinet.rb","strictness":"false"},{"name":"call.rb","strictness":"strict"},{"name":"demo_config.rb","strictness":"strict"},{"name":"double.rb","strictness":"strict"},{"name":"double_data.rb","strictness":"strict"},{"name":"explanation.rb","strictness":"strict"},{"name":"explanation_data.rb","strictness":"strict"},{"name":"fake_method_data.rb","strictness":"strict"},{"name":"matcher_registry.rb","strictness":"strict"},{"name":"no_explanation_data.rb","strictness":null},{"name":"signature.rb","strictness":"false"},{"name":"stubbing.rb","strictness":"strict"},{"name":"top_shelf.rb","strictness":"false"},{"name":"type_replacement.rb","strictness":"strict"},{"name":"type_replacement_data.rb","strictness":"strict"},{"name":"unsatisfying_call.rb","strictness":"strict"},{"name":"unsatisfying_call_explanation.rb","strictness":"strict"}],"score":0.7647058823529411},{"name":"verifies_call.rb","strictness":"false"},{"name":"verifies_call","children":[{"name":"finds_verifiable_calls.rb","strictness":"false"},{"name":"raises_verification_error.rb","strictness":"false"},{"name":"raises_verification_error","children":[{"name":"gathers_calls_of_method.rb","strictness":"false"}],"score":0.0}],"score":0.0},{"name":"version.rb","strictness":"false"}],"score":0.1847890671420083}],"score":0.5923945335710041},{"name":"sorbet","children":[{"name":"tapioca","children":[{"name":"require.rb","strictness":"true"}],"score":1.0}],"score":1.0}]}
+var dataHeight = treeHeight(root)
+
+var opacity = d3.scaleLinear()
+    .domain([0, dataHeight])
+    .range([0, 0.2])
+
+root = d3.hierarchy(root)
+    .sum((d) => d.children ? d.children.length : 1)
+    .sort((a, b) => b.value - a.value);
+
+var dirColor = d3.scaleLinear()
+  .domain([1, 0])
+  .range([strictnessColor("true"), strictnessColor("false")])
+  .interpolate(d3.interpolateRgb);
+
+function redraw() {
+  var diameter = document.getElementById("map_sigils").clientWidth - 20;
+  d3.select("#map_sigils").selectAll("*").remove()
+
+  var svg_map_sigils = d3.select("#map_sigils")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .append("g")
+      .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+  var pack = d3.pack()
+      .size([diameter, diameter])
+      .padding(2);
+
+  var focus = root,
+      nodes = pack(root).descendants(),
+      view;
+
+  var circle = svg_map_sigils.selectAll("circle")
+    .data(nodes)
+    .enter().append("circle")
+      .attr("class", (d) => d.parent ? d.children ? "node" : "node file" : "node root")
+      .attr("fill", (d) => d.children ? dirColor(d.data.score) : strictnessColor(d.data.strictness))
+      .attr("fill-opacity", (d) => d.children ? opacity(d.depth) : 1)
+      .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
+      .on("mouseover", (d) => tooltip.style("opacity", 1))
+      .on("mousemove", tooltipMap)
+      .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+  var text = svg_map_sigils.selectAll("text")
+    .data(nodes)
+    .enter().append("text")
+      .attr("class", (d) => d.children ? "label dir" : "label file")
+      .attr("fill-opacity", (d) => d.depth <= 1 ? 1 : 0)
+      .attr("display", (d) => d.depth <= 1 ? "inline" : "none")
+      .text((d) => d.data.name);
+
+  var node = svg_map_sigils.selectAll("circle,text");
+
+  function zoom(d) {
+    var focus0 = focus; focus = d;
+
+    var transition = d3.transition()
+        .duration(d3.event.altKey ? 7500 : 750)
+        .tween("zoom", function(d) {
+          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+          return (t) => zoomTo(i(t));
+        });
+
+    transition.selectAll("text")
+      .filter(function(d) { return d && d.parent === focus || this.style.display === "inline"; })
+        .attr("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
+        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
+        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+  }
+
+  function zoomTo(v) {
+    var k = diameter / v[2]; view = v;
+    node.attr("transform", (d) => "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")");
+    circle.attr("r", (d) => d.r * k);
+  }
+
+  zoomTo([root.x, root.y, root.r * 2]);
+  d3.select("#map_sigils").on("click", () => zoom(root));
+}
+
+redraw();
+window.addEventListener("resize", redraw);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Sigils Timeline</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_sigils"></svg>
+<script>function tooltip_timeline_sigils(d) {
+  tooltipTimeline(d, "files excluding RBIs");
+}
+
+
+var data_timeline_sigils = [{"timestamp":1684959835,"commit":"93f8153","total":103,"values":{"true":103}},{"timestamp":1687348946,"commit":"5d093b9","total":113,"values":{"false":64,"true":38,"strict":13}},{"timestamp":1687349568,"commit":"24b1c92","total":113,"values":{"false":57,"true":45,"strict":13}}];
+var keys_timeline_sigils = ["ignore","false","true","strict","strong","stdlib"];
+
+var stack_timeline_sigils = d3.stack()
+  .keys(keys_timeline_sigils)
+  .value((d, key) => toPercent(d.values[key], d.total));
+
+var layers_timeline_sigils = stack_timeline_sigils(data_timeline_sigils);
+
+var points_timeline_sigils = []
+layers_timeline_sigils.forEach(function(d) {
+  d.forEach(function(p) {
+    p.key = d.key
+    points_timeline_sigils.push(p);
+  });
+})
+
+function draw_timeline_sigils() {
+  var width_timeline_sigils = document.getElementById("timeline_sigils").clientWidth;
+  var height_timeline_sigils = 200;
+
+  d3.select("#timeline_sigils").selectAll("*").remove()
+
+  var svg_timeline_sigils = d3.select("#timeline_sigils")
+    .attr("class", "inverted")
+    .attr("width", width_timeline_sigils)
+    .attr("height", height_timeline_sigils);
+
+  var xScale_timeline_sigils = d3.scaleTime()
+  .range([0, width_timeline_sigils])
+  .domain(d3.extent(data_timeline_sigils, (d) => parseDate(d.timestamp)));
+
+svg_timeline_sigils.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_sigils + ")")
+  .call(d3.axisBottom(xScale_timeline_sigils)
+    .tickFormat("")
+    .tickSize(-height_timeline_sigils))
+
+var yScale_timeline_sigils = d3.scaleLinear()
+  .range([height_timeline_sigils, 0])
+  .domain([0, 100]);
+
+svg_timeline_sigils.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_sigils)
+    .tickValues([0, 25, 50, 75, 100])
+    .tickFormat("")
+    .tickSize(-width_timeline_sigils))
+
+var area_timeline_sigils = d3.area()
+  .x((d) => xScale_timeline_sigils(parseDate(d.data.timestamp)))
+  .y0((d) => yScale_timeline_sigils(d[0]))
+  .y1((d) => yScale_timeline_sigils(d[1]))
+  .curve(d3.curveCatmullRom.alpha(1));
+
+var layer = svg_timeline_sigils.selectAll(".layer")
+  .data(layers_timeline_sigils)
+  .enter().append("g")
+    .attr("class", "layer")
+    .attr("fill", (d, i) => strictnessColor(d.key))
+
+layer.append("path")
+  .attr("class", "area")
+  .attr("d", area_timeline_sigils)
+  .attr("fill", (d) => strictnessColor(d.key))
+
+svg_timeline_sigils.selectAll("circle")
+  .data(points_timeline_sigils)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_sigils(parseDate(d.data.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_sigils(d[1]))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_sigils)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_sigils.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_sigils + ")")
+  .call(d3.axisBottom(xScale_timeline_sigils)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_sigils.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_sigils)
+    .tickValues([25, 50, 75])
+    .tickSize(-3)
+    .tickFormat((d) => d + '%')
+    .tickPadding(-30))
+
+
+}
+
+draw_timeline_sigils();
+window.addEventListener("resize", draw_timeline_sigils);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Calls Timeline</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_calls"></svg>
+<script>function tooltip_timeline_calls(d) {
+  tooltipTimeline(d, "calls");
+}
+
+
+var data_timeline_calls = [{"timestamp":1684959835,"commit":"93f8153","total":4082,"values":{"true":1884,"false":2198}},{"timestamp":1687348946,"commit":"5d093b9","total":3389,"values":{"true":2214,"false":1175}},{"timestamp":1687349568,"commit":"24b1c92","total":3496,"values":{"true":2265,"false":1231}}];
+var keys_timeline_calls = ["false","true"];
+
+var stack_timeline_calls = d3.stack()
+  .keys(keys_timeline_calls)
+  .value((d, key) => toPercent(d.values[key], d.total));
+
+var layers_timeline_calls = stack_timeline_calls(data_timeline_calls);
+
+var points_timeline_calls = []
+layers_timeline_calls.forEach(function(d) {
+  d.forEach(function(p) {
+    p.key = d.key
+    points_timeline_calls.push(p);
+  });
+})
+
+function draw_timeline_calls() {
+  var width_timeline_calls = document.getElementById("timeline_calls").clientWidth;
+  var height_timeline_calls = 200;
+
+  d3.select("#timeline_calls").selectAll("*").remove()
+
+  var svg_timeline_calls = d3.select("#timeline_calls")
+    .attr("class", "inverted")
+    .attr("width", width_timeline_calls)
+    .attr("height", height_timeline_calls);
+
+  var xScale_timeline_calls = d3.scaleTime()
+  .range([0, width_timeline_calls])
+  .domain(d3.extent(data_timeline_calls, (d) => parseDate(d.timestamp)));
+
+svg_timeline_calls.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_calls + ")")
+  .call(d3.axisBottom(xScale_timeline_calls)
+    .tickFormat("")
+    .tickSize(-height_timeline_calls))
+
+var yScale_timeline_calls = d3.scaleLinear()
+  .range([height_timeline_calls, 0])
+  .domain([0, 100]);
+
+svg_timeline_calls.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_calls)
+    .tickValues([0, 25, 50, 75, 100])
+    .tickFormat("")
+    .tickSize(-width_timeline_calls))
+
+var area_timeline_calls = d3.area()
+  .x((d) => xScale_timeline_calls(parseDate(d.data.timestamp)))
+  .y0((d) => yScale_timeline_calls(d[0]))
+  .y1((d) => yScale_timeline_calls(d[1]))
+  .curve(d3.curveCatmullRom.alpha(1));
+
+var layer = svg_timeline_calls.selectAll(".layer")
+  .data(layers_timeline_calls)
+  .enter().append("g")
+    .attr("class", "layer")
+    .attr("fill", (d, i) => strictnessColor(d.key))
+
+layer.append("path")
+  .attr("class", "area")
+  .attr("d", area_timeline_calls)
+  .attr("fill", (d) => strictnessColor(d.key))
+
+svg_timeline_calls.selectAll("circle")
+  .data(points_timeline_calls)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_calls(parseDate(d.data.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_calls(d[1]))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_calls)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_calls.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_calls + ")")
+  .call(d3.axisBottom(xScale_timeline_calls)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_calls.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_calls)
+    .tickValues([25, 50, 75])
+    .tickSize(-3)
+    .tickFormat((d) => d + '%')
+    .tickPadding(-30))
+
+
+}
+
+draw_timeline_calls();
+window.addEventListener("resize", draw_timeline_calls);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Signatures Timeline</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_sigs"></svg>
+<script>function tooltip_timeline_sigs(d) {
+  tooltipTimeline(d, "methods excluding RBIs");
+}
+
+
+var data_timeline_sigs = [{"timestamp":1684959835,"commit":"93f8153","total":816,"values":{"true":9,"false":807}},{"timestamp":1687348946,"commit":"5d093b9","total":872,"values":{"true":118,"false":754}},{"timestamp":1687349568,"commit":"24b1c92","total":872,"values":{"true":118,"false":754}}];
+var keys_timeline_sigs = ["false","true"];
+
+var stack_timeline_sigs = d3.stack()
+  .keys(keys_timeline_sigs)
+  .value((d, key) => toPercent(d.values[key], d.total));
+
+var layers_timeline_sigs = stack_timeline_sigs(data_timeline_sigs);
+
+var points_timeline_sigs = []
+layers_timeline_sigs.forEach(function(d) {
+  d.forEach(function(p) {
+    p.key = d.key
+    points_timeline_sigs.push(p);
+  });
+})
+
+function draw_timeline_sigs() {
+  var width_timeline_sigs = document.getElementById("timeline_sigs").clientWidth;
+  var height_timeline_sigs = 200;
+
+  d3.select("#timeline_sigs").selectAll("*").remove()
+
+  var svg_timeline_sigs = d3.select("#timeline_sigs")
+    .attr("class", "inverted")
+    .attr("width", width_timeline_sigs)
+    .attr("height", height_timeline_sigs);
+
+  var xScale_timeline_sigs = d3.scaleTime()
+  .range([0, width_timeline_sigs])
+  .domain(d3.extent(data_timeline_sigs, (d) => parseDate(d.timestamp)));
+
+svg_timeline_sigs.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_sigs + ")")
+  .call(d3.axisBottom(xScale_timeline_sigs)
+    .tickFormat("")
+    .tickSize(-height_timeline_sigs))
+
+var yScale_timeline_sigs = d3.scaleLinear()
+  .range([height_timeline_sigs, 0])
+  .domain([0, 100]);
+
+svg_timeline_sigs.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_sigs)
+    .tickValues([0, 25, 50, 75, 100])
+    .tickFormat("")
+    .tickSize(-width_timeline_sigs))
+
+var area_timeline_sigs = d3.area()
+  .x((d) => xScale_timeline_sigs(parseDate(d.data.timestamp)))
+  .y0((d) => yScale_timeline_sigs(d[0]))
+  .y1((d) => yScale_timeline_sigs(d[1]))
+  .curve(d3.curveCatmullRom.alpha(1));
+
+var layer = svg_timeline_sigs.selectAll(".layer")
+  .data(layers_timeline_sigs)
+  .enter().append("g")
+    .attr("class", "layer")
+    .attr("fill", (d, i) => strictnessColor(d.key))
+
+layer.append("path")
+  .attr("class", "area")
+  .attr("d", area_timeline_sigs)
+  .attr("fill", (d) => strictnessColor(d.key))
+
+svg_timeline_sigs.selectAll("circle")
+  .data(points_timeline_sigs)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_sigs(parseDate(d.data.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_sigs(d[1]))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_sigs)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_sigs.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_sigs + ")")
+  .call(d3.axisBottom(xScale_timeline_sigs)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_sigs.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_sigs)
+    .tickValues([25, 50, 75])
+    .tickSize(-3)
+    .tickFormat((d) => d + '%')
+    .tickPadding(-30))
+
+
+}
+
+draw_timeline_sigs();
+window.addEventListener("resize", draw_timeline_sigs);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">RBIs Timeline</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_rbis"></svg>
+<script>function tooltip_timeline_rbis(d) {
+  moveTooltip(d)
+    .html("commit <b>" + d.data.commit + "</b><br>"
+      + d3.timeFormat("%y/%m/%d")(parseDate(d.data.timestamp)) + "<br><br>"
+      + "Files: <b>" + d.data.values.files + "</b><br>"
+      + "RBIs: <b>" + d.data.values.rbis + "</b><br><br>"
+      + "Total: <b>" + d.data.total + "</b>")
+}
+
+
+var data_timeline_rbis = [{"timestamp":1684959835,"commit":"93f8153","total":141,"values":{"files":103,"rbis":38}},{"timestamp":1687348946,"commit":"5d093b9","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687349568,"commit":"24b1c92","total":151,"values":{"files":113,"rbis":38}}];
+var keys_timeline_rbis = ["rbis","files"];
+
+var stack_timeline_rbis = d3.stack()
+  .keys(keys_timeline_rbis)
+  .value((d, key) => d.values[key]);
+
+var layers_timeline_rbis = stack_timeline_rbis(data_timeline_rbis);
+
+var points_timeline_rbis = []
+layers_timeline_rbis.forEach(function(d) {
+  d.forEach(function(p) {
+    p.key = d.key
+    points_timeline_rbis.push(p);
+  });
+})
+
+function draw_timeline_rbis() {
+  var width_timeline_rbis = document.getElementById("timeline_rbis").clientWidth;
+  var height_timeline_rbis = 200;
+
+  d3.select("#timeline_rbis").selectAll("*").remove()
+
+  var svg_timeline_rbis = d3.select("#timeline_rbis")
+    .attr("width", width_timeline_rbis)
+    .attr("height", height_timeline_rbis);
+
+  var xScale_timeline_rbis = d3.scaleTime()
+  .range([0, width_timeline_rbis])
+  .domain(d3.extent(data_timeline_rbis, (d) => parseDate(d.timestamp)));
+
+svg_timeline_rbis.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_rbis + ")")
+  .call(d3.axisBottom(xScale_timeline_rbis)
+    .tickFormat("")
+    .tickSize(-height_timeline_rbis))
+
+var yScale_timeline_rbis = d3.scaleLinear()
+  .range([height_timeline_rbis, 0])
+  .domain([0, d3.max(data_timeline_rbis, (d) => d.total + 10)]);
+
+svg_timeline_rbis.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_rbis)
+    .tickValues([0, 25, 50, 75, 100])
+    .tickFormat("")
+    .tickSize(-width_timeline_rbis))
+
+var area_timeline_rbis = d3.area()
+  .x((d) => xScale_timeline_rbis(parseDate(d.data.timestamp)))
+  .y0((d) => yScale_timeline_rbis(d[0]))
+  .y1((d) => yScale_timeline_rbis(d[1]))
+  .curve(d3.curveCatmullRom.alpha(1));
+
+var layer = svg_timeline_rbis.selectAll(".layer")
+  .data(layers_timeline_rbis)
+  .enter().append("g")
+    .attr("class", "layer")
+
+layer.append("path")
+  .attr("class", "area")
+  .attr("d", area_timeline_rbis)
+  .attr("fill", (d) => d.key == 'rbis' ? '#8673ff' : '#007bff')
+
+layer.append("path")
+  .attr("class", "line")
+  .attr("d", d3.line()
+    .x((d) => xScale_timeline_rbis(parseDate(d.data.timestamp)))
+    .y((d, i) => yScale_timeline_rbis(d[1]))
+    .curve(d3.curveCatmullRom.alpha(1)))
+  .attr("stroke", (d) => d.key == 'rbis' ? '#8673ff' : '#007bff')
+
+svg_timeline_rbis.selectAll("circle")
+  .data(points_timeline_rbis)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_rbis(parseDate(d.data.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_rbis(d[1]))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_rbis)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_rbis.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_rbis + ")")
+  .call(d3.axisBottom(xScale_timeline_rbis)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_rbis.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_rbis)
+    .tickValues([25, 50, 75])
+    .tickSize(-3)
+    .tickFormat((d) => d)
+    .tickPadding(-20))
+
+
+}
+
+draw_timeline_rbis();
+window.addEventListener("resize", draw_timeline_rbis);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Sorbet Versions Timeline</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_versions"></svg>
+<script>function tooltip_timeline_versions(d) {
+  moveTooltip(d)
+    .html("commit <b>" + d.commit + "</b><br>"
+      + d3.timeFormat("%y/%m/%d")(parseDate(d.timestamp)) + "<br><br>"
+      + "static: v<b>" + d.static + "</b><br>"
+      + "runtime: v<b>" + d.runtime + "</b><br><br>"
+      + "versions from<br>Gemfile.lock")
+}
+
+
+var data_timeline_versions = [{"timestamp":1684959835,"commit":"93f8153","static":"0.5.10837","runtime":"0.5.10837"},{"timestamp":1687348946,"commit":"5d093b9","static":"0.5.10880","runtime":"0.5.10880"},{"timestamp":1687349568,"commit":"24b1c92","static":"0.5.10884","runtime":"0.5.10884"}];
+
+function draw_timeline_versions() {
+  var width_timeline_versions = document.getElementById("timeline_versions").clientWidth;
+  var height_timeline_versions = 200;
+
+  d3.select("#timeline_versions").selectAll("*").remove()
+
+  var svg_timeline_versions = d3.select("#timeline_versions")
+    .attr("width", width_timeline_versions)
+    .attr("height", height_timeline_versions)
+
+  var xScale_timeline_versions = d3.scaleTime()
+  .range([0, width_timeline_versions])
+  .domain(d3.extent(data_timeline_versions, (d) => parseDate(d.timestamp)));
+
+svg_timeline_versions.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_versions + ")")
+  .call(d3.axisBottom(xScale_timeline_versions)
+    .tickFormat("")
+    .tickSize(-height_timeline_versions))
+
+var yScale_timeline_versions = d3.scaleLinear()
+  .range([height_timeline_versions, 0])
+  .domain([d3.min([d3.min(data_timeline_versions, (d) => parseVersion(d.static)),
+                              d3.min(data_timeline_versions, (d) => parseVersion(d.runtime))]) - 0.01, d3.max([d3.max(data_timeline_versions, (d) => parseVersion(d.static)),
+                              d3.max(data_timeline_versions, (d) => parseVersion(d.runtime))]) + 0.01]);
+
+svg_timeline_versions.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_versions)
+    .ticks(8)
+    .tickFormat("")
+    .tickSize(-width_timeline_versions))
+
+svg_timeline_versions.append("path")
+   .datum(data_timeline_versions.filter((d) => parseVersion(d.runtime)))
+   .attr("class", "line")
+   .attr("d", d3.line()
+     .x((d) => xScale_timeline_versions(parseDate(d.timestamp)))
+     .y((d) => yScale_timeline_versions(parseVersion(d.runtime)))
+     .curve(d3.curveStepAfter))
+   .attr("stroke", "#e83e8c")
+
+svg_timeline_versions.append("path")
+   .datum(data_timeline_versions.filter((d) => parseVersion(d.static)))
+   .attr("class", "line")
+   .attr("d", d3.line()
+     .x((d) => xScale_timeline_versions(parseDate(d.timestamp)))
+     .y((d) => yScale_timeline_versions(parseVersion(d.static)))
+     .curve(d3.curveStepAfter))
+   .attr("stroke", "#007bff")
+
+svg_timeline_versions.selectAll("circle")
+  .data(data_timeline_versions)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_versions(parseDate(d.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_versions(parseVersion(d.static)))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_versions)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_versions.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_versions + ")")
+  .call(d3.axisBottom(xScale_timeline_versions)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_versions.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_versions)
+    .ticks(4)
+    .tickSize(-3)
+    .tickFormat((d) => 'v0.' + d.toFixed(2))
+    .tickPadding(-50))
+
+
+}
+
+draw_timeline_versions();
+window.addEventListener("resize", draw_timeline_versions);
+</script>
+
+  </div>
+</div>
+
+<div class="card">
+  
+    <h5 class="card-header">Sorbet Typechecking Time</h5>
+  
+  <div class="card-body">
+    <svg id="timeline_runtimes"></svg>
+<script>function tooltip_timeline_runtimes(d) {
+  moveTooltip(d)
+    .html("commit <b>" + d.commit + "</b><br>"
+      + d3.timeFormat("%y/%m/%d")(parseDate(d.timestamp)) + "<br><br>"
+      + "<b>" + d.runtime + "</b>s<br><br>"
+      + "(sorbet user + system time)")
+}
+
+
+var data_timeline_runtimes = [{"timestamp":1684959835,"commit":"93f8153","runtime":1.287636},{"timestamp":1687348946,"commit":"5d093b9","runtime":0.7352580000000001},{"timestamp":1687349568,"commit":"24b1c92","runtime":0.807698}];
+
+function draw_timeline_runtimes() {
+  var width_timeline_runtimes = document.getElementById("timeline_runtimes").clientWidth;
+  var height_timeline_runtimes = 200;
+
+  d3.select("#timeline_runtimes").selectAll("*").remove()
+
+  var svg_timeline_runtimes = d3.select("#timeline_runtimes")
+    .attr("width", width_timeline_runtimes)
+    .attr("height", height_timeline_runtimes)
+
+  var xScale_timeline_runtimes = d3.scaleTime()
+  .range([0, width_timeline_runtimes])
+  .domain(d3.extent(data_timeline_runtimes, (d) => parseDate(d.timestamp)));
+
+svg_timeline_runtimes.append("g")
+  .attr("class", "grid")
+  .attr("transform", "translate(0," + height_timeline_runtimes + ")")
+  .call(d3.axisBottom(xScale_timeline_runtimes)
+    .tickFormat("")
+    .tickSize(-height_timeline_runtimes))
+
+var yScale_timeline_runtimes = d3.scaleLinear()
+  .range([height_timeline_runtimes, 0])
+  .domain([0, d3.max(data_timeline_runtimes, (d) => d.runtime)]);
+
+svg_timeline_runtimes.append("g")
+  .attr("class", "grid")
+  .call(d3.axisLeft(yScale_timeline_runtimes)
+    .ticks(10)
+    .tickFormat("")
+    .tickSize(-width_timeline_runtimes))
+
+svg_timeline_runtimes.append("path")
+  .datum(data_timeline_runtimes.filter((d) => d.runtime))
+  .attr("class", "area")
+  .attr("d", d3.area()
+    .defined((d) => d.runtime)
+    .x((d) => xScale_timeline_runtimes(parseDate(d.timestamp)))
+    .y0(yScale_timeline_runtimes(0))
+    .y1((d) => yScale_timeline_runtimes(d.runtime))
+    .curve(d3.curveCatmullRom.alpha(1)))
+  .attr("fill", "#ccc")
+
+svg_timeline_runtimes.append("path")
+   .datum(data_timeline_runtimes.filter((d) => d.runtime))
+   .attr("class", "line")
+   .attr("d", d3.line()
+     .x((d) => xScale_timeline_runtimes(parseDate(d.timestamp)))
+     .y((d) => yScale_timeline_runtimes(d.runtime))
+     .curve(d3.curveCatmullRom.alpha(1)))
+   .attr("stroke", "#ccc")
+
+svg_timeline_runtimes.selectAll("circle")
+  .data(data_timeline_runtimes)
+  .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => xScale_timeline_runtimes(parseDate(d.timestamp)))
+    .attr("cy", (d, i) => yScale_timeline_runtimes(d.runtime))
+    .on("mouseover", (d) => tooltip.style("opacity", 1))
+    .on("mousemove", tooltip_timeline_runtimes)
+    .on("mouseleave", (d) => tooltip.style("opacity", 0));
+
+svg_timeline_runtimes.append("g")
+  .attr("class", "axis x")
+  .attr("transform", "translate(0," + height_timeline_runtimes + ")")
+  .call(d3.axisBottom(xScale_timeline_runtimes)
+    .tickFormat(d3.timeFormat("%y/%m/%d"))
+    .tickPadding(-15)
+    .tickSize(-3));
+
+svg_timeline_runtimes.append("g")
+  .attr("class", "axis y")
+  .call(d3.axisLeft(yScale_timeline_runtimes)
+    .ticks(5)
+    .tickSize(-3)
+    .tickFormat((d) => d.toFixed(2) + "s")
+    .tickPadding(-40))
+
+  .call(g => g.selectAll(".tick:first-of-type text").remove())
+
+}
+
+draw_timeline_runtimes();
+window.addEventListener("resize", draw_timeline_runtimes);
+</script>
+
+  </div>
+</div>
+
+<div class="text-center" style="margin-top: 30px">
+  Typchecked by Sorbet since <b>2023-05-20</b>
+  (commit <b>8bed1cd</b>).
+</div>
+
+        </div>
+        <div class="footer">
+          Generated by <a href='https://github.com/Shopify/spoom'>spoom</a> on 2023-06-21 12:41:29 UTC.
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

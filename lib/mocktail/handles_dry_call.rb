@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "handles_dry_call/fulfills_stubbing"
 require_relative "handles_dry_call/logs_call"

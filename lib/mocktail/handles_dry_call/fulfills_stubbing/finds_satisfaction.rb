@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "../../share/determines_matching_calls"
 

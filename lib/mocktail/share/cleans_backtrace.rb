@@ -11,7 +11,7 @@ module Mocktail
     rescue => e
       e.tap do |e|
         e.set_backtrace(e.backtrace.drop_while { |frame|
-          frame.start_with?(BASE_PATH)
+          frame.start_with?(BASE_PATH, BASE_PATH) || frame.match?(/[\\|\/]sorbet-runtime.*[\\|\/]lib[\\|\/]types[\\|\/]private/)
         })
       end
     end

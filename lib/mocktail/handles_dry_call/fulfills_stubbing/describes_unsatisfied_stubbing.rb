@@ -5,10 +5,14 @@ require_relative "../../share/bind"
 
 module Mocktail
   class DescribesUnsatisfiedStubbing
+    extend T::Sig
+
+    sig { void }
     def initialize
       @cleans_backtrace = CleansBacktrace.new
     end
 
+    sig { params(dry_call: Mocktail::Call).returns(Mocktail::UnsatisfyingCall) }
     def describe(dry_call)
       UnsatisfyingCall.new(
         call: dry_call,

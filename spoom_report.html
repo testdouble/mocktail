@@ -220,7 +220,7 @@ function tooltipTimeline(d, kind) {
         <div class="header">
           <h1 class="display-3">
   mocktail
-  <span class="badge badge-pill badge-dark" style="font-size: 20%;">6b0fef4</span>
+  <span class="badge badge-pill badge-dark" style="font-size: 20%;">30e9528</span>
 </h1>
 
         </div>
@@ -310,7 +310,7 @@ window.addEventListener("resize", draw_pie_sigils);
 }
 
 
-var json_pie_calls = {"true":2918,"false":1871};
+var json_pie_calls = {"true":2984,"false":1860};
 var pie_pie_calls = d3.pie().value((d) => d.value);
 var data_pie_calls = pie_pie_calls(d3.entries(json_pie_calls));
 var sum_pie_calls = d3.sum(data_pie_calls, (d) => d.data.value);
@@ -384,7 +384,7 @@ window.addEventListener("resize", draw_pie_calls);
 }
 
 
-var json_pie_sigs = {"true":118,"false":753};
+var json_pie_sigs = {"true":132,"false":739};
 var pie_pie_sigs = d3.pie().value((d) => d.value);
 var data_pie_sigs = pie_pie_sigs(d3.entries(json_pie_sigs));
 var sum_pie_sigs = d3.sum(data_pie_sigs, (d) => d.data.value);
@@ -558,7 +558,7 @@ window.addEventListener("resize", redraw);
 }
 
 
-var data_timeline_sigils = [{"timestamp":1684959835,"commit":"93f8153","total":103,"values":{"true":103}},{"timestamp":1687348946,"commit":"5d093b9","total":113,"values":{"false":64,"true":38,"strict":13}},{"timestamp":1687349568,"commit":"24b1c92","total":113,"values":{"false":57,"true":45,"strict":13}},{"timestamp":1687351457,"commit":"74c83c2","total":113,"values":{"false":52,"true":50,"strict":13}},{"timestamp":1687351457,"commit":"97f4c09","total":113,"values":{"false":39,"true":63,"strict":13}},{"timestamp":1687351517,"commit":"4b1edef","total":113,"values":{"false":37,"true":65,"strict":13}},{"timestamp":1687351538,"commit":"f72b67c","total":113,"values":{"false":32,"true":70,"strict":13}},{"timestamp":1687351561,"commit":"305ec0b","total":113,"values":{"false":28,"true":74,"strict":13}},{"timestamp":1687351600,"commit":"6891312","total":113,"values":{"false":24,"true":78,"strict":13}},{"timestamp":1687351618,"commit":"4de157f","total":113,"values":{"false":20,"true":82,"strict":13}},{"timestamp":1687351639,"commit":"f5a1e40","total":113,"values":{"false":8,"true":94,"strict":13}},{"timestamp":1687351658,"commit":"6b0fef4","total":113,"values":{"false":1,"true":101,"strict":13}}];
+var data_timeline_sigils = [{"timestamp":1684959835,"commit":"93f8153","total":103,"values":{"true":103}},{"timestamp":1687348946,"commit":"5d093b9","total":113,"values":{"false":64,"true":38,"strict":13}},{"timestamp":1687349568,"commit":"24b1c92","total":113,"values":{"false":57,"true":45,"strict":13}},{"timestamp":1687351457,"commit":"74c83c2","total":113,"values":{"false":52,"true":50,"strict":13}},{"timestamp":1687351457,"commit":"97f4c09","total":113,"values":{"false":39,"true":63,"strict":13}},{"timestamp":1687351517,"commit":"4b1edef","total":113,"values":{"false":37,"true":65,"strict":13}},{"timestamp":1687351538,"commit":"f72b67c","total":113,"values":{"false":32,"true":70,"strict":13}},{"timestamp":1687351561,"commit":"305ec0b","total":113,"values":{"false":28,"true":74,"strict":13}},{"timestamp":1687351600,"commit":"6891312","total":113,"values":{"false":24,"true":78,"strict":13}},{"timestamp":1687351618,"commit":"4de157f","total":113,"values":{"false":20,"true":82,"strict":13}},{"timestamp":1687351639,"commit":"f5a1e40","total":113,"values":{"false":8,"true":94,"strict":13}},{"timestamp":1687351658,"commit":"6b0fef4","total":113,"values":{"false":1,"true":101,"strict":13}},{"timestamp":1687353030,"commit":"30e9528","total":113,"values":{"false":1,"true":101,"strict":13}}];
 var keys_timeline_sigils = ["ignore","false","true","strict","strong","stdlib"];
 
 var stack_timeline_sigils = d3.stack()
@@ -673,7 +673,7 @@ window.addEventListener("resize", draw_timeline_sigils);
 }
 
 
-var data_timeline_calls = [{"timestamp":1684959835,"commit":"93f8153","total":4082,"values":{"true":1884,"false":2198}},{"timestamp":1687348946,"commit":"5d093b9","total":3389,"values":{"true":2214,"false":1175}},{"timestamp":1687349568,"commit":"24b1c92","total":3496,"values":{"true":2265,"false":1231}},{"timestamp":1687351457,"commit":"74c83c2","total":3582,"values":{"true":2305,"false":1277}},{"timestamp":1687351457,"commit":"97f4c09","total":3675,"values":{"true":2375,"false":1300}},{"timestamp":1687351517,"commit":"4b1edef","total":3737,"values":{"true":2399,"false":1338}},{"timestamp":1687351538,"commit":"f72b67c","total":3894,"values":{"true":2456,"false":1438}},{"timestamp":1687351561,"commit":"305ec0b","total":4055,"values":{"true":2525,"false":1530}},{"timestamp":1687351600,"commit":"6891312","total":4208,"values":{"true":2600,"false":1608}},{"timestamp":1687351618,"commit":"4de157f","total":4298,"values":{"true":2640,"false":1658}},{"timestamp":1687351639,"commit":"f5a1e40","total":4592,"values":{"true":2789,"false":1803}},{"timestamp":1687351658,"commit":"6b0fef4","total":4789,"values":{"true":2918,"false":1871}}];
+var data_timeline_calls = [{"timestamp":1684959835,"commit":"93f8153","total":4082,"values":{"true":1884,"false":2198}},{"timestamp":1687348946,"commit":"5d093b9","total":3389,"values":{"true":2214,"false":1175}},{"timestamp":1687349568,"commit":"24b1c92","total":3496,"values":{"true":2265,"false":1231}},{"timestamp":1687351457,"commit":"74c83c2","total":3582,"values":{"true":2305,"false":1277}},{"timestamp":1687351457,"commit":"97f4c09","total":3675,"values":{"true":2375,"false":1300}},{"timestamp":1687351517,"commit":"4b1edef","total":3737,"values":{"true":2399,"false":1338}},{"timestamp":1687351538,"commit":"f72b67c","total":3894,"values":{"true":2456,"false":1438}},{"timestamp":1687351561,"commit":"305ec0b","total":4055,"values":{"true":2525,"false":1530}},{"timestamp":1687351600,"commit":"6891312","total":4208,"values":{"true":2600,"false":1608}},{"timestamp":1687351618,"commit":"4de157f","total":4298,"values":{"true":2640,"false":1658}},{"timestamp":1687351639,"commit":"f5a1e40","total":4592,"values":{"true":2789,"false":1803}},{"timestamp":1687351658,"commit":"6b0fef4","total":4789,"values":{"true":2918,"false":1871}},{"timestamp":1687353030,"commit":"30e9528","total":4844,"values":{"true":2984,"false":1860}}];
 var keys_timeline_calls = ["false","true"];
 
 var stack_timeline_calls = d3.stack()
@@ -788,7 +788,7 @@ window.addEventListener("resize", draw_timeline_calls);
 }
 
 
-var data_timeline_sigs = [{"timestamp":1684959835,"commit":"93f8153","total":816,"values":{"true":9,"false":807}},{"timestamp":1687348946,"commit":"5d093b9","total":872,"values":{"true":118,"false":754}},{"timestamp":1687349568,"commit":"24b1c92","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351457,"commit":"74c83c2","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351457,"commit":"97f4c09","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351517,"commit":"4b1edef","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351538,"commit":"f72b67c","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351561,"commit":"305ec0b","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351600,"commit":"6891312","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351618,"commit":"4de157f","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351639,"commit":"f5a1e40","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351658,"commit":"6b0fef4","total":871,"values":{"true":118,"false":753}}];
+var data_timeline_sigs = [{"timestamp":1684959835,"commit":"93f8153","total":816,"values":{"true":9,"false":807}},{"timestamp":1687348946,"commit":"5d093b9","total":872,"values":{"true":118,"false":754}},{"timestamp":1687349568,"commit":"24b1c92","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351457,"commit":"74c83c2","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351457,"commit":"97f4c09","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351517,"commit":"4b1edef","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351538,"commit":"f72b67c","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351561,"commit":"305ec0b","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351600,"commit":"6891312","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351618,"commit":"4de157f","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351639,"commit":"f5a1e40","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351658,"commit":"6b0fef4","total":871,"values":{"true":118,"false":753}},{"timestamp":1687353030,"commit":"30e9528","total":871,"values":{"true":132,"false":739}}];
 var keys_timeline_sigs = ["false","true"];
 
 var stack_timeline_sigs = d3.stack()
@@ -908,7 +908,7 @@ window.addEventListener("resize", draw_timeline_sigs);
 }
 
 
-var data_timeline_rbis = [{"timestamp":1684959835,"commit":"93f8153","total":141,"values":{"files":103,"rbis":38}},{"timestamp":1687348946,"commit":"5d093b9","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687349568,"commit":"24b1c92","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351457,"commit":"74c83c2","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351457,"commit":"97f4c09","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351517,"commit":"4b1edef","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351538,"commit":"f72b67c","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351561,"commit":"305ec0b","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351600,"commit":"6891312","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351618,"commit":"4de157f","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351639,"commit":"f5a1e40","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351658,"commit":"6b0fef4","total":151,"values":{"files":113,"rbis":38}}];
+var data_timeline_rbis = [{"timestamp":1684959835,"commit":"93f8153","total":141,"values":{"files":103,"rbis":38}},{"timestamp":1687348946,"commit":"5d093b9","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687349568,"commit":"24b1c92","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351457,"commit":"74c83c2","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351457,"commit":"97f4c09","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351517,"commit":"4b1edef","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351538,"commit":"f72b67c","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351561,"commit":"305ec0b","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351600,"commit":"6891312","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351618,"commit":"4de157f","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351639,"commit":"f5a1e40","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351658,"commit":"6b0fef4","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687353030,"commit":"30e9528","total":151,"values":{"files":113,"rbis":38}}];
 var keys_timeline_rbis = ["rbis","files"];
 
 var stack_timeline_rbis = d3.stack()
@@ -1034,7 +1034,7 @@ window.addEventListener("resize", draw_timeline_rbis);
 }
 
 
-var data_timeline_versions = [{"timestamp":1684959835,"commit":"93f8153","static":"0.5.10837","runtime":"0.5.10837"},{"timestamp":1687348946,"commit":"5d093b9","static":"0.5.10880","runtime":"0.5.10880"},{"timestamp":1687349568,"commit":"24b1c92","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351457,"commit":"74c83c2","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351457,"commit":"97f4c09","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351517,"commit":"4b1edef","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351538,"commit":"f72b67c","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351561,"commit":"305ec0b","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351600,"commit":"6891312","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351618,"commit":"4de157f","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351639,"commit":"f5a1e40","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351658,"commit":"6b0fef4","static":"0.5.10884","runtime":"0.5.10884"}];
+var data_timeline_versions = [{"timestamp":1684959835,"commit":"93f8153","static":"0.5.10837","runtime":"0.5.10837"},{"timestamp":1687348946,"commit":"5d093b9","static":"0.5.10880","runtime":"0.5.10880"},{"timestamp":1687349568,"commit":"24b1c92","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351457,"commit":"74c83c2","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351457,"commit":"97f4c09","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351517,"commit":"4b1edef","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351538,"commit":"f72b67c","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351561,"commit":"305ec0b","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351600,"commit":"6891312","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351618,"commit":"4de157f","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351639,"commit":"f5a1e40","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351658,"commit":"6b0fef4","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687353030,"commit":"30e9528","static":"0.5.10884","runtime":"0.5.10884"}];
 
 function draw_timeline_versions() {
   var width_timeline_versions = document.getElementById("timeline_versions").clientWidth;
@@ -1140,7 +1140,7 @@ window.addEventListener("resize", draw_timeline_versions);
 }
 
 
-var data_timeline_runtimes = [{"timestamp":1684959835,"commit":"93f8153","runtime":1.287636},{"timestamp":1687348946,"commit":"5d093b9","runtime":0.7352580000000001},{"timestamp":1687349568,"commit":"24b1c92","runtime":0.807698},{"timestamp":1687351457,"commit":"74c83c2","runtime":1.106142},{"timestamp":1687351457,"commit":"97f4c09","runtime":0.72845},{"timestamp":1687351517,"commit":"4b1edef","runtime":0.783385},{"timestamp":1687351538,"commit":"f72b67c","runtime":0.754455},{"timestamp":1687351561,"commit":"305ec0b","runtime":0.841583},{"timestamp":1687351600,"commit":"6891312","runtime":0.816443},{"timestamp":1687351618,"commit":"4de157f","runtime":0.801064},{"timestamp":1687351639,"commit":"f5a1e40","runtime":0.744268},{"timestamp":1687351658,"commit":"6b0fef4","runtime":0.7227870000000001}];
+var data_timeline_runtimes = [{"timestamp":1684959835,"commit":"93f8153","runtime":1.287636},{"timestamp":1687348946,"commit":"5d093b9","runtime":0.7352580000000001},{"timestamp":1687349568,"commit":"24b1c92","runtime":0.807698},{"timestamp":1687351457,"commit":"74c83c2","runtime":1.106142},{"timestamp":1687351457,"commit":"97f4c09","runtime":0.72845},{"timestamp":1687351517,"commit":"4b1edef","runtime":0.783385},{"timestamp":1687351538,"commit":"f72b67c","runtime":0.754455},{"timestamp":1687351561,"commit":"305ec0b","runtime":0.841583},{"timestamp":1687351600,"commit":"6891312","runtime":0.816443},{"timestamp":1687351618,"commit":"4de157f","runtime":0.801064},{"timestamp":1687351639,"commit":"f5a1e40","runtime":0.744268},{"timestamp":1687351658,"commit":"6b0fef4","runtime":0.7227870000000001},{"timestamp":1687353030,"commit":"30e9528","runtime":0.8186509999999999}];
 
 function draw_timeline_runtimes() {
   var width_timeline_runtimes = document.getElementById("timeline_runtimes").clientWidth;
@@ -1239,7 +1239,7 @@ window.addEventListener("resize", draw_timeline_runtimes);
 
         </div>
         <div class="footer">
-          Generated by <a href='https://github.com/Shopify/spoom'>spoom</a> on 2023-06-21 13:09:35 UTC.
+          Generated by <a href='https://github.com/Shopify/spoom'>spoom</a> on 2023-06-21 13:54:22 UTC.
         </div>
       </div>
     </div>

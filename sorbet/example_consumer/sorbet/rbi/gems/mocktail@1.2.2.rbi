@@ -300,10 +300,10 @@ end
 
 # source://mocktail//lib/mocktail/value/demo_config.rb#4
 class Mocktail::DemoConfig < ::T::Struct
-  const :ignore_block, T.nilable(T::Boolean)
-  const :ignore_extra_args, T.nilable(T::Boolean)
-  const :ignore_arity, T.nilable(T::Boolean)
-  const :times, T.nilable(::Integer)
+  const :ignore_block, T.nilable(T::Boolean), default: T.unsafe(nil)
+  const :ignore_extra_args, T.nilable(T::Boolean), default: T.unsafe(nil)
+  const :ignore_arity, T.nilable(T::Boolean), default: T.unsafe(nil)
+  const :times, T.nilable(::Integer), default: T.unsafe(nil)
 
   class << self
     # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
@@ -313,12 +313,12 @@ end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#7
 class Mocktail::DescribesUnsatisfiedStubbing
-  # @return [DescribesUnsatisfiedStubbing] a new instance of DescribesUnsatisfiedStubbing
-  #
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#8
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#11
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#12
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#16
+  sig { params(dry_call: ::Mocktail::Call).returns(::Mocktail::UnsatisfyingCall) }
   def describe(dry_call); end
 end
 
@@ -508,12 +508,12 @@ end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#6
 class Mocktail::FindsSatisfaction
-  # @return [FindsSatisfaction] a new instance of FindsSatisfaction
-  #
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#7
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#10
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#11
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#15
+  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.untyped])) }
   def find(dry_call); end
 end
 
@@ -530,20 +530,22 @@ end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#7
 class Mocktail::FulfillsStubbing
-  # @return [FulfillsStubbing] a new instance of FulfillsStubbing
-  #
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#8
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#11
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#13
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#17
+  sig { params(dry_call: ::Mocktail::Call).returns(T.untyped) }
   def fulfill(dry_call); end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#23
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#28
+  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.untyped])) }
   def satisfaction(dry_call); end
 
   private
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#31
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#37
+  sig { params(dry_call: ::Mocktail::Call).void }
   def store_unsatisfying_call!(dry_call); end
 end
 
@@ -1642,27 +1644,29 @@ Mocktail::VERSION = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#4
 class Mocktail::ValidatesArguments
-  # @return [ValidatesArguments] a new instance of ValidatesArguments
-  #
-  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#26
+  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#32
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#30
+  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#37
+  sig { params(dry_call: T.untyped).returns(::NilClass) }
   def validate(dry_call); end
 
   class << self
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#5
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#7
+    sig { void }
     def disable!; end
 
-    # @return [Boolean]
-    #
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#13
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#17
+    sig { returns(T::Boolean) }
     def disabled?; end
 
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#9
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#12
+    sig { void }
     def enable!; end
 
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#17
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#22
+    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.untyped)).void }
     def optional(disable, &blk); end
   end
 end

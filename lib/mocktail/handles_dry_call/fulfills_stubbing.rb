@@ -5,11 +5,15 @@ require_relative "fulfills_stubbing/describes_unsatisfied_stubbing"
 
 module Mocktail
   class FulfillsStubbing
+    extend T::Sig
+
+    sig { void }
     def initialize
       @finds_satisfaction = FindsSatisfaction.new
       @describes_unsatisfied_stubbing = DescribesUnsatisfiedStubbing.new
     end
 
+    sig { params(dry_call: Call).returns(T.untyped) }
     def fulfill(dry_call)
       if (stubbing = satisfaction(dry_call))
         stubbing.satisfied!
@@ -20,6 +24,7 @@ module Mocktail
       end
     end
 
+    sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.untyped])) }
     def satisfaction(dry_call)
       return if Mocktail.cabinet.demonstration_in_progress?
 
@@ -28,6 +33,7 @@ module Mocktail
 
     private
 
+    sig { params(dry_call: Call).void }
     def store_unsatisfying_call!(dry_call)
       return if Mocktail.cabinet.demonstration_in_progress?
 

@@ -1,11 +1,15 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class RedefinesSingletonMethods
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @handles_dry_call = HandlesDryCall.new
+      @handles_dry_call = T.let(HandlesDryCall.new, HandlesDryCall)
     end
 
+    sig { params(type: T.any(T::Class[T.anything], Module)).void }
     def redefine(type)
       type_replacement = TopShelf.instance.type_replacement_for(type)
       return unless type_replacement.replacement_methods.nil?
@@ -39,6 +43,7 @@ module Mocktail
       }
     end
 
+    sig { params(type: T.any(T::Class[T.anything], Module)).void }
     def declare_singleton_method_missing_errors!(type)
       return if type.singleton_methods.include?(:method_missing)
 

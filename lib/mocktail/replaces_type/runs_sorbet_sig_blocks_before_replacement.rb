@@ -1,7 +1,9 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class RunsSorbetSigBlocksBeforeReplacement
+    extend T::Sig
+
     # This is necessary because when Sorbet runs a sig block of a singleton
     # method, it has the net effect of unwrapping/redefining the method. If
     # we try to use Mocktail.replace(Foo) and Foo.bar has a Sorbet sig block,
@@ -20,6 +22,7 @@ module Mocktail
     # to A.
     #
     # It's very fun and confusing and a great time.
+    sig { params(type: T.any(T::Class[T.anything], Module)).void }
     def run(type)
       return unless defined?(T::Private::Methods)
 
@@ -30,7 +33,6 @@ module Mocktail
         #
         # https://github.com/sorbet/sorbet/blob/master/gems/sorbet-runtime/lib/types/private/methods/_methods.rb#L111
         T::Private::Methods.signature_for_method(method)
-        # T::Private::Methods.run_sig_block_for_method(method)
       end
     end
   end

@@ -1210,26 +1210,27 @@ end
 
 # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#4
 class Mocktail::RedefinesNew
-  # @return [RedefinesNew] a new instance of RedefinesNew
-  #
-  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#5
+  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#8
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#9
+  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#13
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def redefine(type); end
 end
 
 # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#4
 class Mocktail::RedefinesSingletonMethods
-  # @return [RedefinesSingletonMethods] a new instance of RedefinesSingletonMethods
-  #
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#5
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#8
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#42
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#47
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def declare_singleton_method_missing_errors!(type); end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#9
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#13
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def redefine(type); end
 end
 
@@ -1339,7 +1340,8 @@ class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   #
   # It's very fun and confusing and a great time.
   #
-  # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#23
+  # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#26
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def run(type); end
 end
 

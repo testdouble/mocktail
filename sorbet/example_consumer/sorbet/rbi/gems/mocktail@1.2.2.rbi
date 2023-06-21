@@ -633,12 +633,14 @@ class Mocktail::GrabsOriginalMethodParameters
   # If the method isn't wrapped by Sorbet, this will return the #instance_method,
   # per usual
   #
-  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#11
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#14
+  sig { params(method: T.nilable(T.any(::Method, ::UnboundMethod))).returns(T::Array[T::Array[::Symbol]]) }
   def grab(method); end
 
   private
 
-  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#21
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#27
+  sig { params(method: T.any(::Method, ::UnboundMethod)).returns(T.nilable(::T::Private::Methods::Signature)) }
   def sorbet_wrapped_method(method); end
 end
 
@@ -1155,19 +1157,18 @@ end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#4
 class Mocktail::ReconcilesArgsWithParams
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#5
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#8
+  sig { params(signature: ::Mocktail::Signature).returns(T::Boolean) }
   def reconcile(signature); end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#12
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#16
+  sig { params(arg_params: ::Mocktail::Params, args: T::Array[T.untyped]).returns(T::Boolean) }
   def args_match?(arg_params, args); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#17
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#22
+  sig { params(kwarg_params: ::Mocktail::Params, kwargs: T::Hash[::Symbol, T.untyped]).returns(T::Boolean) }
   def kwargs_match?(kwarg_params, kwargs); end
 end
 
@@ -1228,7 +1229,8 @@ end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#4
 class Mocktail::RecreatesMessage
-  # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#5
+  # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#8
+  sig { params(signature: ::Mocktail::Signature).returns(::String) }
   def recreate(signature); end
 end
 
@@ -1406,39 +1408,57 @@ end
 
 # source://mocktail//lib/mocktail/share/stringifies_call.rb#4
 class Mocktail::StringifiesCall
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#5
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#8
+  sig { params(call: ::Mocktail::Call, anonymous_blocks: T::Boolean, always_parens: T::Boolean).returns(::String) }
   def stringify(call, anonymous_blocks: T.unsafe(nil), always_parens: T.unsafe(nil)); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#9
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#13
+  sig do
+    params(
+      calls: T::Array[::Mocktail::Call],
+      nonzero_message: ::String,
+      zero_message: ::String,
+      anonymous_blocks: T::Boolean,
+      always_parens: T::Boolean
+    ).returns(::String)
+  end
   def stringify_multiple(calls, nonzero_message:, zero_message:, anonymous_blocks: T.unsafe(nil), always_parens: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#39
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#47
+  sig { params(args: T::Array[T.untyped]).returns(T.nilable(::String)) }
   def argify(args); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#25
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#30
+  sig { params(call: ::Mocktail::Call, parens: T::Boolean).returns(T.nilable(::String)) }
   def args_to_s(call, parens: T.unsafe(nil)); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#54
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#65
+  sig { params(block: T.nilable(::Proc), anonymous: T::Boolean).returns(T.nilable(::String)) }
   def blockify(block, anonymous:); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#44
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#53
+  sig { params(kwargs: T::Hash[::Symbol, T.untyped]).returns(T.nilable(::String)) }
   def kwargify(kwargs); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#49
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#59
+  sig { params(block: T.nilable(::Proc)).returns(T.nilable(::String)) }
   def lambdafy(block); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#64
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#76
+  sig { params(block: ::Proc).returns(::String) }
   def source_locationify(block); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#68
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#81
+  sig { params(path: ::String).returns(::String) }
   def strip_pwd(path); end
 end
 
 # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#4
 class Mocktail::StringifiesMethodName
-  # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#5
+  # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#8
+  sig { params(call: ::Mocktail::Call).returns(::String) }
   def stringify(call); end
 end
 
@@ -1542,17 +1562,23 @@ end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#6
 class Mocktail::TransformsParams
-  # @return [TransformsParams] a new instance of TransformsParams
-  #
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#7
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#10
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#11
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#15
+  sig do
+    params(
+      dry_call: ::Mocktail::Call,
+      params: T.nilable(T::Array[T::Array[::Symbol]])
+    ).returns(::Mocktail::Signature)
+  end
   def transform(dry_call, params: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#43
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#48
+  sig { params(params: T::Array[T::Array[::Symbol]]).returns(T::Array[T::Array[::Symbol]]) }
   def name_unnamed_params(params); end
 end
 
@@ -1683,6 +1709,13 @@ end
 # pass static typecheck
 module T
   module Private
+    module Methods
+      class Signature
+        sig { returns(T::Array[T::Array[Symbol]]) }
+        def parameters; end
+      end
+    end
+
     module RuntimeLevels
       class << self
         sig { returns(Symbol) }

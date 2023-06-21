@@ -11,5 +11,13 @@ module T
         end
       end
     end
+
+    module Methods
+      class Signature
+        sig { returns(T::Array[T::Array[Symbol]]) }
+        def parameters
+        end
+      end
+    end
   end
 end

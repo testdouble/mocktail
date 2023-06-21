@@ -586,15 +586,16 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#4
 class Mocktail::GathersFakeableInstanceMethods
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#5
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#8
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Array[::Symbol]) }
   def gather(type); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#15
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#19
+  sig { params(type: T.any(::Module, T::Class[T.anything]), method_name: ::Symbol).returns(T::Boolean) }
   def ignore?(type, method_name); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#19
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#24
+  sig { returns(T::Array[::Module]) }
   def ignored_ancestors; end
 end
 

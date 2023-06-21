@@ -631,7 +631,8 @@ class Mocktail::InvalidMatcherError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#4
 class Mocktail::LogsCall
-  # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#5
+  # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#8
+  sig { params(dry_call: ::Mocktail::Call).void }
   def log(dry_call); end
 end
 

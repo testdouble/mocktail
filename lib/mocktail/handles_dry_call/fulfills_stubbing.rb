@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require_relative "fulfills_stubbing/finds_satisfaction"
 require_relative "fulfills_stubbing/describes_unsatisfied_stubbing"
@@ -9,8 +9,8 @@ module Mocktail
 
     sig { void }
     def initialize
-      @finds_satisfaction = FindsSatisfaction.new
-      @describes_unsatisfied_stubbing = DescribesUnsatisfiedStubbing.new
+      @finds_satisfaction = T.let(FindsSatisfaction.new, Mocktail::FindsSatisfaction)
+      @describes_unsatisfied_stubbing = T.let(DescribesUnsatisfiedStubbing.new, Mocktail::DescribesUnsatisfiedStubbing)
     end
 
     sig { params(dry_call: Call).returns(T.untyped) }

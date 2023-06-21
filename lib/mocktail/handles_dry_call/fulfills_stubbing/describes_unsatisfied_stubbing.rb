@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require_relative "../../share/cleans_backtrace"
 require_relative "../../share/bind"
@@ -9,7 +9,7 @@ module Mocktail
 
     sig { void }
     def initialize
-      @cleans_backtrace = CleansBacktrace.new
+      @cleans_backtrace = T.let(CleansBacktrace.new, Mocktail::CleansBacktrace)
     end
 
     sig { params(dry_call: Mocktail::Call).returns(Mocktail::UnsatisfyingCall) }

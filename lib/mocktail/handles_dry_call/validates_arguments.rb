@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class ValidatesArguments
@@ -30,7 +30,7 @@ module Mocktail
 
     sig { void }
     def initialize
-      @simulates_argument_error = SimulatesArgumentError.new
+      @simulates_argument_error = T.let(SimulatesArgumentError.new, Mocktail::SimulatesArgumentError)
     end
 
     sig { params(dry_call: T.untyped).returns(NilClass) }

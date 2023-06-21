@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require_relative "../../share/determines_matching_calls"
 
@@ -8,7 +8,7 @@ module Mocktail
 
     sig { void }
     def initialize
-      @determines_matching_calls = DeterminesMatchingCalls.new
+      @determines_matching_calls = T.let(DeterminesMatchingCalls.new, Mocktail::DeterminesMatchingCalls)
     end
 
     sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.untyped])) }

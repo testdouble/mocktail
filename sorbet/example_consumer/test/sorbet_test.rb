@@ -51,7 +51,7 @@ class SherbetTest < Minitest::Test
     Mocktail.stubs(
       ignore_block: true,
       ignore_extra_args: true,
-      ignore_arity: nil,
+      ignore_arity: false,
       times: 4
     ) { sherbet.flavor }.with { :strawberry }
 
@@ -176,7 +176,7 @@ class SherbetTest < Minitest::Test
     verify(
       ignore_block: true,
       ignore_extra_args: true,
-      ignore_arity: nil,
+      ignore_arity: false,
       times: 1
     ) { wastebin.dump(sherbet) }
     verify(

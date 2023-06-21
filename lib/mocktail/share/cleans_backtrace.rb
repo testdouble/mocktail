@@ -1,11 +1,14 @@
-# typed: true
+# typed: strict
 
 require "pathname"
 
 module Mocktail
   class CleansBacktrace
-    BASE_PATH = (Pathname.new(__FILE__) + "../../..").to_s
+    extend T::Sig
 
+    BASE_PATH = T.let((Pathname.new(__FILE__) + "../../..").to_s, String)
+
+    sig { params(error: StandardError).returns(StandardError) }
     def clean(error)
       raise error
     rescue => e

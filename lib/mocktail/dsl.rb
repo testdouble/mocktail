@@ -7,9 +7,9 @@ module Mocktail
     sig {
       type_parameters(:T)
         .params(
-          ignore_block: T.nilable(T::Boolean),
-          ignore_extra_args: T.nilable(T::Boolean),
-          ignore_arity: T.nilable(T::Boolean),
+          ignore_block: T::Boolean,
+          ignore_extra_args: T::Boolean,
+          ignore_arity: T::Boolean,
           times: T.nilable(Integer),
           demo: T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
         )
@@ -27,9 +27,9 @@ module Mocktail
     sig {
       type_parameters(:T)
         .params(
-          ignore_block: T.nilable(T::Boolean),
-          ignore_extra_args: T.nilable(T::Boolean),
-          ignore_arity: T.nilable(T::Boolean),
+          ignore_block: T::Boolean,
+          ignore_extra_args: T::Boolean,
+          ignore_arity: T::Boolean,
           times: T.nilable(Integer),
           demo: T.proc.params(matchers: Mocktail::MatcherPresentation).void
         ).void

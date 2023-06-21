@@ -20,7 +20,7 @@ module Mocktail
           Bind.call(dry_call.double, :==, stubbing.recording.double) &&
             dry_call.method == stubbing.recording.method
         },
-        backtrace: @cleans_backtrace.clean(Error.new).backtrace
+        backtrace: @cleans_backtrace.clean(Error.new).backtrace || []
       )
     end
   end

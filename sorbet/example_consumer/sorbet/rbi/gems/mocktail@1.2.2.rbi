@@ -177,7 +177,7 @@ class Mocktail::Call < ::T::Struct
   const :original_method, T.nilable(T.any(::Method, ::UnboundMethod))
   const :args, T::Array[T.untyped], default: T.unsafe(nil)
   const :kwargs, T::Hash[::Symbol, T.untyped], default: T.unsafe(nil)
-  const :block, T.nilable(T.anything)
+  const :block, T.nilable(::Proc)
 
   # Because T::Struct compares with referential equality, we need
   # to redefine the equality methods to compare the values of the attributes.
@@ -202,11 +202,12 @@ end
 
 # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#6
 class Mocktail::CleansBacktrace
-  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#9
+  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#12
+  sig { params(error: ::StandardError).returns(::StandardError) }
   def clean(error); end
 end
 
-# source://mocktail//lib/mocktail/share/cleans_backtrace.rb#7
+# source://mocktail//lib/mocktail/share/cleans_backtrace.rb#9
 Mocktail::CleansBacktrace::BASE_PATH = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/collects_calls.rb#4
@@ -217,16 +218,18 @@ end
 
 # source://mocktail//lib/mocktail/share/creates_identifier.rb#4
 class Mocktail::CreatesIdentifier
-  # source://mocktail//lib/mocktail/share/creates_identifier.rb#7
+  # source://mocktail//lib/mocktail/share/creates_identifier.rb#10
+  sig { params(s: ::Object, default: ::String, max_length: ::Integer).returns(::String) }
   def create(s, default: T.unsafe(nil), max_length: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/creates_identifier.rb#24
+  # source://mocktail//lib/mocktail/share/creates_identifier.rb#28
+  sig { params(id: ::String, default: ::String).returns(::String) }
   def unreserved(id, default); end
 end
 
-# source://mocktail//lib/mocktail/share/creates_identifier.rb#5
+# source://mocktail//lib/mocktail/share/creates_identifier.rb#7
 Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
@@ -235,9 +238,9 @@ module Mocktail::DSL
   sig do
     type_parameters(:T)
       .params(
-        ignore_block: T.nilable(T::Boolean),
-        ignore_extra_args: T.nilable(T::Boolean),
-        ignore_arity: T.nilable(T::Boolean),
+        ignore_block: T::Boolean,
+        ignore_extra_args: T::Boolean,
+        ignore_arity: T::Boolean,
         times: T.nilable(::Integer),
         demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
       ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
@@ -247,9 +250,9 @@ module Mocktail::DSL
   # source://mocktail//lib/mocktail/dsl.rb#37
   sig do
     params(
-      ignore_block: T.nilable(T::Boolean),
-      ignore_extra_args: T.nilable(T::Boolean),
-      ignore_arity: T.nilable(T::Boolean),
+      ignore_block: T::Boolean,
+      ignore_extra_args: T::Boolean,
+      ignore_arity: T::Boolean,
       times: T.nilable(::Integer),
       demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).void
     ).void
@@ -329,9 +332,9 @@ end
 
 # source://mocktail//lib/mocktail/value/demo_config.rb#4
 class Mocktail::DemoConfig < ::T::Struct
-  const :ignore_block, T.nilable(T::Boolean), default: T.unsafe(nil)
-  const :ignore_extra_args, T.nilable(T::Boolean), default: T.unsafe(nil)
-  const :ignore_arity, T.nilable(T::Boolean), default: T.unsafe(nil)
+  const :ignore_block, T::Boolean, default: T.unsafe(nil)
+  const :ignore_extra_args, T::Boolean, default: T.unsafe(nil)
+  const :ignore_arity, T::Boolean, default: T.unsafe(nil)
   const :times, T.nilable(::Integer), default: T.unsafe(nil)
 
   class << self
@@ -353,29 +356,50 @@ end
 
 # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#6
 class Mocktail::DeterminesMatchingCalls
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#7
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#10
+  sig do
+    params(
+      real_call: ::Mocktail::Call,
+      demo_call: ::Mocktail::Call,
+      demo_config: ::Mocktail::DemoConfig
+    ).returns(T::Boolean)
+  end
   def determine(real_call, demo_call, demo_config); end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#19
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#23
+  sig do
+    params(
+      real_args: T::Array[T.untyped],
+      demo_args: T::Array[T.untyped],
+      ignore_extra_args: T::Boolean
+    ).returns(T::Boolean)
+  end
   def args_match?(real_args, demo_args, ignore_extra_args); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#44
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#50
+  sig do
+    params(
+      real_block: T.nilable(::Proc),
+      demo_block: T.nilable(::Proc),
+      ignore_block: T::Boolean
+    ).returns(T::Boolean)
+  end
   def blocks_match?(real_block, demo_block, ignore_block); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#32
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#37
+  sig do
+    params(
+      real_kwargs: T::Hash[::Symbol, T.untyped],
+      demo_kwargs: T::Hash[::Symbol, T.untyped],
+      ignore_extra_args: T::Boolean
+    ).returns(T::Boolean)
+  end
   def kwargs_match?(real_kwargs, demo_kwargs, ignore_extra_args); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#56
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#63
+  sig { params(real_arg: T.untyped, demo_arg: T.untyped).returns(T::Boolean) }
   def match?(real_arg, demo_arg); end
 end
 

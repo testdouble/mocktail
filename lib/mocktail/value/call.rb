@@ -16,7 +16,7 @@ module Mocktail
     #   (i.e. `T.proc.params(*T.untyped).returns(T.untyped)` doesn't work)
     #
     # See: https://github.com/sorbet/sorbet/issues/1142#issuecomment-1586195730
-    const :block, T.nilable(T.anything)
+    const :block, T.nilable(Proc)
 
     sig { returns(T.nilable(Symbol)) }
     attr_reader :method

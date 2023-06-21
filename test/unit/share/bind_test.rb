@@ -10,7 +10,7 @@ module Mocktail
       end
 
       def self.ancestors
-        [42, Integer, Numeric]
+        [42, Integer, Numeric, BasicObject]
       end
     end
 
@@ -30,7 +30,7 @@ module Mocktail
       Mocktail.replace(FortyTwo)
 
       assert_nil FortyTwo.ancestors
-      assert_equal Bind.call(FortyTwo, :ancestors), [42, Integer, Numeric]
+      assert_equal Bind.call(FortyTwo, :ancestors), [42, Integer, Numeric, BasicObject]
     end
   end
 end

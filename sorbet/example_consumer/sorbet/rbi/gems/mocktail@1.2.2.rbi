@@ -110,60 +110,60 @@ end
 
 # source://mocktail//lib/mocktail/value/cabinet.rb#8
 class Mocktail::Cabinet
-  # @return [Cabinet] a new instance of Cabinet
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#12
+  # source://mocktail//lib/mocktail/value/cabinet.rb#24
+  sig { void }
   def initialize; end
 
-  # Returns the value of attribute calls.
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#10
+  # source://mocktail//lib/mocktail/value/cabinet.rb#15
+  sig { returns(T::Array[::Mocktail::Call]) }
   def calls; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#64
+  # source://mocktail//lib/mocktail/value/cabinet.rb#85
+  sig { params(double: ::Mocktail::Double).returns(T::Array[::Mocktail::Call]) }
   def calls_for_double(double); end
 
-  # Sets the attribute demonstration_in_progress
-  #
-  # @param value the value to set the attribute demonstration_in_progress to.
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#9
-  def demonstration_in_progress=(_arg0); end
+  # source://mocktail//lib/mocktail/value/cabinet.rb#12
+  sig { params(demonstration_in_progress: T::Boolean).void }
+  def demonstration_in_progress=(demonstration_in_progress); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#47
+  # source://mocktail//lib/mocktail/value/cabinet.rb#65
+  sig { returns(T::Boolean) }
   def demonstration_in_progress?; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#51
+  # source://mocktail//lib/mocktail/value/cabinet.rb#70
+  sig { params(thing: T.untyped).returns(T.nilable(::Mocktail::Double)) }
   def double_for_instance(thing); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#20
+  # source://mocktail//lib/mocktail/value/cabinet.rb#33
+  sig { void }
   def reset!; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#35
+  # source://mocktail//lib/mocktail/value/cabinet.rb#50
+  sig { params(call: ::Mocktail::Call).void }
   def store_call(call); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#31
+  # source://mocktail//lib/mocktail/value/cabinet.rb#45
+  sig { params(double: ::Mocktail::Double).void }
   def store_double(double); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#39
+  # source://mocktail//lib/mocktail/value/cabinet.rb#55
+  sig { params(stubbing: Mocktail::Stubbing[T.untyped]).void }
   def store_stubbing(stubbing); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#43
+  # source://mocktail//lib/mocktail/value/cabinet.rb#60
+  sig { params(unsatisfying_call: ::Mocktail::UnsatisfyingCall).void }
   def store_unsatisfying_call(unsatisfying_call); end
 
-  # Returns the value of attribute stubbings.
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#10
+  # source://mocktail//lib/mocktail/value/cabinet.rb#18
+  sig { returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
   def stubbings; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#58
+  # source://mocktail//lib/mocktail/value/cabinet.rb#78
+  sig { params(double: ::Mocktail::Double).returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
   def stubbings_for_double(double); end
 
-  # Returns the value of attribute unsatisfying_calls.
-  #
-  # source://mocktail//lib/mocktail/value/cabinet.rb#10
+  # source://mocktail//lib/mocktail/value/cabinet.rb#21
+  sig { returns(T::Array[::Mocktail::UnsatisfyingCall]) }
   def unsatisfying_calls; end
 end
 
@@ -407,7 +407,7 @@ end
 class Mocktail::Double < ::T::Struct
   const :original_type, T.any(::Module, T::Class[T.anything])
   const :dry_type, T::Class[T.anything]
-  const :dry_instance, T.anything
+  const :dry_instance, ::BasicObject
   const :dry_methods, T::Array[::Symbol]
 
   class << self
@@ -1046,36 +1046,26 @@ class Mocktail::NoExplanation < ::Mocktail::Explanation
 end
 
 # source://mocktail//lib/mocktail/value/no_explanation_data.rb#4
-class Mocktail::NoExplanationData < ::Struct
+class Mocktail::NoExplanationData < ::T::Struct
   include ::Mocktail::ExplanationData
+
+  const :thing, ::Object
 
   # @raise [Error]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#10
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#11
+  sig { override.returns(T::Array[::Mocktail::Call]) }
   def calls; end
 
   # @raise [Error]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#14
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#16
+  sig { override.returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
   def stubbings; end
 
-  # Returns the value of attribute thing
-  #
-  # @return [Object] the current value of thing
-  def thing; end
-
-  # Sets the attribute thing
-  #
-  # @param value [Object] the value to set the attribute thing to.
-  # @return [Object] the newly set value
-  def thing=(_); end
-
   class << self
-    def [](*_arg0); end
-    def inspect; end
-    def keyword_init?; end
-    def members; end
-    def new(*_arg0); end
+    # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 

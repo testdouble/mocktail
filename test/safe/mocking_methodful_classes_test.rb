@@ -24,7 +24,8 @@ class MockingMethodfulClassesTest < Minitest::Test
   end
 
   class OverridesEverything
-    (instance_methods - [:__send__, :object_id, :nil?]).each do |method|
+    # puts instance_methods.map { |m| ":#{m}," }.join("\n")
+    (instance_methods - [:__send__, :object_id, :nil?, :is_a?]).each do |method|
       define_method method, ->(*args, **kwargs, &block) {
         T.unsafe(self).super
       }
@@ -36,7 +37,6 @@ class MockingMethodfulClassesTest < Minitest::Test
 
   def test_overriding_everything
     overrides_everything = Mocktail.of(OverridesEverything)
-
     overrides_everything.normal_method
     stubs { overrides_everything.normal_method }.with { 32 }
     stubs { |m| overrides_everything == m.any }.with { false }

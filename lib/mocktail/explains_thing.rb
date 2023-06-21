@@ -13,7 +13,8 @@ module Mocktail
     def explain(thing)
       if (double = Mocktail.cabinet.double_for_instance(thing))
         double_explanation(double)
-      elsif (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
+      elsif (thing.is_a?(Module) || thing.is_a?(Class)) &&
+          (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
         replaced_type_explanation(type_replacement)
       elsif (fake_method_explanation = fake_method_explanation_for(thing))
         fake_method_explanation

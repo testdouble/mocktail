@@ -101,7 +101,9 @@ class Mocktail::AmbiguousDemonstrationError < ::Mocktail::Error; end
 # source://mocktail//lib/mocktail/share/bind.rb#4
 module Mocktail::Bind
   class << self
-    # source://mocktail//lib/mocktail/share/bind.rb#5
+    # sig intentionally omitted, because the wrapper will cause infinite recursion if certain methods are mocked
+    #
+    # source://mocktail//lib/mocktail/share/bind.rb#6
     def call(mock, method_name, *args, **kwargs, &blk); end
   end
 end
@@ -421,25 +423,25 @@ class Mocktail::ExplainsThing
 
   private
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#47
+  # source://mocktail//lib/mocktail/explains_thing.rb#48
   def data_for_double(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#69
+  # source://mocktail//lib/mocktail/explains_thing.rb#70
   def data_for_type_replacement(type_replacement); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#95
+  # source://mocktail//lib/mocktail/explains_thing.rb#96
   def describe_dry_method(double_data, method); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#56
+  # source://mocktail//lib/mocktail/explains_thing.rb#57
   def double_explanation(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#27
+  # source://mocktail//lib/mocktail/explains_thing.rb#28
   def fake_method_explanation_for(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#120
+  # source://mocktail//lib/mocktail/explains_thing.rb#121
   def no_explanation(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#82
+  # source://mocktail//lib/mocktail/explains_thing.rb#83
   def replaced_type_explanation(type_replacement); end
 end
 
@@ -1430,49 +1432,53 @@ end
 #
 # source://mocktail//lib/mocktail/value/top_shelf.rb#7
 class Mocktail::TopShelf
-  # @return [TopShelf] a new instance of TopShelf
-  #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#15
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#19
+  sig { void }
   def initialize; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#41
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#50
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Boolean) }
   def new_replaced?(type); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#49
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#60
+  sig { params(type: T::Class[T.anything]).returns(T::Boolean) }
   def of_next_registered?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#37
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#45
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def register_new_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#45
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#55
+  sig { params(type: T::Class[T.anything]).void }
   def register_of_next_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#57
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#70
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def register_singleton_method_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#33
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#40
+  sig { void }
   def reset_current_thread!; end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#61
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#75
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Boolean) }
   def singleton_methods_replaced?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#21
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#26
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(::Mocktail::TypeReplacement) }
   def type_replacement_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#27
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#33
+  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T.nilable(::Mocktail::TypeReplacement)) }
   def type_replacement_if_exists_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#53
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#65
+  sig { params(type: T::Class[T.anything]).void }
   def unregister_of_next_replacement!(type); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/top_shelf.rb#8
+    # source://mocktail//lib/mocktail/value/top_shelf.rb#11
+    sig { returns(::Mocktail::TopShelf) }
     def instance; end
   end
 end

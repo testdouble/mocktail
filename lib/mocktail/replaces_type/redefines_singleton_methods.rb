@@ -16,7 +16,7 @@ module Mocktail
 
       declare_singleton_method_missing_errors!(type)
       handles_dry_call = @handles_dry_call
-      type_replacement.replacement_methods = type_replacement.original_methods.map { |original_method|
+      type_replacement.replacement_methods = type_replacement.original_methods&.map { |original_method|
         type.singleton_class.send(:undef_method, original_method.name)
         type.define_singleton_method original_method.name, ->(*args, **kwargs, &block) {
           if TopShelf.instance.singleton_methods_replaced?(type)

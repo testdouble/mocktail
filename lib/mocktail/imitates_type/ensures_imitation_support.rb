@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Mocktail
   class EnsuresImitationSupport

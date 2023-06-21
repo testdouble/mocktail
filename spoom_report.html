@@ -220,7 +220,7 @@ function tooltipTimeline(d, kind) {
         <div class="header">
           <h1 class="display-3">
   mocktail
-  <span class="badge badge-pill badge-dark" style="font-size: 20%;">24b1c92</span>
+  <span class="badge badge-pill badge-dark" style="font-size: 20%;">74c83c2</span>
 </h1>
 
         </div>
@@ -239,7 +239,7 @@ function tooltipTimeline(d, kind) {
 }
 
 
-var json_pie_sigils = {"false":57,"true":45,"strict":13};
+var json_pie_sigils = {"false":52,"true":50,"strict":13};
 var pie_pie_sigils = d3.pie().value((d) => d.value);
 var data_pie_sigils = pie_pie_sigils(d3.entries(json_pie_sigils));
 var sum_pie_sigils = d3.sum(data_pie_sigils, (d) => d.data.value);
@@ -310,7 +310,7 @@ window.addEventListener("resize", draw_pie_sigils);
 }
 
 
-var json_pie_calls = {"true":2265,"false":1231};
+var json_pie_calls = {"true":2305,"false":1277};
 var pie_pie_calls = d3.pie().value((d) => d.value);
 var data_pie_calls = pie_pie_calls(d3.entries(json_pie_calls));
 var sum_pie_calls = d3.sum(data_pie_calls, (d) => d.data.value);
@@ -458,7 +458,7 @@ window.addEventListener("resize", draw_pie_sigs);
   
   <div class="card-body">
     <svg id="map_sigils"></svg>
-<script>var root = {children: [{"name":"lib","children":[{"name":"mocktail.rb","strictness":"true"},{"name":"mocktail","children":[{"name":"collects_calls.rb","strictness":"false"},{"name":"debug.rb","strictness":"false"},{"name":"dsl.rb","strictness":"true"},{"name":"errors.rb","strictness":"false"},{"name":"explains_nils.rb","strictness":"false"},{"name":"explains_thing.rb","strictness":"true"},{"name":"grabs_original_method_parameters.rb","strictness":null},{"name":"handles_dry_call.rb","strictness":"true"},{"name":"handles_dry_call","children":[{"name":"fulfills_stubbing.rb","strictness":"true"},{"name":"fulfills_stubbing","children":[{"name":"describes_unsatisfied_stubbing.rb","strictness":"true"},{"name":"finds_satisfaction.rb","strictness":"true"}],"score":1.0},{"name":"logs_call.rb","strictness":"true"},{"name":"validates_arguments.rb","strictness":"true"}],"score":1.0},{"name":"handles_dry_new_call.rb","strictness":"true"},{"name":"imitates_type.rb","strictness":"false"},{"name":"imitates_type","children":[{"name":"ensures_imitation_support.rb","strictness":"false"},{"name":"makes_double.rb","strictness":"false"},{"name":"makes_double","children":[{"name":"declares_dry_class.rb","strictness":"false"},{"name":"declares_dry_class","children":[{"name":"reconstructs_call.rb","strictness":"false"}],"score":0.0},{"name":"gathers_fakeable_instance_methods.rb","strictness":"false"}],"score":0.0}],"score":0.0},{"name":"initializes_mocktail.rb","strictness":"false"},{"name":"matcher_presentation.rb","strictness":"false"},{"name":"matchers.rb","strictness":"false"},{"name":"matchers","children":[{"name":"any.rb","strictness":"false"},{"name":"base.rb","strictness":"false"},{"name":"captor.rb","strictness":"false"},{"name":"includes.rb","strictness":"false"},{"name":"includes_hash.rb","strictness":"false"},{"name":"includes_key.rb","strictness":"false"},{"name":"includes_string.rb","strictness":"false"},{"name":"is_a.rb","strictness":"false"},{"name":"matches.rb","strictness":"false"},{"name":"not.rb","strictness":"false"},{"name":"numeric.rb","strictness":"false"},{"name":"that.rb","strictness":"false"}],"score":0.0},{"name":"raises_neato_no_method_error.rb","strictness":"false"},{"name":"records_demonstration.rb","strictness":"false"},{"name":"registers_matcher.rb","strictness":"false"},{"name":"registers_stubbing.rb","strictness":"false"},{"name":"replaces_next.rb","strictness":"false"},{"name":"replaces_type.rb","strictness":"false"},{"name":"replaces_type","children":[{"name":"redefines_new.rb","strictness":"true"},{"name":"redefines_singleton_methods.rb","strictness":"false"},{"name":"runs_sorbet_sig_blocks_before_replacement.rb","strictness":null}],"score":0.3333333333333333},{"name":"resets_state.rb","strictness":"false"},{"name":"share","children":[{"name":"bind.rb","strictness":"false"},{"name":"cleans_backtrace.rb","strictness":"false"},{"name":"creates_identifier.rb","strictness":"false"},{"name":"determines_matching_calls.rb","strictness":"false"},{"name":"stringifies_call.rb","strictness":"false"},{"name":"stringifies_method_name.rb","strictness":"false"}],"score":0.0},{"name":"simulates_argument_error.rb","strictness":"false"},{"name":"simulates_argument_error","children":[{"name":"reconciles_args_with_params.rb","strictness":"false"},{"name":"recreates_message.rb","strictness":"false"},{"name":"transforms_params.rb","strictness":"false"}],"score":0.0},{"name":"stringifies_method_signature.rb","strictness":"false"},{"name":"value.rb","strictness":"false"},{"name":"value","children":[{"name":"cabinet.rb","strictness":"false"},{"name":"call.rb","strictness":"strict"},{"name":"demo_config.rb","strictness":"strict"},{"name":"double.rb","strictness":"strict"},{"name":"double_data.rb","strictness":"strict"},{"name":"explanation.rb","strictness":"strict"},{"name":"explanation_data.rb","strictness":"strict"},{"name":"fake_method_data.rb","strictness":"strict"},{"name":"matcher_registry.rb","strictness":"strict"},{"name":"no_explanation_data.rb","strictness":null},{"name":"signature.rb","strictness":"false"},{"name":"stubbing.rb","strictness":"strict"},{"name":"top_shelf.rb","strictness":"false"},{"name":"type_replacement.rb","strictness":"strict"},{"name":"type_replacement_data.rb","strictness":"strict"},{"name":"unsatisfying_call.rb","strictness":"strict"},{"name":"unsatisfying_call_explanation.rb","strictness":"strict"}],"score":0.7647058823529411},{"name":"verifies_call.rb","strictness":"false"},{"name":"verifies_call","children":[{"name":"finds_verifiable_calls.rb","strictness":"false"},{"name":"raises_verification_error.rb","strictness":"false"},{"name":"raises_verification_error","children":[{"name":"gathers_calls_of_method.rb","strictness":"false"}],"score":0.0}],"score":0.0},{"name":"version.rb","strictness":"false"}],"score":0.1847890671420083}],"score":0.5923945335710041},{"name":"sorbet","children":[{"name":"tapioca","children":[{"name":"require.rb","strictness":"true"}],"score":1.0}],"score":1.0}]}
+<script>var root = {children: [{"name":"lib","children":[{"name":"mocktail.rb","strictness":"true"},{"name":"mocktail","children":[{"name":"collects_calls.rb","strictness":"false"},{"name":"debug.rb","strictness":"false"},{"name":"dsl.rb","strictness":"true"},{"name":"errors.rb","strictness":"false"},{"name":"explains_nils.rb","strictness":"false"},{"name":"explains_thing.rb","strictness":"true"},{"name":"grabs_original_method_parameters.rb","strictness":null},{"name":"handles_dry_call.rb","strictness":"true"},{"name":"handles_dry_call","children":[{"name":"fulfills_stubbing.rb","strictness":"true"},{"name":"fulfills_stubbing","children":[{"name":"describes_unsatisfied_stubbing.rb","strictness":"true"},{"name":"finds_satisfaction.rb","strictness":"true"}],"score":1.0},{"name":"logs_call.rb","strictness":"true"},{"name":"validates_arguments.rb","strictness":"true"}],"score":1.0},{"name":"handles_dry_new_call.rb","strictness":"true"},{"name":"imitates_type.rb","strictness":"true"},{"name":"imitates_type","children":[{"name":"ensures_imitation_support.rb","strictness":"true"},{"name":"makes_double.rb","strictness":"true"},{"name":"makes_double","children":[{"name":"declares_dry_class.rb","strictness":"false"},{"name":"declares_dry_class","children":[{"name":"reconstructs_call.rb","strictness":"true"}],"score":1.0},{"name":"gathers_fakeable_instance_methods.rb","strictness":"true"}],"score":0.6666666666666666}],"score":0.8888888888888888},{"name":"initializes_mocktail.rb","strictness":"false"},{"name":"matcher_presentation.rb","strictness":"false"},{"name":"matchers.rb","strictness":"false"},{"name":"matchers","children":[{"name":"any.rb","strictness":"false"},{"name":"base.rb","strictness":"false"},{"name":"captor.rb","strictness":"false"},{"name":"includes.rb","strictness":"false"},{"name":"includes_hash.rb","strictness":"false"},{"name":"includes_key.rb","strictness":"false"},{"name":"includes_string.rb","strictness":"false"},{"name":"is_a.rb","strictness":"false"},{"name":"matches.rb","strictness":"false"},{"name":"not.rb","strictness":"false"},{"name":"numeric.rb","strictness":"false"},{"name":"that.rb","strictness":"false"}],"score":0.0},{"name":"raises_neato_no_method_error.rb","strictness":"false"},{"name":"records_demonstration.rb","strictness":"false"},{"name":"registers_matcher.rb","strictness":"false"},{"name":"registers_stubbing.rb","strictness":"false"},{"name":"replaces_next.rb","strictness":"false"},{"name":"replaces_type.rb","strictness":"false"},{"name":"replaces_type","children":[{"name":"redefines_new.rb","strictness":"true"},{"name":"redefines_singleton_methods.rb","strictness":"false"},{"name":"runs_sorbet_sig_blocks_before_replacement.rb","strictness":null}],"score":0.3333333333333333},{"name":"resets_state.rb","strictness":"false"},{"name":"share","children":[{"name":"bind.rb","strictness":"false"},{"name":"cleans_backtrace.rb","strictness":"false"},{"name":"creates_identifier.rb","strictness":"false"},{"name":"determines_matching_calls.rb","strictness":"false"},{"name":"stringifies_call.rb","strictness":"false"},{"name":"stringifies_method_name.rb","strictness":"false"}],"score":0.0},{"name":"simulates_argument_error.rb","strictness":"false"},{"name":"simulates_argument_error","children":[{"name":"reconciles_args_with_params.rb","strictness":"false"},{"name":"recreates_message.rb","strictness":"false"},{"name":"transforms_params.rb","strictness":"false"}],"score":0.0},{"name":"stringifies_method_signature.rb","strictness":"false"},{"name":"value.rb","strictness":"false"},{"name":"value","children":[{"name":"cabinet.rb","strictness":"false"},{"name":"call.rb","strictness":"strict"},{"name":"demo_config.rb","strictness":"strict"},{"name":"double.rb","strictness":"strict"},{"name":"double_data.rb","strictness":"strict"},{"name":"explanation.rb","strictness":"strict"},{"name":"explanation_data.rb","strictness":"strict"},{"name":"fake_method_data.rb","strictness":"strict"},{"name":"matcher_registry.rb","strictness":"strict"},{"name":"no_explanation_data.rb","strictness":null},{"name":"signature.rb","strictness":"false"},{"name":"stubbing.rb","strictness":"strict"},{"name":"top_shelf.rb","strictness":"false"},{"name":"type_replacement.rb","strictness":"strict"},{"name":"type_replacement_data.rb","strictness":"strict"},{"name":"unsatisfying_call.rb","strictness":"strict"},{"name":"unsatisfying_call_explanation.rb","strictness":"strict"}],"score":0.7647058823529411},{"name":"verifies_call.rb","strictness":"false"},{"name":"verifies_call","children":[{"name":"finds_verifiable_calls.rb","strictness":"false"},{"name":"raises_verification_error.rb","strictness":"false"},{"name":"raises_verification_error","children":[{"name":"gathers_calls_of_method.rb","strictness":"false"}],"score":0.0}],"score":0.0},{"name":"version.rb","strictness":"false"}],"score":0.24202812438106555}],"score":0.6210140621905328},{"name":"sorbet","children":[{"name":"tapioca","children":[{"name":"require.rb","strictness":"true"}],"score":1.0}],"score":1.0}]}
 var dataHeight = treeHeight(root)
 
 var opacity = d3.scaleLinear()
@@ -558,7 +558,7 @@ window.addEventListener("resize", redraw);
 }
 
 
-var data_timeline_sigils = [{"timestamp":1684959835,"commit":"93f8153","total":103,"values":{"true":103}},{"timestamp":1687348946,"commit":"5d093b9","total":113,"values":{"false":64,"true":38,"strict":13}},{"timestamp":1687349568,"commit":"24b1c92","total":113,"values":{"false":57,"true":45,"strict":13}}];
+var data_timeline_sigils = [{"timestamp":1684959835,"commit":"93f8153","total":103,"values":{"true":103}},{"timestamp":1687348946,"commit":"5d093b9","total":113,"values":{"false":64,"true":38,"strict":13}},{"timestamp":1687349568,"commit":"24b1c92","total":113,"values":{"false":57,"true":45,"strict":13}},{"timestamp":1687351457,"commit":"74c83c2","total":113,"values":{"false":52,"true":50,"strict":13}}];
 var keys_timeline_sigils = ["ignore","false","true","strict","strong","stdlib"];
 
 var stack_timeline_sigils = d3.stack()
@@ -673,7 +673,7 @@ window.addEventListener("resize", draw_timeline_sigils);
 }
 
 
-var data_timeline_calls = [{"timestamp":1684959835,"commit":"93f8153","total":4082,"values":{"true":1884,"false":2198}},{"timestamp":1687348946,"commit":"5d093b9","total":3389,"values":{"true":2214,"false":1175}},{"timestamp":1687349568,"commit":"24b1c92","total":3496,"values":{"true":2265,"false":1231}}];
+var data_timeline_calls = [{"timestamp":1684959835,"commit":"93f8153","total":4082,"values":{"true":1884,"false":2198}},{"timestamp":1687348946,"commit":"5d093b9","total":3389,"values":{"true":2214,"false":1175}},{"timestamp":1687349568,"commit":"24b1c92","total":3496,"values":{"true":2265,"false":1231}},{"timestamp":1687351457,"commit":"74c83c2","total":3582,"values":{"true":2305,"false":1277}}];
 var keys_timeline_calls = ["false","true"];
 
 var stack_timeline_calls = d3.stack()
@@ -788,7 +788,7 @@ window.addEventListener("resize", draw_timeline_calls);
 }
 
 
-var data_timeline_sigs = [{"timestamp":1684959835,"commit":"93f8153","total":816,"values":{"true":9,"false":807}},{"timestamp":1687348946,"commit":"5d093b9","total":872,"values":{"true":118,"false":754}},{"timestamp":1687349568,"commit":"24b1c92","total":872,"values":{"true":118,"false":754}}];
+var data_timeline_sigs = [{"timestamp":1684959835,"commit":"93f8153","total":816,"values":{"true":9,"false":807}},{"timestamp":1687348946,"commit":"5d093b9","total":872,"values":{"true":118,"false":754}},{"timestamp":1687349568,"commit":"24b1c92","total":872,"values":{"true":118,"false":754}},{"timestamp":1687351457,"commit":"74c83c2","total":872,"values":{"true":118,"false":754}}];
 var keys_timeline_sigs = ["false","true"];
 
 var stack_timeline_sigs = d3.stack()
@@ -908,7 +908,7 @@ window.addEventListener("resize", draw_timeline_sigs);
 }
 
 
-var data_timeline_rbis = [{"timestamp":1684959835,"commit":"93f8153","total":141,"values":{"files":103,"rbis":38}},{"timestamp":1687348946,"commit":"5d093b9","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687349568,"commit":"24b1c92","total":151,"values":{"files":113,"rbis":38}}];
+var data_timeline_rbis = [{"timestamp":1684959835,"commit":"93f8153","total":141,"values":{"files":103,"rbis":38}},{"timestamp":1687348946,"commit":"5d093b9","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687349568,"commit":"24b1c92","total":151,"values":{"files":113,"rbis":38}},{"timestamp":1687351457,"commit":"74c83c2","total":151,"values":{"files":113,"rbis":38}}];
 var keys_timeline_rbis = ["rbis","files"];
 
 var stack_timeline_rbis = d3.stack()
@@ -1034,7 +1034,7 @@ window.addEventListener("resize", draw_timeline_rbis);
 }
 
 
-var data_timeline_versions = [{"timestamp":1684959835,"commit":"93f8153","static":"0.5.10837","runtime":"0.5.10837"},{"timestamp":1687348946,"commit":"5d093b9","static":"0.5.10880","runtime":"0.5.10880"},{"timestamp":1687349568,"commit":"24b1c92","static":"0.5.10884","runtime":"0.5.10884"}];
+var data_timeline_versions = [{"timestamp":1684959835,"commit":"93f8153","static":"0.5.10837","runtime":"0.5.10837"},{"timestamp":1687348946,"commit":"5d093b9","static":"0.5.10880","runtime":"0.5.10880"},{"timestamp":1687349568,"commit":"24b1c92","static":"0.5.10884","runtime":"0.5.10884"},{"timestamp":1687351457,"commit":"74c83c2","static":"0.5.10884","runtime":"0.5.10884"}];
 
 function draw_timeline_versions() {
   var width_timeline_versions = document.getElementById("timeline_versions").clientWidth;
@@ -1140,7 +1140,7 @@ window.addEventListener("resize", draw_timeline_versions);
 }
 
 
-var data_timeline_runtimes = [{"timestamp":1684959835,"commit":"93f8153","runtime":1.287636},{"timestamp":1687348946,"commit":"5d093b9","runtime":0.7352580000000001},{"timestamp":1687349568,"commit":"24b1c92","runtime":0.807698}];
+var data_timeline_runtimes = [{"timestamp":1684959835,"commit":"93f8153","runtime":1.287636},{"timestamp":1687348946,"commit":"5d093b9","runtime":0.7352580000000001},{"timestamp":1687349568,"commit":"24b1c92","runtime":0.807698},{"timestamp":1687351457,"commit":"74c83c2","runtime":1.106142}];
 
 function draw_timeline_runtimes() {
   var width_timeline_runtimes = document.getElementById("timeline_runtimes").clientWidth;
@@ -1239,7 +1239,7 @@ window.addEventListener("resize", draw_timeline_runtimes);
 
         </div>
         <div class="footer">
-          Generated by <a href='https://github.com/Shopify/spoom'>spoom</a> on 2023-06-21 12:41:29 UTC.
+          Generated by <a href='https://github.com/Shopify/spoom'>spoom</a> on 2023-06-21 12:44:30 UTC.
         </div>
       </div>
     </div>

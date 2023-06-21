@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Mocktail
   # The TopShelf is where we keep all the more global, dangerous state.

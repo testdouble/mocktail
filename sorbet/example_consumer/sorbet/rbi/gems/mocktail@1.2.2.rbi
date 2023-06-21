@@ -1688,6 +1688,19 @@ class Mocktail::VerifiesCall
   def verification_satisfied?(verifiable_call_count, demo_config); end
 end
 
+# sorbet gem fails to export some of these constants, so we need to in order to
+# pass static typecheck
+module T
+  module Private
+    module RuntimeLevels
+      class << self
+        sig { returns(Symbol) }
+        def default_checked_level; end
+      end
+    end
+  end
+end
+
 module Mocktail::ExplanationData
   include Kernel
 end

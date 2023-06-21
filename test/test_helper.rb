@@ -12,7 +12,6 @@ require "mocktail"
 require "minitest/autorun"
 
 require_relative "support/sorbet_override"
-require_relative "support/sorbet_hacks"
 
 class Minitest::Test
   protected

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "share/stringifies_method_name"
 require_relative "share/stringifies_call"

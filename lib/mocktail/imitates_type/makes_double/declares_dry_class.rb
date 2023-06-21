@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 require_relative "declares_dry_class/reconstructs_call"
 
@@ -15,13 +15,14 @@ module Mocktail
       dry_class = Class.new(Object) {
         include type if type.instance_of?(Module)
 
-        def initialize(*args, **kwargs, &blk)
+        define_method :initialize do |*args, **kwargs, &blk|
         end
 
-        define_method :is_a?, ->(thing) {
-          type.ancestors.include?(thing)
-        }
-        alias_method :kind_of?, :is_a?
+        [:is_a?, :kind_of?].each do |method_name|
+          define_method method_name, ->(thing) {
+            type.ancestors.include?(thing)
+          }
+        end
 
         if type.instance_of?(Class)
           define_method :instance_of?, ->(thing) {

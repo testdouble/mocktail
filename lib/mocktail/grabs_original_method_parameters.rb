@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class GrabsOriginalMethodParameters
     # Sorbet wraps the original method in a sig wrapper, so we need to unwrap it.

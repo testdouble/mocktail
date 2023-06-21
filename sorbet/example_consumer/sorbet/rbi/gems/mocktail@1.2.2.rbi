@@ -288,13 +288,13 @@ class Mocktail::DeclaresDryClass
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#76
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#77
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#47
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#48
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#96
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#97
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
 
@@ -567,7 +567,7 @@ class Mocktail::GathersFakeableInstanceMethods
   def ignored_ancestors; end
 end
 
-# source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#2
+# source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#4
 class Mocktail::GrabsOriginalMethodParameters
   # Sorbet wraps the original method in a sig wrapper, so we need to unwrap it.
   # The value returned from `owner.instance_method(method_name)` does not have
@@ -576,12 +576,12 @@ class Mocktail::GrabsOriginalMethodParameters
   # If the method isn't wrapped by Sorbet, this will return the #instance_method,
   # per usual
   #
-  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#9
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#11
   def grab(method); end
 
   private
 
-  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#19
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#21
   def sorbet_wrapped_method(method); end
 end
 
@@ -983,18 +983,18 @@ class Mocktail::NoExplanation < ::Mocktail::Explanation
   def reference; end
 end
 
-# source://mocktail//lib/mocktail/value/no_explanation_data.rb#2
+# source://mocktail//lib/mocktail/value/no_explanation_data.rb#4
 class Mocktail::NoExplanationData < ::Struct
   include ::Mocktail::ExplanationData
 
   # @raise [Error]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#8
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#10
   def calls; end
 
   # @raise [Error]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#12
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#14
   def stubbings; end
 
   # Returns the value of attribute thing
@@ -1297,7 +1297,7 @@ class Mocktail::ResetsState
   def reset; end
 end
 
-# source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#2
+# source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#4
 class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   # This is necessary because when Sorbet runs a sig block of a singleton
   # method, it has the net effect of unwrapping/redefining the method. If
@@ -1318,7 +1318,7 @@ class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   #
   # It's very fun and confusing and a great time.
   #
-  # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#21
+  # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#23
   def run(type); end
 end
 

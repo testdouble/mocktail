@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   class RunsSorbetSigBlocksBeforeReplacement
     # This is necessary because when Sorbet runs a sig block of a singleton

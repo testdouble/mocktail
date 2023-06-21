@@ -1,3 +1,5 @@
+# typed: true
+
 module Mocktail
   NoExplanationData = Struct.new(
     :thing,

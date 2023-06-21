@@ -280,23 +280,50 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#6
 class Mocktail::DeclaresDryClass
-  # @return [DeclaresDryClass] a new instance of DeclaresDryClass
-  #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#7
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#10
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#14
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#18
+  sig do
+    params(
+      type: T.any(::Module, T::Class[T.anything]),
+      instance_methods: T::Array[::Symbol]
+    ).returns(T::Class[::Object])
+  end
   def declare(type, instance_methods); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#77
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#83
+  sig do
+    params(
+      dry_class: T::Class[::Object],
+      method_name: ::Symbol,
+      type: T.any(::Module, T::Class[T.anything]),
+      instance_methods: T::Array[::Symbol]
+    ).void
+  end
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#48
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#53
+  sig do
+    params(
+      dry_class: T::Class[::Object],
+      type: T.any(::Module, T::Class[T.anything]),
+      instance_methods: T::Array[::Symbol]
+    ).void
+  end
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#97
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#104
+  sig do
+    params(
+      dry_class: T::Class[::Object],
+      type: T.any(::Module, T::Class[T.anything]),
+      instance_methods: T::Array[::Symbol]
+    ).void
+  end
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
 
@@ -1124,7 +1151,7 @@ class Mocktail::ReconstructsCall
       double: T.anything,
       call_binding: ::Binding,
       default_args: T.nilable(T::Hash[::Symbol, T.untyped]),
-      dry_class: T::Class[T.anything],
+      dry_class: T::Class[::Object],
       type: T.any(::Module, T::Class[T.anything]),
       method: ::Symbol,
       original_method: T.any(::Method, ::UnboundMethod),

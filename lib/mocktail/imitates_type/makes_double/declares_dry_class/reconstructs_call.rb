@@ -9,7 +9,7 @@ module Mocktail
         double: T.anything,
         call_binding: Binding,
         default_args: T.nilable(T::Hash[Symbol, T.untyped]),
-        dry_class: T::Class[T.anything],
+        dry_class: T::Class[Object],
         type: T.any(Module, T::Class[T.anything]),
         method: Symbol,
         original_method: T.any(UnboundMethod, Method),

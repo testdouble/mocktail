@@ -1,16 +1,20 @@
-# typed: true
+# typed: strict
 
 require_relative "declares_dry_class/reconstructs_call"
 
 module Mocktail
   class DeclaresDryClass
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
-      @transforms_params = TransformsParams.new
-      @stringifies_method_signature = StringifiesMethodSignature.new
-      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
+      @raises_neato_no_method_error = T.let(RaisesNeatoNoMethodError.new, RaisesNeatoNoMethodError)
+      @transforms_params = T.let(TransformsParams.new, TransformsParams)
+      @stringifies_method_signature = T.let(StringifiesMethodSignature.new, StringifiesMethodSignature)
+      @grabs_original_method_parameters = T.let(GrabsOriginalMethodParameters.new, GrabsOriginalMethodParameters)
     end
 
+    sig { params(type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).returns(T::Class[Object]) }
     def declare(type, instance_methods)
       dry_class = Class.new(Object) {
         include type if type.instance_of?(Module)
@@ -45,6 +49,7 @@ module Mocktail
 
     private
 
+    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def define_double_methods!(dry_class, type, instance_methods)
       instance_methods.each do |method_name|
         dry_class.undef_method(method_name) if dry_class.method_defined?(method_name)
@@ -74,6 +79,7 @@ module Mocktail
       end
     end
 
+    sig { params(dry_class: T::Class[Object], method_name: Symbol, type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def add_stringify_methods!(dry_class, method_name, type, instance_methods)
       dry_class.define_singleton_method method_name, -> {
         if (id_matches = super().match(/:([0-9a-fx]+)>$/))
@@ -94,6 +100,7 @@ module Mocktail
       end
     end
 
+    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def define_method_missing_errors!(dry_class, type, instance_methods)
       return if instance_methods.include?(:method_missing)
 

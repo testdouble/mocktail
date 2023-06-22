@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require_relative "simulates_argument_error/transforms_params"
 require_relative "simulates_argument_error/reconciles_args_with_params"
@@ -8,14 +8,18 @@ require_relative "share/stringifies_call"
 
 module Mocktail
   class SimulatesArgumentError
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @transforms_params = TransformsParams.new
-      @reconciles_args_with_params = ReconcilesArgsWithParams.new
-      @recreates_message = RecreatesMessage.new
-      @cleans_backtrace = CleansBacktrace.new
-      @stringifies_call = StringifiesCall.new
+      @transforms_params = T.let(TransformsParams.new, TransformsParams)
+      @reconciles_args_with_params = T.let(ReconcilesArgsWithParams.new, ReconcilesArgsWithParams)
+      @recreates_message = T.let(RecreatesMessage.new, RecreatesMessage)
+      @cleans_backtrace = T.let(CleansBacktrace.new, CleansBacktrace)
+      @stringifies_call = T.let(StringifiesCall.new, StringifiesCall)
     end
 
+    sig { params(dry_call: Call).returns(T.nilable(ArgumentError)) }
     def simulate(dry_call)
       signature = @transforms_params.transform(dry_call)
 

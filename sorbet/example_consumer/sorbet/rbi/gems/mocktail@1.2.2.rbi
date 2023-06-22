@@ -202,8 +202,8 @@ end
 
 # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#6
 class Mocktail::CleansBacktrace
-  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#12
-  sig { params(error: ::StandardError).returns(::StandardError) }
+  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#16
+  sig { type_parameters(:T).params(error: T.all(::StandardError, T.type_parameter(:T))).returns(T.type_parameter(:T)) }
   def clean(error); end
 end
 
@@ -1257,8 +1257,14 @@ end
 
 # source://mocktail//lib/mocktail/records_demonstration.rb#4
 class Mocktail::RecordsDemonstration
-  # source://mocktail//lib/mocktail/records_demonstration.rb#8
-  sig { params(demonstration: ::Proc, demo_config: ::Mocktail::DemoConfig).returns(::Mocktail::Call) }
+  # source://mocktail//lib/mocktail/records_demonstration.rb#14
+  sig do
+    type_parameters(:T)
+      .params(
+        demonstration: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T)),
+        demo_config: ::Mocktail::DemoConfig
+      ).returns(::Mocktail::Call)
+  end
   def record(demonstration, demo_config); end
 end
 
@@ -1382,18 +1388,19 @@ end
 
 # source://mocktail//lib/mocktail/replaces_type.rb#8
 class Mocktail::ReplacesType
-  # @return [ReplacesType] a new instance of ReplacesType
-  #
-  # source://mocktail//lib/mocktail/replaces_type.rb#9
+  # source://mocktail//lib/mocktail/replaces_type.rb#12
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type.rb#16
+  # source://mocktail//lib/mocktail/replaces_type.rb#20
+  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def replace(type); end
 end
 
 # source://mocktail//lib/mocktail/resets_state.rb#4
 class Mocktail::ResetsState
-  # source://mocktail//lib/mocktail/resets_state.rb#5
+  # source://mocktail//lib/mocktail/resets_state.rb#8
+  sig { void }
   def reset; end
 end
 
@@ -1449,12 +1456,12 @@ Mocktail::Signature::DEFAULT_REST_KWARGS = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/simulates_argument_error.rb#10
 class Mocktail::SimulatesArgumentError
-  # @return [SimulatesArgumentError] a new instance of SimulatesArgumentError
-  #
-  # source://mocktail//lib/mocktail/simulates_argument_error.rb#11
+  # source://mocktail//lib/mocktail/simulates_argument_error.rb#14
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/simulates_argument_error.rb#19
+  # source://mocktail//lib/mocktail/simulates_argument_error.rb#23
+  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(::ArgumentError)) }
   def simulate(dry_call); end
 end
 
@@ -1516,18 +1523,22 @@ end
 
 # source://mocktail//lib/mocktail/stringifies_method_signature.rb#4
 class Mocktail::StringifiesMethodSignature
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#5
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#8
+  sig { params(signature: ::Mocktail::Signature).returns(::String) }
   def stringify(signature); end
 
   private
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#39
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#45
+  sig { params(signature: ::Mocktail::Signature).returns(::String) }
   def block(signature); end
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#27
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#32
+  sig { params(signature: ::Mocktail::Signature).returns(T.nilable(::String)) }
   def keyword(signature); end
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#15
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#19
+  sig { params(signature: ::Mocktail::Signature).returns(T.nilable(::String)) }
   def positional(signature); end
 end
 
@@ -1744,19 +1755,23 @@ class Mocktail::VerificationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/verifies_call.rb#8
 class Mocktail::VerifiesCall
-  # @return [VerifiesCall] a new instance of VerifiesCall
-  #
-  # source://mocktail//lib/mocktail/verifies_call.rb#9
+  # source://mocktail//lib/mocktail/verifies_call.rb#12
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call.rb#15
+  # source://mocktail//lib/mocktail/verifies_call.rb#19
+  sig do
+    params(
+      demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).void,
+      demo_config: ::Mocktail::DemoConfig
+    ).void
+  end
   def verify(demo, demo_config); end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/verifies_call.rb#27
+  # source://mocktail//lib/mocktail/verifies_call.rb#32
+  sig { params(verifiable_call_count: ::Integer, demo_config: ::Mocktail::DemoConfig).returns(T::Boolean) }
   def verification_satisfied?(verifiable_call_count, demo_config); end
 end
 

@@ -1,15 +1,32 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class ReplacesNext
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @top_shelf = TopShelf.instance
-      @redefines_new = RedefinesNew.new
-      @imitates_type = ImitatesType.new
+      @top_shelf = T.let(TopShelf.instance, TopShelf)
+      @redefines_new = T.let(RedefinesNew.new, RedefinesNew)
+      @imitates_type = T.let(ImitatesType.new, ImitatesType)
     end
 
+    sig {
+      type_parameters(:T)
+        .params(type: T::Class[T.all(T.type_parameter(:T), Object)])
+        .returns(T.type_parameter(:T))
+    }
+    def replace_once(type)
+      replace(type, 1).fetch(0)
+    end
+
+    sig {
+      type_parameters(:T)
+        .params(type: T::Class[T.all(T.type_parameter(:T), Object)], count: Integer)
+        .returns(T::Array[T.type_parameter(:T)])
+    }
     def replace(type, count)
-      raise UnsupportedMocktail.new("Mocktail.of_next() only supports classes") unless type.is_a?(Class)
+      raise UnsupportedMocktail.new("Mocktail.of_next() only supports classes") unless T.unsafe(type).is_a?(Class)
 
       mocktails = count.times.map { @imitates_type.imitate(type) }
 
@@ -32,7 +49,7 @@ module Mocktail
         }
       end
 
-      (mocktails.size == 1) ? mocktails.first : mocktails
+      mocktails
     end
   end
 end

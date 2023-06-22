@@ -210,6 +210,37 @@ to your subject some other way, but this approach allows you to write very terse
 isolation tests without foisting additional indirection or dependency injection
 in for your tests' sake.
 
+#### Mocktail.of_next_with_count
+
+In addition to telling Mocktail to overwrite `new` on a target Class to return
+exactly one fake object before reverting to its original `new` method, you can
+generate a set of fake objects this way.
+
+```ruby
+class Dice
+  def roll
+    (1..6).to_a.sample
+  end
+end
+
+loaded_dice = Mocktail.of_next_with_count(Dice, 2)
+
+stubs { loaded_dice[0].roll }.with { 1 }
+stubs { loaded_dice[1].roll }.with { 1 }
+
+# Then, over in your subject under test:
+puts [Dice.new, Dice.new].sum { |dice| dice.roll }
+#=> 2 # guaranteed snake eyes 🎲🎲
+
+Dice.new.roll # Back to random rolls!
+```
+
+`Mocktail.of_next(Dice, count: 2)` would also work in the above case, but isn't
+able to be type-checked by Sorbet (because it can't change the return type to an
+Array based on a non-`1` value of the `count` argument), so unless you
+[disable Sorbet's runtime type checking](#im-seeing-a-typeerror-and-it-has-to-do-with-sorbet-and-i-dont-care-about-sorbet),
+this will raise an exception.
+
 ### Mocktail.stubs
 
 Configuring a fake method to take a certain action or return a particular value
@@ -904,7 +935,7 @@ There are some limitations and caveats, however.
   _that class_ into `Mocktail.of`
 * The `count` parameter of `Mocktail.of_next(Class, count:)` will not work, as
 the method signature is intentionally constrained to only returning a single
-mocked instance. Use `Mocktail.of_next_with_count(Class, count:)` instead to get
+mocked instance. Use `Mocktail.of_next_with_count(Class, count)` instead to get
 an array back with type-checking in place
 * Many of Mocktail's built-in matchers need to be approached differently when
 type-checking is enabled. Some become less necessary because they serve the role
@@ -941,7 +972,7 @@ Sorbet signatures has been narrowed to the greatest reasonable extent:
 ### I'm seeing a TypeError and it has to do with Sorbet and I don't care about Sorbet
 
 If you're not using Sorbet and you see any type-related errors and you want them to go away,
-you can add set the ENV var `SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL` to "never".
+you can add set the environment variable `SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL=never`.
 
 You can also set this programmatically:
 

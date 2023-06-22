@@ -14,4 +14,6 @@ module Mocktail
   class InvalidMatcherError < Error; end
 
   class VerificationError < Error; end
+
+  class TypeCheckingError < Error; end
 end

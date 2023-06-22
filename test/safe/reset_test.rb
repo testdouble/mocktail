@@ -52,7 +52,7 @@ class ResetTest < Minitest::Test
     verify(times: 1) { Emailer.new }
     verify(times: 2) { Emailer.refresh }
     verify(times: 1) { emailer.email }
-    of_next_emailers = Mocktail.of_next_with_count(Emailer, count: 2)
+    of_next_emailers = Mocktail.of_next_with_count(Emailer, 2)
     assert_equal of_next_emailers.first, Emailer.new
     Mocktail::ValidatesArguments.disable! # YOLO
     assert Mocktail::ValidatesArguments.disabled?

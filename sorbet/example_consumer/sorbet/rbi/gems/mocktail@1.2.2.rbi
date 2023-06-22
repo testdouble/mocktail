@@ -15,14 +15,14 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#120
+    # source://mocktail//lib/mocktail.rb#136
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#113
+    # source://mocktail//lib/mocktail.rb#129
     sig do
       params(
         double: ::Object,
@@ -31,19 +31,19 @@ module Mocktail
     end
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#71
+    # source://mocktail//lib/mocktail.rb#87
     sig { returns(::Mocktail::Matchers::Captor) }
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#97
+    # source://mocktail//lib/mocktail.rb#113
     sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#102
+    # source://mocktail//lib/mocktail.rb#118
     sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#66
+    # source://mocktail//lib/mocktail.rb#82
     sig { returns(::Mocktail::MatcherPresentation) }
     def matchers; end
 
@@ -60,7 +60,7 @@ module Mocktail
     sig do
       type_parameters(:T)
         .params(
-          type: T::Class[T.type_parameter(:T)],
+          type: T::Class[T.all(::Object, T.type_parameter(:T))],
           count: T.nilable(::Integer)
         ).returns(T.type_parameter(:T))
     end
@@ -68,28 +68,28 @@ module Mocktail
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#61
+    # source://mocktail//lib/mocktail.rb#77
     sig do
       type_parameters(:T)
         .params(
-          type: T::Class[T.type_parameter(:T)],
-          count: T.nilable(::Integer)
+          type: T::Class[T.all(::Object, T.type_parameter(:T))],
+          count: ::Integer
         ).returns(T::Array[T.type_parameter(:T)])
     end
-    def of_next_with_count(type, count:); end
+    def of_next_with_count(type, count); end
 
-    # source://mocktail//lib/mocktail.rb#76
+    # source://mocktail//lib/mocktail.rb#92
     sig { params(matcher: T.class_of(Mocktail::Matchers::Base)).void }
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#83
+    # source://mocktail//lib/mocktail.rb#99
     sig { params(type: T.any(::Class, ::Module)).void }
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#89
+    # source://mocktail//lib/mocktail.rb#105
     sig { void }
     def reset; end
   end
@@ -1258,7 +1258,7 @@ end
 # source://mocktail//lib/mocktail/records_demonstration.rb#4
 class Mocktail::RecordsDemonstration
   # source://mocktail//lib/mocktail/records_demonstration.rb#8
-  sig { params(demonstration: ::Proc, demo_config: ::Mocktail::DemoConfig).returns(T.anything) }
+  sig { params(demonstration: ::Proc, demo_config: ::Mocktail::DemoConfig).returns(::Mocktail::Call) }
   def record(demonstration, demo_config); end
 end
 
@@ -1326,12 +1326,18 @@ end
 
 # source://mocktail//lib/mocktail/registers_stubbing.rb#6
 class Mocktail::RegistersStubbing
-  # @return [RegistersStubbing] a new instance of RegistersStubbing
-  #
-  # source://mocktail//lib/mocktail/registers_stubbing.rb#7
+  # source://mocktail//lib/mocktail/registers_stubbing.rb#10
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/registers_stubbing.rb#11
+  # source://mocktail//lib/mocktail/registers_stubbing.rb#21
+  sig do
+    type_parameters(:T)
+      .params(
+        demonstration: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T)),
+        demo_config: ::Mocktail::DemoConfig
+      ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
+  end
   def register(demonstration, demo_config); end
 end
 
@@ -1348,15 +1354,30 @@ end
 
 # source://mocktail//lib/mocktail/replaces_next.rb#4
 class Mocktail::ReplacesNext
-  # @return [ReplacesNext] a new instance of ReplacesNext
-  #
-  # source://mocktail//lib/mocktail/replaces_next.rb#5
+  # source://mocktail//lib/mocktail/replaces_next.rb#8
+  sig { void }
   def initialize; end
 
   # @raise [UnsupportedMocktail]
   #
-  # source://mocktail//lib/mocktail/replaces_next.rb#11
+  # source://mocktail//lib/mocktail/replaces_next.rb#28
+  sig do
+    type_parameters(:T)
+      .params(
+        type: T::Class[T.all(::Object, T.type_parameter(:T))],
+        count: ::Integer
+      ).returns(T::Array[T.type_parameter(:T)])
+  end
   def replace(type, count); end
+
+  # source://mocktail//lib/mocktail/replaces_next.rb#19
+  sig do
+    type_parameters(:T)
+      .params(
+        type: T::Class[T.all(::Object, T.type_parameter(:T))]
+      ).returns(T.type_parameter(:T))
+  end
+  def replace_once(type); end
 end
 
 # source://mocktail//lib/mocktail/replaces_type.rb#8
@@ -1612,6 +1633,9 @@ class Mocktail::TransformsParams
   sig { params(params: T::Array[T::Array[::Symbol]]).returns(T::Array[T::Array[::Symbol]]) }
   def name_unnamed_params(params); end
 end
+
+# source://mocktail//lib/mocktail/errors.rb#18
+class Mocktail::TypeCheckingError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/type_replacement.rb#4
 class Mocktail::TypeReplacement < ::T::Struct

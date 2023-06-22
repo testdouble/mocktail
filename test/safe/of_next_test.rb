@@ -33,7 +33,9 @@ class OfNextTest < Minitest::Test
   end
 
   def test_of_next_multiples_then_returns_to_normal
-    five_things = T.cast(Mocktail.of_next(Argz, count: 5), T::Array[Argz])
+    skip unless runtime_type_checking_disabled?
+
+    five_things = T.unsafe(Mocktail).of_next(Argz, count: 5)
 
     assert_equal five_things[0], Argz.new(42, b: true)
     assert_equal five_things[1], Argz.new(1337, b: false)
@@ -45,7 +47,7 @@ class OfNextTest < Minitest::Test
   end
 
   def test_of_next_multiples_with_alias_method
-    two_things = Mocktail.of_next_with_count(Argz, count: 2)
+    two_things = Mocktail.of_next_with_count(Argz, 2)
 
     assert_equal two_things[0], Argz.new(42, b: true)
     assert_equal two_things[1], Argz.new(1337, b: false)
@@ -54,7 +56,7 @@ class OfNextTest < Minitest::Test
   end
 
   def test_of_single_with_array_typed_alias_method
-    one_things = Mocktail.of_next_with_count(Argz, count: 1)
+    one_things = Mocktail.of_next_with_count(Argz, 1)
 
     assert_equal 1, one_things.size
     assert_equal one_things[0], Argz.new(42, b: true)
@@ -62,7 +64,9 @@ class OfNextTest < Minitest::Test
     assert_equal "args required!", e.message
   end
 
-  def test_of_next_multiples_then_returns_to_replaced_version
+  def test_of_next_multiples_then_returns_to_replaced_version_when_runtime_is_disabled
+    skip unless runtime_type_checking_disabled?
+
     Mocktail.replace(Neato)
     # of_next is still supported even though of_next_with_count is typesafe:
     three_neats = T.unsafe(Mocktail).of_next(Neato, count: 3)
@@ -71,6 +75,26 @@ class OfNextTest < Minitest::Test
     assert_equal three_neats[1], Neato.new
     assert_equal three_neats[2], Neato.new
     assert Neato.new.to_s.include?("Mocktail")
+  end
+
+  def test_of_next_multiples_raises_error_when_runtime_is_enabled
+    skip if runtime_type_checking_disabled?
+
+    Mocktail.replace(Neato)
+
+    e = assert_raises(Mocktail::TypeCheckingError) {
+      T.unsafe(Mocktail).of_next(Neato, count: 3)
+    }
+    assert_equal <<~MSG, e.message
+      Calling `Mocktail.of_next()' with a `count' value other than 1 is not supported when
+      type checking is enabled. There are two ways to fix this:
+
+      1. Use `Mocktail.of_next_with_count(type, count)' instead, which will always return
+         an array of fake objects.
+
+      2. Disable runtime type checking by setting `T::Private::RuntimeLevels.default_checked_level = :never'
+         or by setting the envronment variable `SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL=never'
+    MSG
   end
 
   module AModule
@@ -88,7 +112,7 @@ class OfNextTest < Minitest::Test
   def test_multiple_threads
     [
       thread do
-        mock_neatos = Mocktail.of_next_with_count(Neato, count: 3)
+        mock_neatos = Mocktail.of_next_with_count(Neato, 3)
         sleep 0.001
         assert_equal mock_neatos[0], Neato.new
         sleep 0.001

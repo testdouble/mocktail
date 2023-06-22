@@ -221,13 +221,13 @@ class SherbetTest < Minitest::Test
 
   sig { void }
   def test_of_next_with_count
-    sherbet = Mocktail.of_next_with_count(Sherbet, count: 2)
+    sherbet = Mocktail.of_next_with_count(Sherbet, 2)
     T.assert_type!(sherbet, T::Array[Sherbet])
   end
 
   sig { void }
   def test_alias_of_next_with_count
-    sherbets = Mocktail.of_next_with_count(Sherbet, count: 2)
+    sherbets = Mocktail.of_next_with_count(Sherbet, 2)
 
     assert_equal 2, sherbets.size
   end

@@ -45,21 +45,37 @@ module Mocktail
   # stubs its constructor to return that fake the next time klass.new is called
   sig {
     type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
+      .params(type: T::Class[T.all(T.type_parameter(:T), Object)], count: T.nilable(Integer))
       .returns(T.type_parameter(:T))
   }
   def self.of_next(type, count: 1)
-    ReplacesNext.new.replace(type, count)
+    count ||= 1
+    if count == 1
+      ReplacesNext.new.replace_once(type)
+    elsif T::Private::RuntimeLevels.default_checked_level == :never
+      T.unsafe(ReplacesNext.new).replace(type, count)
+    else
+      raise TypeCheckingError.new <<~MSG
+        Calling `Mocktail.of_next()' with a `count' value other than 1 is not supported when
+        type checking is enabled. There are two ways to fix this:
+
+        1. Use `Mocktail.of_next_with_count(type, count)' instead, which will always return
+           an array of fake objects.
+
+        2. Disable runtime type checking by setting `T::Private::RuntimeLevels.default_checked_level = :never'
+           or by setting the envronment variable `SORBET_RUNTIME_DEFAULT_CHECKED_LEVEL=never'
+      MSG
+    end
   end
 
   # An alias of of_next that always returns an array of fakes
   sig {
     type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)], count: T.nilable(Integer))
+      .params(type: T::Class[T.all(T.type_parameter(:T), Object)], count: Integer)
       .returns(T::Array[T.type_parameter(:T)])
   }
-  def self.of_next_with_count(type, count:)
-    Array(of_next(type, count: count))
+  def self.of_next_with_count(type, count)
+    ReplacesNext.new.replace(type, count)
   end
 
   sig { returns(Mocktail::MatcherPresentation) }

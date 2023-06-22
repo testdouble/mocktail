@@ -10,7 +10,6 @@ module Mocktail
 
     sig { void }
     def initialize
-      @top_shelf = T.let(TopShelf.instance, TopShelf)
       @ensures_imitation_support = T.let(EnsuresImitationSupport.new, EnsuresImitationSupport)
       @makes_double = T.let(MakesDouble.new, MakesDouble)
     end

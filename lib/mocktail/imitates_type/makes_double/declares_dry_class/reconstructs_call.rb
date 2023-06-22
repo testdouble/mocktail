@@ -6,7 +6,7 @@ module Mocktail
 
     sig {
       params(
-        double: T.anything,
+        double: Object,
         call_binding: Binding,
         default_args: T.nilable(T::Hash[Symbol, T.untyped]),
         dry_class: T::Class[Object],

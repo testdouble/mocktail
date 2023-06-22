@@ -25,7 +25,7 @@ module Mocktail
       end
 
       if prior_call_count + 1 == cabinet.calls.size
-        cabinet.calls.pop
+        T.must(cabinet.calls.pop)
       elsif prior_call_count == cabinet.calls.size
         raise MissingDemonstrationError.new <<~MSG.tr("\n", " ")
           `stubs` & `verify` expect an invocation of a mocked method by a passed

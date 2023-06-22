@@ -6,6 +6,8 @@ module Mocktail
   class DeclaresDryClass
     extend T::Sig
 
+    DEFAULT_ANCESTORS = T.let(T.must(Class.new(Object).ancestors[1..]), T::Array[T.any(T::Class[T.anything], Module)])
+
     sig { void }
     def initialize
       @raises_neato_no_method_error = T.let(RaisesNeatoNoMethodError.new, RaisesNeatoNoMethodError)
@@ -24,7 +26,8 @@ module Mocktail
 
         [:is_a?, :kind_of?].each do |method_name|
           define_method method_name, ->(thing) {
-            type.ancestors.include?(thing)
+            # Mocktails extend from Object, so share the same ancestors, plus the passed type
+            [type, *DEFAULT_ANCESTORS].include?(thing)
           }
         end
 

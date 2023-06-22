@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 
 require "sorbet-runtime"
 
@@ -95,7 +95,7 @@ module Mocktail
 
   # Replaces every singleton method on `type` with a fake, and when instantiated
   # or included will also fake instance methods
-  sig { params(type: T.any(Class, Module)).void }
+  sig { params(type: T.any(T::Class[T.anything], Module)).void }
   def self.replace(type)
     ReplacesType.new.replace(type)
     nil
@@ -133,6 +133,7 @@ module Mocktail
   # Stores most transactional state about calls & stubbing configurations
   # Anything returned by this is undocumented and could change at any time, so
   # don't commit code that relies on it!
+  sig { returns Cabinet }
   def self.cabinet
     Thread.current[:mocktail_store] ||= Cabinet.new
   end

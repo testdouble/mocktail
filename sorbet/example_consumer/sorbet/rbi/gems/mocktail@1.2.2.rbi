@@ -15,7 +15,8 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#136
+    # source://mocktail//lib/mocktail.rb#137
+    sig { returns(::Mocktail::Cabinet) }
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
@@ -86,7 +87,7 @@ module Mocktail
     # or included will also fake instance methods
     #
     # source://mocktail//lib/mocktail.rb#99
-    sig { params(type: T.any(::Class, ::Module)).void }
+    sig { params(type: T.any(::Module, T::Class[T.anything])).void }
     def replace(type); end
 
     # source://mocktail//lib/mocktail.rb#105
@@ -170,7 +171,7 @@ end
 # source://mocktail//lib/mocktail/value/call.rb#4
 class Mocktail::Call < ::T::Struct
   const :singleton, T.nilable(T::Boolean)
-  const :double, T.nilable(T.anything)
+  const :double, T.nilable(::Object)
   const :original_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :dry_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :method, T.nilable(::Symbol)
@@ -285,11 +286,11 @@ end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#6
 class Mocktail::DeclaresDryClass
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#10
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#12
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#18
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#20
   sig do
     params(
       type: T.any(::Module, T::Class[T.anything]),
@@ -300,7 +301,7 @@ class Mocktail::DeclaresDryClass
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#83
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#86
   sig do
     params(
       dry_class: T::Class[::Object],
@@ -311,7 +312,7 @@ class Mocktail::DeclaresDryClass
   end
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#53
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#56
   sig do
     params(
       dry_class: T::Class[::Object],
@@ -321,7 +322,7 @@ class Mocktail::DeclaresDryClass
   end
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#104
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#107
   sig do
     params(
       dry_class: T::Class[::Object],
@@ -331,6 +332,9 @@ class Mocktail::DeclaresDryClass
   end
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
+
+# source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#9
+Mocktail::DeclaresDryClass::DEFAULT_ANCESTORS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/value/demo_config.rb#4
 class Mocktail::DemoConfig < ::T::Struct
@@ -694,7 +698,7 @@ class Mocktail::ImitatesType
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type.rb#23
+  # source://mocktail//lib/mocktail/imitates_type.rb#22
   sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
   def imitate(type); end
 end
@@ -1211,7 +1215,7 @@ class Mocktail::ReconstructsCall
   # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#19
   sig do
     params(
-      double: T.anything,
+      double: ::Object,
       call_binding: ::Binding,
       default_args: T.nilable(T::Hash[::Symbol, T.untyped]),
       dry_class: T::Class[::Object],

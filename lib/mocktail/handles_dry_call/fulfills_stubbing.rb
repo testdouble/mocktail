@@ -13,7 +13,7 @@ module Mocktail
       @describes_unsatisfied_stubbing = T.let(DescribesUnsatisfiedStubbing.new, Mocktail::DescribesUnsatisfiedStubbing)
     end
 
-    sig { params(dry_call: Call).returns(T.untyped) }
+    sig { params(dry_call: Call).returns(T.anything) }
     def fulfill(dry_call)
       if (stubbing = satisfaction(dry_call))
         stubbing.satisfied!
@@ -24,7 +24,7 @@ module Mocktail
       end
     end
 
-    sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.untyped])) }
+    sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.anything])) }
     def satisfaction(dry_call)
       return if Mocktail.cabinet.demonstration_in_progress?
 

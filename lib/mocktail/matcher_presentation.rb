@@ -9,7 +9,7 @@ module Mocktail
       !!MatcherRegistry.instance.get(name) || super
     end
 
-    sig { params(name: Symbol, args: T.untyped, kwargs: T.untyped, blk: T.nilable(Proc)).returns(T.untyped) }
+    sig { params(name: Symbol, args: T.anything, kwargs: T.anything, blk: T.nilable(Proc)).returns(T.anything) }
     def method_missing(name, *args, **kwargs, &blk)
       if (matcher = MatcherRegistry.instance.get(name))
         T.unsafe(matcher).new(*args, **kwargs, &blk)

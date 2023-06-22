@@ -8,7 +8,7 @@ module Mocktail
       params(
         double: Object,
         call_binding: Binding,
-        default_args: T.nilable(T::Hash[Symbol, T.untyped]),
+        default_args: T.nilable(T::Hash[Symbol, T.anything]),
         dry_class: T::Class[Object],
         type: T.any(Module, T::Class[T.anything]),
         method: Symbol,
@@ -33,8 +33,8 @@ module Mocktail
     private
 
     sig {
-      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.untyped]))
-        .returns(T::Array[T.untyped])
+      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.anything]))
+        .returns(T::Array[T.anything])
     }
     def args_for(signature, call_binding, default_args)
       arg_names, rest_name = non_default_args(signature.positional_params, default_args)
@@ -46,8 +46,8 @@ module Mocktail
     end
 
     sig {
-      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.untyped]))
-        .returns(T::Hash[Symbol, T.untyped])
+      params(signature: Signature, call_binding: Binding, default_args: T.nilable(T::Hash[Symbol, T.anything]))
+        .returns(T::Hash[Symbol, T.anything])
     }
     def kwargs_for(signature, call_binding, default_args)
       kwarg_names, kwrest_name = non_default_args(signature.keyword_params, default_args)
@@ -58,7 +58,7 @@ module Mocktail
       kwarg_values.merge(kwrest_value || {})
     end
 
-    sig { params(params: Params, default_args: T.nilable(T::Hash[Symbol, T.untyped])).returns([T::Array[Symbol], T.nilable(Symbol)]) }
+    sig { params(params: Params, default_args: T.nilable(T::Hash[Symbol, T.anything])).returns([T::Array[Symbol], T.nilable(Symbol)]) }
     def non_default_args(params, default_args)
       named_args = params.allowed
         .reject { |p| default_args&.key?(p) }

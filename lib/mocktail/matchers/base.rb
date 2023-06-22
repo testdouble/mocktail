@@ -9,7 +9,7 @@ module Mocktail::Matchers
 
     # Custom matchers can receive any args, kwargs, or block they want. Usually
     # single-argument, though, so that's defaulted here and in #insepct
-    sig { params(expected: T.untyped).void }
+    sig { params(expected: BasicObject).void }
     def initialize(expected)
       @expected = expected
     end
@@ -19,14 +19,14 @@ module Mocktail::Matchers
       raise Mocktail::InvalidMatcherError.new("The `matcher_name` class method must return a valid method name")
     end
 
-    sig { params(actual: T.untyped).returns(T::Boolean) }
+    sig { params(actual: BasicObject).returns(T::Boolean) }
     def match?(actual)
       raise Mocktail::InvalidMatcherError.new("Matchers must implement `match?(argument)`")
     end
 
     sig { returns(String) }
     def inspect
-      "#{self.class.matcher_name}(#{@expected.inspect})"
+      "#{self.class.matcher_name}(#{T.cast(@expected, Object).inspect})"
     end
 
     sig { returns(TrueClass) }

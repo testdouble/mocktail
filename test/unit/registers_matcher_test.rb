@@ -21,7 +21,7 @@ class RegistersMatcherTest < Minitest::Test
     end
 
     def inspect
-      "m.is_pants(#{@expected.inspect})"
+      "m.is_pants(#{T.cast(@expected, Object).inspect})"
     end
 
     def is_mocktail_matcher?

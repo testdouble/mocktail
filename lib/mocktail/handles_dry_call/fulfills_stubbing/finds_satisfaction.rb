@@ -11,7 +11,7 @@ module Mocktail
       @determines_matching_calls = T.let(DeterminesMatchingCalls.new, Mocktail::DeterminesMatchingCalls)
     end
 
-    sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.untyped])) }
+    sig { params(dry_call: Call).returns(T.nilable(Stubbing[T.anything])) }
     def find(dry_call)
       Mocktail.cabinet.stubbings.reverse.find { |stubbing|
         demo_config_times = stubbing.demo_config.times

@@ -221,12 +221,12 @@ end
 # source://mocktail//lib/mocktail/share/creates_identifier.rb#4
 class Mocktail::CreatesIdentifier
   # source://mocktail//lib/mocktail/share/creates_identifier.rb#10
-  sig { params(s: ::Object, default: ::String, max_length: ::Integer).returns(::String) }
+  sig { params(s: T.anything, default: ::String, max_length: ::Integer).returns(::String) }
   def create(s, default: T.unsafe(nil), max_length: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/creates_identifier.rb#28
+  # source://mocktail//lib/mocktail/share/creates_identifier.rb#33
   sig { params(id: ::String, default: ::String).returns(::String) }
   def unreserved(id, default); end
 end
@@ -585,7 +585,7 @@ class Mocktail::FindsSatisfaction
   def initialize; end
 
   # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#15
-  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.untyped])) }
+  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.anything])) }
   def find(dry_call); end
 end
 
@@ -607,11 +607,11 @@ class Mocktail::FulfillsStubbing
   def initialize; end
 
   # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#17
-  sig { params(dry_call: ::Mocktail::Call).returns(T.untyped) }
+  sig { params(dry_call: ::Mocktail::Call).returns(T.anything) }
   def fulfill(dry_call); end
 
   # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#28
-  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.untyped])) }
+  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.anything])) }
   def satisfaction(dry_call); end
 
   private
@@ -684,8 +684,8 @@ class Mocktail::HandlesDryNewCall
   sig do
     params(
       type: T::Class[T.anything],
-      args: T::Array[T.untyped],
-      kwargs: T::Hash[::Symbol, T.untyped],
+      args: T::Array[T.anything],
+      kwargs: T::Hash[::Symbol, T.anything],
       block: T.nilable(::Proc)
     ).returns(T.anything)
   end
@@ -765,7 +765,7 @@ class Mocktail::MatcherPresentation
   def matches(pattern); end
 
   # source://mocktail//lib/mocktail/matcher_presentation.rb#13
-  sig { params(name: ::Symbol, args: T.untyped, kwargs: T.untyped, blk: T.nilable(::Proc)).returns(T.untyped) }
+  sig { params(name: ::Symbol, args: T.anything, kwargs: T.anything, blk: T.nilable(::Proc)).returns(T.anything) }
   def method_missing(name, *args, **kwargs, &blk); end
 
   sig { type_parameters(:T).params(unexpected: T.type_parameter(:T)).returns(T.type_parameter(:T)) }
@@ -837,7 +837,7 @@ class Mocktail::Matchers::Base
   # single-argument, though, so that's defaulted here and in #insepct
   #
   # source://mocktail//lib/mocktail/matchers/base.rb#13
-  sig { params(expected: T.untyped).void }
+  sig { params(expected: ::BasicObject).void }
   def initialize(expected); end
 
   # source://mocktail//lib/mocktail/matchers/base.rb#28
@@ -851,7 +851,7 @@ class Mocktail::Matchers::Base
   # @raise [Mocktail::InvalidMatcherError]
   #
   # source://mocktail//lib/mocktail/matchers/base.rb#23
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  sig { params(actual: ::BasicObject).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
@@ -1144,7 +1144,7 @@ class Mocktail::RaisesNeatoNoMethodError
   def count_repeats(identifiers); end
 
   # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#56
-  sig { params(kwargs: T::Hash[::Symbol, T.untyped]).returns(T.nilable(::String)) }
+  sig { params(kwargs: T::Hash[::Symbol, T.anything]).returns(T.nilable(::String)) }
   def kwparams_list(kwargs); end
 
   # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#36
@@ -1152,7 +1152,7 @@ class Mocktail::RaisesNeatoNoMethodError
   def params(call); end
 
   # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#47
-  sig { params(args: T::Array[T.untyped]).returns(T.nilable(::String)) }
+  sig { params(args: T::Array[T.anything]).returns(T.nilable(::String)) }
   def params_list(args); end
 end
 
@@ -1217,7 +1217,7 @@ class Mocktail::ReconstructsCall
     params(
       double: ::Object,
       call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.untyped]),
+      default_args: T.nilable(T::Hash[::Symbol, T.anything]),
       dry_class: T::Class[::Object],
       type: T.any(::Module, T::Class[T.anything]),
       method: ::Symbol,
@@ -1234,8 +1234,8 @@ class Mocktail::ReconstructsCall
     params(
       signature: ::Mocktail::Signature,
       call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
-    ).returns(T::Array[T.untyped])
+      default_args: T.nilable(T::Hash[::Symbol, T.anything])
+    ).returns(T::Array[T.anything])
   end
   def args_for(signature, call_binding, default_args); end
 
@@ -1244,8 +1244,8 @@ class Mocktail::ReconstructsCall
     params(
       signature: ::Mocktail::Signature,
       call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
-    ).returns(T::Hash[::Symbol, T.untyped])
+      default_args: T.nilable(T::Hash[::Symbol, T.anything])
+    ).returns(T::Hash[::Symbol, T.anything])
   end
   def kwargs_for(signature, call_binding, default_args); end
 
@@ -1253,7 +1253,7 @@ class Mocktail::ReconstructsCall
   sig do
     params(
       params: ::Mocktail::Params,
-      default_args: T.nilable(T::Hash[::Symbol, T.untyped])
+      default_args: T.nilable(T::Hash[::Symbol, T.anything])
     ).returns([T::Array[::Symbol], T.nilable(::Symbol)])
   end
   def non_default_args(params, default_args); end
@@ -1732,7 +1732,7 @@ class Mocktail::ValidatesArguments
   def initialize; end
 
   # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#37
-  sig { params(dry_call: T.untyped).returns(::NilClass) }
+  sig { params(dry_call: ::Mocktail::Call).returns(::NilClass) }
   def validate(dry_call); end
 
   class << self
@@ -1749,7 +1749,7 @@ class Mocktail::ValidatesArguments
     def enable!; end
 
     # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#22
-    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.untyped)).void }
+    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.anything)).void }
     def optional(disable, &blk); end
   end
 end

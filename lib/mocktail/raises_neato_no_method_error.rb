@@ -43,7 +43,7 @@ module Mocktail
       "(#{params_lists.join(", ")})"
     end
 
-    sig { params(args: T::Array[T.untyped]).returns(T.nilable(String)) }
+    sig { params(args: T::Array[T.anything]).returns(T.nilable(String)) }
     def params_list(args)
       return if args.empty?
 
@@ -52,7 +52,7 @@ module Mocktail
       }).join(", ")
     end
 
-    sig { params(kwargs: T::Hash[Symbol, T.untyped]).returns(T.nilable(String)) }
+    sig { params(kwargs: T::Hash[Symbol, T.anything]).returns(T.nilable(String)) }
     def kwparams_list(kwargs)
       return if kwargs.empty?
 

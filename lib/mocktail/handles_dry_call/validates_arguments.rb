@@ -18,14 +18,14 @@ module Mocktail
       !!Thread.current[:mocktail_arity_validation_disabled]
     end
 
-    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.untyped)).void }
+    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.anything)).void }
     def self.optional(disable, &blk)
       return blk.call unless disable
 
       disable!
-      blk.call.tap do
-        enable!
-      end
+      ret = blk.call
+      enable!
+      ret
     end
 
     sig { void }
@@ -33,7 +33,7 @@ module Mocktail
       @simulates_argument_error = T.let(SimulatesArgumentError.new, Mocktail::SimulatesArgumentError)
     end
 
-    sig { params(dry_call: T.untyped).returns(NilClass) }
+    sig { params(dry_call: Call).returns(NilClass) }
     def validate(dry_call)
       return if self.class.disabled?
 

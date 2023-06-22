@@ -1,14 +1,18 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class HandlesDryNewCall
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @validates_arguments = ValidatesArguments.new
-      @logs_call = LogsCall.new
-      @fulfills_stubbing = FulfillsStubbing.new
-      @imitates_type = ImitatesType.new
+      @validates_arguments = T.let(ValidatesArguments.new, ValidatesArguments)
+      @logs_call = T.let(LogsCall.new, LogsCall)
+      @fulfills_stubbing = T.let(FulfillsStubbing.new, FulfillsStubbing)
+      @imitates_type = T.let(ImitatesType.new, ImitatesType)
     end
 
+    sig { params(type: T::Class[T.anything], args: T::Array[T.untyped], kwargs: T::Hash[Symbol, T.untyped], block: T.nilable(Proc)).returns(T.anything) }
     def handle(type, args, kwargs, block)
       @validates_arguments.validate(Call.new(
         original_method: type.instance_method(:initialize),

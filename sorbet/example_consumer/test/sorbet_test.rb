@@ -43,6 +43,19 @@ class SherbetTest < Minitest::Test
     T.assert_type!(sherbet.flavor, Symbol)
   end
 
+  # This test makes sure the returns(T.anything) in
+  # lib/mocktail/handles_dry_call.rb doesn't cause issues for the test-scoped code
+  sig { void }
+  def test_stubbing_that_invokes_methods_on_return_value
+    sherbet = Mocktail.of(Sherbet)
+    T.assert_type!(sherbet, Sherbet)
+
+    stubs { sherbet.flavor }.with { :gooberry }
+
+    assert_equal :gooberry.to_s.to_sym, sherbet.flavor
+    T.assert_type!(sherbet.flavor, Symbol)
+  end
+
   sig { void }
   def test_stubbing_with_all_dem_options
     sherbet = Mocktail.of(Sherbet)

@@ -20,7 +20,7 @@ module Mocktail
         type.define_singleton_method :new, ->(*args, **kwargs, &block) {
           if TopShelf.instance.new_replaced?(type) ||
               (type.is_a?(Class) && TopShelf.instance.of_next_registered?(type))
-            handles_dry_new_call.handle(type, args, kwargs, block)
+            handles_dry_new_call.handle(T.cast(type, T::Class[T.anything]), args, kwargs, block)
           else
             type_replacement.original_new.call(*args, **kwargs, &block)
           end

@@ -1,7 +1,10 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class InitializesMocktail
+    extend T::Sig
+
+    sig { void }
     def init
       [
         Mocktail::Matchers::Any,

@@ -661,40 +661,48 @@ end
 
 # source://mocktail//lib/mocktail/handles_dry_call.rb#8
 class Mocktail::HandlesDryCall
-  # @return [HandlesDryCall] a new instance of HandlesDryCall
-  #
-  # source://mocktail//lib/mocktail/handles_dry_call.rb#9
+  # source://mocktail//lib/mocktail/handles_dry_call.rb#12
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call.rb#15
+  # source://mocktail//lib/mocktail/handles_dry_call.rb#19
+  sig { params(dry_call: ::Mocktail::Call).returns(T.anything) }
   def handle(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_new_call.rb#4
 class Mocktail::HandlesDryNewCall
-  # @return [HandlesDryNewCall] a new instance of HandlesDryNewCall
-  #
-  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#5
+  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#8
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#12
+  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#16
+  sig do
+    params(
+      type: T::Class[T.anything],
+      args: T::Array[T.untyped],
+      kwargs: T::Hash[::Symbol, T.untyped],
+      block: T.nilable(::Proc)
+    ).returns(T.anything)
+  end
   def handle(type, args, kwargs, block); end
 end
 
 # source://mocktail//lib/mocktail/imitates_type.rb#7
 class Mocktail::ImitatesType
-  # @return [ImitatesType] a new instance of ImitatesType
-  #
-  # source://mocktail//lib/mocktail/imitates_type.rb#8
+  # source://mocktail//lib/mocktail/imitates_type.rb#12
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type.rb#14
+  # source://mocktail//lib/mocktail/imitates_type.rb#23
+  sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
   def imitate(type); end
 end
 
 # source://mocktail//lib/mocktail/initializes_mocktail.rb#4
 class Mocktail::InitializesMocktail
-  # source://mocktail//lib/mocktail/initializes_mocktail.rb#5
+  # source://mocktail//lib/mocktail/initializes_mocktail.rb#8
+  sig { void }
   def init; end
 end
 

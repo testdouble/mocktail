@@ -760,7 +760,8 @@ class Mocktail::MatcherPresentation
   sig { params(pattern: T.any(String, Regexp)).returns(String) }
   def matches(pattern); end
 
-  # source://mocktail//lib/mocktail/matcher_presentation.rb#9
+  # source://mocktail//lib/mocktail/matcher_presentation.rb#13
+  sig { params(name: ::Symbol, args: T.untyped, kwargs: T.untyped, blk: T.nilable(::Proc)).returns(T.untyped) }
   def method_missing(name, *args, **kwargs, &blk); end
 
   sig { type_parameters(:T).params(unexpected: T.type_parameter(:T)).returns(T.type_parameter(:T)) }
@@ -774,9 +775,8 @@ class Mocktail::MatcherPresentation
 
   private
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/matcher_presentation.rb#5
+  # source://mocktail//lib/mocktail/matcher_presentation.rb#8
+  sig { params(name: ::Symbol, include_private: T::Boolean).returns(T::Boolean) }
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -1115,34 +1115,40 @@ end
 
 # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#8
 class Mocktail::RaisesNeatoNoMethodError
-  # @return [RaisesNeatoNoMethodError] a new instance of RaisesNeatoNoMethodError
-  #
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#9
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#12
+  sig { void }
   def initialize; end
 
   # @raise [NoMethodError]
   #
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#15
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#19
+  sig { params(call: ::Mocktail::Call).void }
   def call(call); end
 
   private
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#55
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#63
+  sig { params(block: T.nilable(::Proc)).returns(T.nilable(::String)) }
   def block_param(block); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#71
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#81
+  sig { params(call: ::Mocktail::Call).returns(T.nilable(::String)) }
   def corrections(call); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#61
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#70
+  sig { params(identifiers: T::Array[::String]).returns(T::Array[::String]) }
   def count_repeats(identifiers); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#49
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#56
+  sig { params(kwargs: T::Hash[::Symbol, T.untyped]).returns(T.nilable(::String)) }
   def kwparams_list(kwargs); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#31
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#36
+  sig { params(call: ::Mocktail::Call).returns(T.nilable(::String)) }
   def params(call); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#41
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#47
+  sig { params(args: T::Array[T.untyped]).returns(T.nilable(::String)) }
   def params_list(args); end
 end
 

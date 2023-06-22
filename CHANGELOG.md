@@ -7,8 +7,8 @@
   `Mocktail.explain(lol_not_a_mock).reference.thing` and get a reference back to
   `lol_not_a_mock`.)
 * **Breaking change (you probably won't care about)** - If you fake a class with
-  module that overloads `nil?` you _may_ get an infinite recursion if you
-  override it due to an implementation detail in sorbet's `T::Struct` type. See
+  module that overloads `nil?` or `is_a?` you _may_ get an infinite recursion if you
+  override it. See
   [this skipped test](/test/safe/mocking_methodful_classes_test.rb)
 
 # 1.2.2

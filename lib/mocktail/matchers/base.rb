@@ -19,7 +19,7 @@ module Mocktail::Matchers
       raise Mocktail::InvalidMatcherError.new("The `matcher_name` class method must return a valid method name")
     end
 
-    sig { params(actual: BasicObject).returns(T::Boolean) }
+    sig { params(actual: T.untyped).returns(T::Boolean) }
     def match?(actual)
       raise Mocktail::InvalidMatcherError.new("Matchers must implement `match?(argument)`")
     end

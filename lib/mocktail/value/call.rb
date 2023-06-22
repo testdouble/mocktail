@@ -5,7 +5,7 @@ module Mocktail
     extend T::Sig
 
     const :singleton, T.nilable(T::Boolean)
-    const :double, T.nilable(Object)
+    const :double, T.untyped, default: nil
     const :original_type, T.nilable(T.any(T::Class[T.anything], Module))
     const :dry_type, T.nilable(T.any(T::Class[T.anything], Module))
     const :method, T.nilable(Symbol), without_accessors: true
@@ -28,14 +28,19 @@ module Mocktail
       eql?(other)
     end
 
-    sig { params(other: T.untyped).returns(T::Boolean) }
+    sig { params(other: T.anything).returns(T::Boolean) }
     def eql?(other)
-      self.class == other.class && [
-        :singleton, :double, :original_type, :dry_type,
-        :method, :original_method, :args, :kwargs, :block
-      ].all? { |attr|
-        instance_variable_get("@#{attr}") == other.send(attr)
-      }
+      case other
+      when Call
+        [
+          :singleton, :double, :original_type, :dry_type,
+          :method, :original_method, :args, :kwargs, :block
+        ].all? { |attr|
+          instance_variable_get("@#{attr}") == other.send(attr)
+        }
+      else
+        false
+      end
     end
 
     sig { returns(Integer) }

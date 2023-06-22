@@ -132,7 +132,7 @@ class Mocktail::Cabinet
   def demonstration_in_progress?; end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#70
-  sig { params(thing: T.untyped).returns(T.nilable(::Mocktail::Double)) }
+  sig { params(thing: T.anything).returns(T.nilable(::Mocktail::Double)) }
   def double_for_instance(thing); end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#33
@@ -148,7 +148,7 @@ class Mocktail::Cabinet
   def store_double(double); end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#55
-  sig { params(stubbing: Mocktail::Stubbing[T.untyped]).void }
+  sig { params(stubbing: Mocktail::Stubbing[T.anything]).void }
   def store_stubbing(stubbing); end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#60
@@ -156,11 +156,11 @@ class Mocktail::Cabinet
   def store_unsatisfying_call(unsatisfying_call); end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#18
-  sig { returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
+  sig { returns(T::Array[Mocktail::Stubbing[T.anything]]) }
   def stubbings; end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#78
-  sig { params(double: ::Mocktail::Double).returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
+  sig { params(double: ::Mocktail::Double).returns(T::Array[Mocktail::Stubbing[T.anything]]) }
   def stubbings_for_double(double); end
 
   # source://mocktail//lib/mocktail/value/cabinet.rb#21
@@ -171,7 +171,7 @@ end
 # source://mocktail//lib/mocktail/value/call.rb#4
 class Mocktail::Call < ::T::Struct
   const :singleton, T.nilable(T::Boolean)
-  const :double, T.nilable(::Object)
+  const :double, T.untyped, default: T.unsafe(nil)
   const :original_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :dry_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :method, T.nilable(::Symbol)
@@ -188,10 +188,10 @@ class Mocktail::Call < ::T::Struct
   def ==(other); end
 
   # source://mocktail//lib/mocktail/value/call.rb#32
-  sig { params(other: T.untyped).returns(T::Boolean) }
+  sig { params(other: T.anything).returns(T::Boolean) }
   def eql?(other); end
 
-  # source://mocktail//lib/mocktail/value/call.rb#42
+  # source://mocktail//lib/mocktail/value/call.rb#47
   sig { returns(::Integer) }
   def hash; end
 
@@ -413,7 +413,7 @@ end
 class Mocktail::Double < ::T::Struct
   const :original_type, T.any(::Module, T::Class[T.anything])
   const :dry_type, T::Class[T.anything]
-  const :dry_instance, ::Object
+  const :dry_instance, T.untyped
   const :dry_methods, T::Array[::Symbol]
 
   class << self
@@ -427,9 +427,9 @@ class Mocktail::DoubleData < ::T::Struct
   include ::Mocktail::ExplanationData
 
   const :type, T.any(::Module, T::Class[T.anything])
-  const :double, ::Object
+  const :double, T.untyped
   const :calls, T::Array[::Mocktail::Call]
-  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
   class << self
     # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
@@ -549,7 +549,7 @@ module Mocktail::ExplanationData
   # @abstract
   #
   # source://mocktail//lib/mocktail/value/explanation_data.rb#16
-  sig { abstract.returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
+  sig { abstract.returns(T::Array[Mocktail::Stubbing[T.anything]]) }
   def stubbings; end
 end
 
@@ -559,7 +559,7 @@ class Mocktail::FakeMethodData < ::T::Struct
 
   const :receiver, T.anything
   const :calls, T::Array[::Mocktail::Call]
-  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
   class << self
     # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
@@ -851,7 +851,7 @@ class Mocktail::Matchers::Base
   # @raise [Mocktail::InvalidMatcherError]
   #
   # source://mocktail//lib/mocktail/matchers/base.rb#23
-  sig { params(actual: ::BasicObject).returns(T::Boolean) }
+  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
@@ -1076,7 +1076,7 @@ end
 class Mocktail::NoExplanationData < ::T::Struct
   include ::Mocktail::ExplanationData
 
-  const :thing, ::Object
+  const :thing, T.untyped
 
   # @raise [Error]
   #
@@ -1087,7 +1087,7 @@ class Mocktail::NoExplanationData < ::T::Struct
   # @raise [Error]
   #
   # source://mocktail//lib/mocktail/value/no_explanation_data.rb#16
-  sig { override.returns(T::Array[Mocktail::Stubbing[T.untyped]]) }
+  sig { override.returns(T::Array[Mocktail::Stubbing[T.anything]]) }
   def stubbings; end
 
   class << self
@@ -1437,11 +1437,11 @@ end
 # source://mocktail//lib/mocktail/value/signature.rb#23
 class Mocktail::Signature < ::T::Struct
   const :positional_params, ::Mocktail::Params
-  const :positional_args, T::Array[T.untyped]
+  const :positional_args, T::Array[T.anything]
   const :keyword_params, ::Mocktail::Params
-  const :keyword_args, T::Hash[::Symbol, T.untyped]
+  const :keyword_args, T::Hash[::Symbol, T.anything]
   const :block_param, T.nilable(::Symbol)
-  const :block_arg, T.untyped, default: T.unsafe(nil)
+  const :block_arg, T.nilable(::Proc), default: T.unsafe(nil)
 
   class << self
     # source://sorbet-runtime/0.5.10847/lib/types/struct.rb#13
@@ -1490,7 +1490,7 @@ class Mocktail::StringifiesCall
   private
 
   # source://mocktail//lib/mocktail/share/stringifies_call.rb#47
-  sig { params(args: T::Array[T.untyped]).returns(T.nilable(::String)) }
+  sig { params(args: T::Array[::Object]).returns(T.nilable(::String)) }
   def argify(args); end
 
   # source://mocktail//lib/mocktail/share/stringifies_call.rb#30
@@ -1502,7 +1502,7 @@ class Mocktail::StringifiesCall
   def blockify(block, anonymous:); end
 
   # source://mocktail//lib/mocktail/share/stringifies_call.rb#53
-  sig { params(kwargs: T::Hash[::Symbol, T.untyped]).returns(T.nilable(::String)) }
+  sig { params(kwargs: T::Hash[::Symbol, ::Object]).returns(T.nilable(::String)) }
   def kwargify(kwargs); end
 
   # source://mocktail//lib/mocktail/share/stringifies_call.rb#59
@@ -1673,7 +1673,7 @@ class Mocktail::TypeReplacementData < ::T::Struct
   const :type, T.any(::Module, T::Class[T.anything])
   const :replaced_method_names, T::Array[::Symbol]
   const :calls, T::Array[::Mocktail::Call]
-  const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
+  const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
   # source://mocktail//lib/mocktail/value/type_replacement_data.rb#15
   sig { returns(T.any(::Module, T::Class[T.anything])) }
@@ -1691,7 +1691,7 @@ class Mocktail::UnexpectedError < ::Mocktail::Error; end
 # source://mocktail//lib/mocktail/value/unsatisfying_call.rb#4
 class Mocktail::UnsatisfyingCall < ::T::Struct
   const :call, ::Mocktail::Call
-  const :other_stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
+  const :other_stubbings, T::Array[Mocktail::Stubbing[T.anything]]
   const :backtrace, T::Array[::String]
 
   class << self

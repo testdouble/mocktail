@@ -14,7 +14,7 @@ module Mocktail
     sig { returns(T::Array[Call]) }
     attr_reader :calls
 
-    sig { returns(T::Array[Stubbing[T.untyped]]) }
+    sig { returns(T::Array[Stubbing[T.anything]]) }
     attr_reader :stubbings
 
     sig { returns(T::Array[UnsatisfyingCall]) }
@@ -24,7 +24,7 @@ module Mocktail
     def initialize
       @doubles = T.let([], T::Array[Double])
       @calls = T.let([], T::Array[Call])
-      @stubbings = T.let([], T::Array[Stubbing[T.untyped]])
+      @stubbings = T.let([], T::Array[Stubbing[T.anything]])
       @unsatisfying_calls = T.let([], T::Array[UnsatisfyingCall])
       @demonstration_in_progress = T.let(false, T::Boolean)
     end
@@ -51,7 +51,7 @@ module Mocktail
       @calls << call
     end
 
-    sig { params(stubbing: Stubbing[T.untyped]).void }
+    sig { params(stubbing: Stubbing[T.anything]).void }
     def store_stubbing(stubbing)
       @stubbings << stubbing
     end
@@ -66,7 +66,7 @@ module Mocktail
       @demonstration_in_progress
     end
 
-    sig { params(thing: T.untyped).returns(T.nilable(Double)) }
+    sig { params(thing: T.anything).returns(T.nilable(Double)) }
     def double_for_instance(thing)
       @doubles.find { |double|
         # Intentionally calling directly to avoid an infinite recursion in Bind.call
@@ -74,7 +74,7 @@ module Mocktail
       }
     end
 
-    sig { params(double: Double).returns(T::Array[Stubbing[T.untyped]]) }
+    sig { params(double: Double).returns(T::Array[Stubbing[T.anything]]) }
     def stubbings_for_double(double)
       @stubbings.select { |stubbing|
         Bind.call(stubbing.recording.double, :==, double.dry_instance)

@@ -12,7 +12,7 @@ module Mocktail
     def calls
     end
 
-    sig { abstract.returns T::Array[Mocktail::Stubbing[T.untyped]] }
+    sig { abstract.returns T::Array[Mocktail::Stubbing[T.anything]] }
     def stubbings
     end
   end

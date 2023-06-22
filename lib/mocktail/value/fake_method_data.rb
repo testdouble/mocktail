@@ -6,6 +6,6 @@ module Mocktail
 
     const :receiver, T.anything
     const :calls, T::Array[Call]
-    const :stubbings, T::Array[Stubbing[T.untyped]]
+    const :stubbings, T::Array[Stubbing[T.anything]]
   end
 end

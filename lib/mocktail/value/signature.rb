@@ -22,11 +22,11 @@ module Mocktail
 
   class Signature < T::Struct
     const :positional_params, Params
-    const :positional_args, T::Array[T.untyped]
+    const :positional_args, T::Array[T.anything]
     const :keyword_params, Params
-    const :keyword_args, T::Hash[Symbol, T.untyped]
+    const :keyword_args, T::Hash[Symbol, T.anything]
     const :block_param, T.nilable(Symbol)
-    const :block_arg, T.untyped, default: nil # Should be a T.nilable(T.proc), but variadic params aren't supported yet
+    const :block_arg, T.nilable(Proc), default: nil
 
     DEFAULT_REST_ARGS = "args"
     DEFAULT_REST_KWARGS = "kwargs"

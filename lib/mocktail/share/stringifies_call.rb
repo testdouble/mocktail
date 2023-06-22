@@ -43,13 +43,13 @@ module Mocktail
       end
     end
 
-    sig { params(args: T::Array[T.untyped]).returns(T.nilable(String)) }
+    sig { params(args: T::Array[Object]).returns(T.nilable(String)) }
     def argify(args)
       return unless !args.empty?
       args.map(&:inspect).join(", ")
     end
 
-    sig { params(kwargs: T::Hash[Symbol, T.untyped]).returns(T.nilable(String)) }
+    sig { params(kwargs: T::Hash[Symbol, Object]).returns(T.nilable(String)) }
     def kwargify(kwargs)
       return unless !kwargs.empty?
       kwargs.map { |key, val| "#{key}: #{val.inspect}" }.join(", ")

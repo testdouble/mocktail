@@ -8,8 +8,8 @@ module Mocktail
     include ExplanationData
 
     const :type, T.any(T::Class[T.anything], Module)
-    const :double, Object
+    const :double, T.untyped
     const :calls, T::Array[Call]
-    const :stubbings, T::Array[Stubbing[T.untyped]]
+    const :stubbings, T::Array[Stubbing[T.anything]]
   end
 end

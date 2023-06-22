@@ -1,15 +1,19 @@
-# typed: true
+# typed: strict
 
 require_relative "share/stringifies_method_name"
 require_relative "share/stringifies_call"
 
 module Mocktail
   class ExplainsThing
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @stringifies_method_name = StringifiesMethodName.new
-      @stringifies_call = StringifiesCall.new
+      @stringifies_method_name = T.let(StringifiesMethodName.new, StringifiesMethodName)
+      @stringifies_call = T.let(StringifiesCall.new, StringifiesCall)
     end
 
+    sig { params(thing: Object).returns(Explanation) }
     def explain(thing)
       if (double = Mocktail.cabinet.double_for_instance(thing))
         double_explanation(double)
@@ -25,6 +29,7 @@ module Mocktail
 
     private
 
+    sig { params(thing: Object).returns(T.nilable(FakeMethodExplanation)) }
     def fake_method_explanation_for(thing)
       return unless thing.is_a?(Method)
       method = thing
@@ -45,6 +50,7 @@ module Mocktail
       end
     end
 
+    sig { params(double: Double).returns(DoubleData) }
     def data_for_double(double)
       DoubleData.new(
         type: double.original_type,
@@ -54,6 +60,7 @@ module Mocktail
       )
     end
 
+    sig { params(double: Double).returns(DoubleExplanation) }
     def double_explanation(double)
       double_data = data_for_double(double)
 
@@ -67,10 +74,11 @@ module Mocktail
       MSG
     end
 
+    sig { params(type_replacement: TypeReplacement).returns(TypeReplacementData) }
     def data_for_type_replacement(type_replacement)
       TypeReplacementData.new(
         type: type_replacement.type,
-        replaced_method_names: type_replacement.replacement_methods.map(&:name).sort,
+        replaced_method_names: type_replacement.replacement_methods&.map(&:name)&.sort || [],
         calls: Mocktail.cabinet.calls.select { |call|
           call.double == type_replacement.type
         },
@@ -80,6 +88,7 @@ module Mocktail
       )
     end
 
+    sig { params(type_replacement: TypeReplacement).returns(ReplacedTypeExplanation) }
     def replaced_type_explanation(type_replacement)
       type_replacement_data = data_for_type_replacement(type_replacement)
 
@@ -93,6 +102,7 @@ module Mocktail
       MSG
     end
 
+    sig { params(double_data: T.any(DoubleData, TypeReplacementData), method: Symbol).returns(String) }
     def describe_dry_method(double_data, method)
       method_name = @stringifies_method_name.stringify(Call.new(
         original_type: double_data.type,
@@ -118,6 +128,7 @@ module Mocktail
       ].join("\n")
     end
 
+    sig { params(thing: Object).returns(NoExplanation) }
     def no_explanation(thing)
       NoExplanation.new(NoExplanationData.new(thing: thing),
         "Unfortunately, Mocktail doesn't know what this thing is: #{thing.inspect}")

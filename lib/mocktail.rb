@@ -91,8 +91,7 @@ module Mocktail
   end
 
   sig {
-    type_parameters(:T)
-      .params(thing: T.type_parameter(:T))
+    params(thing: Object)
       .returns(Explanation)
   }
   def self.explain(thing)
@@ -108,7 +107,7 @@ module Mocktail
   # Takes an optional second parameter of the method name to filter only
   # calls to that method
   sig {
-    params(double: T.anything, method_name: T.nilable(T.any(String, Symbol)))
+    params(double: Object, method_name: T.nilable(T.any(String, Symbol)))
       .returns(T::Array[Mocktail::Call])
   }
   def self.calls(double, method_name = nil)

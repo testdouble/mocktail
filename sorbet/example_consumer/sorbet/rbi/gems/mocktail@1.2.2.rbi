@@ -15,17 +15,17 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#121
+    # source://mocktail//lib/mocktail.rb#120
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#114
+    # source://mocktail//lib/mocktail.rb#113
     sig do
       params(
-        double: T.anything,
+        double: ::Object,
         method_name: T.nilable(T.any(::String, ::Symbol))
       ).returns(T::Array[::Mocktail::Call])
     end
@@ -35,11 +35,11 @@ module Mocktail
     sig { returns(::Mocktail::Matchers::Captor) }
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#98
-    sig { type_parameters(:T).params(thing: T.type_parameter(:T)).returns(::Mocktail::Explanation) }
+    # source://mocktail//lib/mocktail.rb#97
+    sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#103
+    # source://mocktail//lib/mocktail.rb#102
     sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
@@ -213,7 +213,7 @@ Mocktail::CleansBacktrace::BASE_PATH = T.let(T.unsafe(nil), String)
 # source://mocktail//lib/mocktail/collects_calls.rb#4
 class Mocktail::CollectsCalls
   # source://mocktail//lib/mocktail/collects_calls.rb#8
-  sig { params(double: T.anything, method_name: T.nilable(::Symbol)).returns(T::Array[::Mocktail::Call]) }
+  sig { params(double: ::Object, method_name: T.nilable(::Symbol)).returns(T::Array[::Mocktail::Call]) }
   def collect(double, method_name); end
 end
 
@@ -409,7 +409,7 @@ end
 class Mocktail::Double < ::T::Struct
   const :original_type, T.any(::Module, T::Class[T.anything])
   const :dry_type, T::Class[T.anything]
-  const :dry_instance, ::BasicObject
+  const :dry_instance, ::Object
   const :dry_methods, T::Array[::Symbol]
 
   class << self
@@ -423,7 +423,7 @@ class Mocktail::DoubleData < ::T::Struct
   include ::Mocktail::ExplanationData
 
   const :type, T.any(::Module, T::Class[T.anything])
-  const :double, T.anything
+  const :double, ::Object
   const :calls, T::Array[::Mocktail::Call]
   const :stubbings, T::Array[Mocktail::Stubbing[T.untyped]]
 
@@ -456,46 +456,58 @@ class Mocktail::Error < ::StandardError; end
 
 # source://mocktail//lib/mocktail/explains_nils.rb#7
 class Mocktail::ExplainsNils
-  # @return [ExplainsNils] a new instance of ExplainsNils
-  #
-  # source://mocktail//lib/mocktail/explains_nils.rb#8
+  # source://mocktail//lib/mocktail/explains_nils.rb#11
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/explains_nils.rb#13
+  # source://mocktail//lib/mocktail/explains_nils.rb#17
+  sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
   def explain; end
 end
 
 # source://mocktail//lib/mocktail/explains_thing.rb#7
 class Mocktail::ExplainsThing
-  # @return [ExplainsThing] a new instance of ExplainsThing
-  #
-  # source://mocktail//lib/mocktail/explains_thing.rb#8
+  # source://mocktail//lib/mocktail/explains_thing.rb#11
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#13
+  # source://mocktail//lib/mocktail/explains_thing.rb#17
+  sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
   def explain(thing); end
 
   private
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#48
+  # source://mocktail//lib/mocktail/explains_thing.rb#54
+  sig { params(double: ::Mocktail::Double).returns(::Mocktail::DoubleData) }
   def data_for_double(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#70
+  # source://mocktail//lib/mocktail/explains_thing.rb#78
+  sig { params(type_replacement: ::Mocktail::TypeReplacement).returns(::Mocktail::TypeReplacementData) }
   def data_for_type_replacement(type_replacement); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#96
+  # source://mocktail//lib/mocktail/explains_thing.rb#106
+  sig do
+    params(
+      double_data: T.any(::Mocktail::DoubleData, ::Mocktail::TypeReplacementData),
+      method: ::Symbol
+    ).returns(::String)
+  end
   def describe_dry_method(double_data, method); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#57
+  # source://mocktail//lib/mocktail/explains_thing.rb#64
+  sig { params(double: ::Mocktail::Double).returns(::Mocktail::DoubleExplanation) }
   def double_explanation(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#28
+  # source://mocktail//lib/mocktail/explains_thing.rb#33
+  sig { params(thing: ::Object).returns(T.nilable(::Mocktail::FakeMethodExplanation)) }
   def fake_method_explanation_for(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#121
+  # source://mocktail//lib/mocktail/explains_thing.rb#132
+  sig { params(thing: ::Object).returns(::Mocktail::NoExplanation) }
   def no_explanation(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#83
+  # source://mocktail//lib/mocktail/explains_thing.rb#92
+  sig { params(type_replacement: ::Mocktail::TypeReplacement).returns(::Mocktail::ReplacedTypeExplanation) }
   def replaced_type_explanation(type_replacement); end
 end
 

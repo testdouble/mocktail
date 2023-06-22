@@ -1,15 +1,19 @@
-# typed: true
+# typed: strict
 
 require_relative "share/stringifies_method_name"
 require_relative "share/stringifies_call"
 
 module Mocktail
   class ExplainsNils
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @stringifies_method_name = StringifiesMethodName.new
-      @stringifies_call = StringifiesCall.new
+      @stringifies_method_name = T.let(StringifiesMethodName.new, StringifiesMethodName)
+      @stringifies_call = T.let(StringifiesCall.new, StringifiesCall)
     end
 
+    sig { returns(T::Array[UnsatisfyingCallExplanation]) }
     def explain
       Mocktail.cabinet.unsatisfying_calls.map { |unsatisfying_call|
         dry_call = unsatisfying_call.call

@@ -16,12 +16,12 @@ module Mocktail::Matchers
 
     sig { returns(Symbol) }
     def self.matcher_name
-      raise Mocktail::Error.new("The `matcher_name` class method must return a valid method name")
+      raise Mocktail::InvalidMatcherError.new("The `matcher_name` class method must return a valid method name")
     end
 
     sig { params(actual: T.untyped).returns(T::Boolean) }
     def match?(actual)
-      raise Mocktail::Error.new("Matchers must implement `match?(argument)`")
+      raise Mocktail::InvalidMatcherError.new("Matchers must implement `match?(argument)`")
     end
 
     sig { returns(String) }

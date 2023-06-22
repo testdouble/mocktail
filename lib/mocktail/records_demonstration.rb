@@ -1,7 +1,10 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class RecordsDemonstration
+    extend T::Sig
+
+    sig { params(demonstration: Proc, demo_config: DemoConfig).returns(T.anything) }
     def record(demonstration, demo_config)
       cabinet = Mocktail.cabinet
       prior_call_count = Mocktail.cabinet.calls.dup.size

@@ -1,11 +1,15 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class RegistersMatcher
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
+      @grabs_original_method_parameters = T.let(GrabsOriginalMethodParameters.new, GrabsOriginalMethodParameters)
     end
 
+    sig { params(matcher_type: T.class_of(Matchers::Base)).void }
     def register(matcher_type)
       if invalid_type?(matcher_type)
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")
@@ -30,25 +34,28 @@ module Mocktail
 
     private
 
+    sig { params(matcher_type: T.class_of(Matchers::Base)).returns(T::Boolean) }
     def invalid_type?(matcher_type)
       !matcher_type.is_a?(Class)
     end
 
+    sig { params(matcher_type: T.class_of(Matchers::Base)).returns(T::Boolean) }
     def invalid_name?(matcher_type)
       return true unless matcher_type.respond_to?(:matcher_name)
       name = matcher_type.matcher_name
 
-      !(name.is_a?(String) || name.is_a?(Symbol)) ||
-        name.to_sym.inspect.start_with?(":\"")
+      !name.respond_to?(:to_sym) || name.to_sym.inspect.start_with?(":\"")
     end
 
+    sig { params(matcher_type: T.class_of(Matchers::Base)).returns(T::Boolean) }
     def invalid_match?(matcher_type)
       params = @grabs_original_method_parameters.grab(matcher_type.instance_method(:match?))
-      params.size > 1 || ![:req, :opt].include?(params.first[0])
+      params.size > 1 || ![:req, :opt].include?(T.unsafe(params.first)[0])
     rescue NameError
       true
     end
 
+    sig { params(matcher_type: T.class_of(Matchers::Base)).returns(T::Boolean) }
     def invalid_flag?(matcher_type)
       !matcher_type.instance_method(:is_mocktail_matcher?)
     rescue NameError

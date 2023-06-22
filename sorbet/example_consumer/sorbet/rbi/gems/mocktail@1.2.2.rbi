@@ -844,14 +844,14 @@ class Mocktail::Matchers::Base
   sig { returns(::TrueClass) }
   def is_mocktail_matcher?; end
 
-  # @raise [Mocktail::Error]
+  # @raise [Mocktail::InvalidMatcherError]
   #
   # source://mocktail//lib/mocktail/matchers/base.rb#23
   sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
-    # @raise [Mocktail::Error]
+    # @raise [Mocktail::InvalidMatcherError]
     #
     # source://mocktail//lib/mocktail/matchers/base.rb#18
     sig { returns(::Symbol) }
@@ -1257,7 +1257,8 @@ end
 
 # source://mocktail//lib/mocktail/records_demonstration.rb#4
 class Mocktail::RecordsDemonstration
-  # source://mocktail//lib/mocktail/records_demonstration.rb#5
+  # source://mocktail//lib/mocktail/records_demonstration.rb#8
+  sig { params(demonstration: ::Proc, demo_config: ::Mocktail::DemoConfig).returns(T.anything) }
   def record(demonstration, demo_config); end
 end
 
@@ -1296,34 +1297,30 @@ end
 
 # source://mocktail//lib/mocktail/registers_matcher.rb#4
 class Mocktail::RegistersMatcher
-  # @return [RegistersMatcher] a new instance of RegistersMatcher
-  #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#5
+  # source://mocktail//lib/mocktail/registers_matcher.rb#8
+  sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#9
+  # source://mocktail//lib/mocktail/registers_matcher.rb#13
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).void }
   def register(matcher_type); end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#52
+  # source://mocktail//lib/mocktail/registers_matcher.rb#59
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
   def invalid_flag?(matcher_type); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#45
+  # source://mocktail//lib/mocktail/registers_matcher.rb#51
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
   def invalid_match?(matcher_type); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#37
+  # source://mocktail//lib/mocktail/registers_matcher.rb#43
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
   def invalid_name?(matcher_type); end
 
-  # @return [Boolean]
-  #
-  # source://mocktail//lib/mocktail/registers_matcher.rb#33
+  # source://mocktail//lib/mocktail/registers_matcher.rb#38
+  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
   def invalid_type?(matcher_type); end
 end
 

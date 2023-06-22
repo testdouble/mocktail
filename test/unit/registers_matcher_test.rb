@@ -44,7 +44,11 @@ class RegistersMatcherTest < Minitest::Test
     assert_equal "m.is_pants(\"trousers\")", not_matching_pants.inspect
   end
 
-  class MissingNameMatcher
+  class MissingNameMatcher < Mocktail::Matchers::Base
+    class << self
+      undef_method(:matcher_name)
+    end
+
     def match?
       false
     end
@@ -54,7 +58,7 @@ class RegistersMatcherTest < Minitest::Test
     end
   end
 
-  class InvalidNameMatcher
+  class InvalidNameMatcher < Mocktail::Matchers::Base
     def self.matcher_name
       "42"
     end
@@ -79,17 +83,19 @@ class RegistersMatcherTest < Minitest::Test
     end
   end
 
-  class NoMatchMatcher
+  class NoMatchMatcher < Mocktail::Matchers::Base
     def self.matcher_name
       :no_match
     end
+
+    undef_method :match?
 
     def is_mocktail_matcher?
       true
     end
   end
 
-  class BadMatchMatcher
+  class BadMatchMatcher < Mocktail::Matchers::Base
     def self.matcher_name
       :bad_match
     end
@@ -128,15 +134,19 @@ class RegistersMatcherTest < Minitest::Test
   end
 
   def test_blows_up_when_not_a_class
+    skip unless runtime_type_checking_disabled?
+
     e = assert_raises(Mocktail::InvalidMatcherError) do
-      @subject.register(Lol)
+      T.unsafe(@subject).register(Lol)
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
       Matchers must be Ruby classes
     MSG
   end
 
-  class MissingFlagMatcher
+  class MissingFlagMatcher < Mocktail::Matchers::Base
+    undef_method(:is_mocktail_matcher?)
+
     def self.matcher_name
       :missing_flag
     end

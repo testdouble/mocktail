@@ -212,7 +212,8 @@ Mocktail::CleansBacktrace::BASE_PATH = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/collects_calls.rb#4
 class Mocktail::CollectsCalls
-  # source://mocktail//lib/mocktail/collects_calls.rb#5
+  # source://mocktail//lib/mocktail/collects_calls.rb#8
+  sig { params(double: T.anything, method_name: T.nilable(::Symbol)).returns(T::Array[::Mocktail::Call]) }
   def collect(double, method_name); end
 end
 
@@ -276,7 +277,8 @@ module Mocktail::Debug
     # MockingMethodfulClassesTest, because it mocks every defined method on the
     # mocked BasicObject
     #
-    # source://mocktail//lib/mocktail/debug.rb#17
+    # source://mocktail//lib/mocktail/debug.rb#20
+    sig { void }
     def guard_against_mocktail_accidentally_calling_mocks_if_debugging!; end
   end
 end

@@ -112,7 +112,7 @@ module Mocktail
       .returns(T::Array[Mocktail::Call])
   }
   def self.calls(double, method_name = nil)
-    CollectsCalls.new.collect(double, method_name)
+    CollectsCalls.new.collect(double, method_name&.to_sym)
   end
 
   # Stores most transactional state about calls & stubbing configurations

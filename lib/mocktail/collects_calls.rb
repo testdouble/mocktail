@@ -1,7 +1,10 @@
-# typed: true
+# typed: strict
 
 module Mocktail
   class CollectsCalls
+    extend T::Sig
+
+    sig { params(double: T.anything, method_name: T.nilable(Symbol)).returns(T::Array[Call]) }
     def collect(double, method_name)
       calls = ExplainsThing.new.explain(double).reference.calls
 

@@ -528,9 +528,9 @@ class StubTest < Minitest::Test
     checkable = Mocktail.of(Checkable)
     validates_thing = ValidatesThing.new(checkable)
 
-    stubs { checkable.check { |blk| blk.call == true } }.with { :valid }
+    stubs { T.unsafe(checkable).check { |blk| blk.call == true } }.with { :valid }
 
-    stubs { checkable.check { |blk| blk.call != true } }.with { :invalid }
+    stubs { T.unsafe(checkable).check { |blk| blk.call != true } }.with { :invalid }
 
     assert_equal validates_thing.validate({email: "foo@bar"}), :valid
     assert_equal validates_thing.validate({email: "foobar"}), :invalid
@@ -554,11 +554,11 @@ class StubTest < Minitest::Test
 
     stubs { T.unsafe(thing).positional(:a, :d, :e) }.with { :weird }
     stubs { T.unsafe(thing).positional(:a, :b, :d, :e) }.with { :less_weird }
-    stubs { thing.positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
+    stubs { T.unsafe(thing).positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
 
     assert_equal :weird, T.unsafe(thing).positional(:a, :d, :e)
     assert_equal :less_weird, T.unsafe(thing).positional(:a, :b, :d, :e)
-    assert_equal :even_less_weird, thing.positional(:a, :b, :c, :d, :e)
+    assert_equal :even_less_weird, T.unsafe(thing).positional(:a, :b, :c, :d, :e)
 
     assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0]&.args
     assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1]&.args

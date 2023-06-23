@@ -19,6 +19,9 @@ module T
         end
       end
 
+      module MethodHooks
+      end
+
       module SingletonMethodHooks
       end
     end

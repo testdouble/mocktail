@@ -93,11 +93,11 @@ class CallCountTest < Minitest::Test
     }
     refute og_methods.any? { |method|
       method.name == :method_added &&
-        method.owner == T::Private::Methods::SingletonMethodHooks
+        method.owner == T::Private::Methods::MethodHooks
     }
     refute og_methods.any? { |method|
       method.name == :sig &&
-        method.owner == T::Private::Methods::SingletonMethodHooks
+        method.owner == T::Sig
     }
   end
 end

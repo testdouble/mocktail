@@ -1790,6 +1790,8 @@ end
 module T
   module Private
     module Methods
+      module MethodHooks; end
+
       class Signature
         sig { returns(T::Array[T::Array[Symbol]]) }
         def parameters; end

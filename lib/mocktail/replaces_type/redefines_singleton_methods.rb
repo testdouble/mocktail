@@ -70,7 +70,11 @@ module Mocktail
 
     sig { params(method: Method).returns(T::Boolean) }
     def sorbet_method_hook?(method)
-      method.owner == T::Private::Methods::SingletonMethodHooks
+      [
+        T::Sig,
+        T::Private::Methods::MethodHooks,
+        T::Private::Methods::SingletonMethodHooks
+      ].include?(method.owner)
     end
   end
 end

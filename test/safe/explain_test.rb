@@ -1,19 +1,25 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class ExplainTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class Thing
+    extend T::Sig
+
+    sig { params(arg: T.untyped).returns(T.untyped) }
     def do(arg = nil)
     end
 
+    sig { returns(T.untyped) }
     def dont_do
       raise "don't!"
     end
   end
 
+  sig { void }
   def test_explain_stub_returned_nil
     thing = Mocktail.of(Thing)
     thing.do
@@ -35,7 +41,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:19:in `test_explain_stub_returned_nil'
+        #{__FILE__}:25:in `test_explain_stub_returned_nil'
 
       No stubbings were configured on this method.
 
@@ -43,6 +49,7 @@ class ExplainTest < Minitest::Test
     T.assert_type!(explanation.reference, Mocktail::UnsatisfyingCall)
   end
 
+  sig { void }
   def test_explain_stub_returned_nil_with_stubbings
     thing = Mocktail.of(Thing)
     stubs { thing.do("pants") }.with { :ok }
@@ -68,7 +75,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:49:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:56:in `test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 
@@ -77,6 +84,7 @@ class ExplainTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_explain_nil
     a_nil = Thing.new.do
 
@@ -99,6 +107,7 @@ class ExplainTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_other_unknowns
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain(Thing)
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain(Thing.new)
@@ -106,6 +115,7 @@ class ExplainTest < Minitest::Test
     assert_kind_of Mocktail::NoExplanation, Mocktail.explain("hi")
   end
 
+  sig { void }
   def test_explain_double_instance
     thing = Mocktail.of(Thing)
     stubs { thing.do(42) }.with { :correct }
@@ -144,13 +154,18 @@ class ExplainTest < Minitest::Test
   end
 
   module Training
+    extend T::Sig
+
+    sig { params(people: T.untyped).returns(T.untyped) }
     def self.teach(people)
     end
 
+    sig { params(thing: T.untyped).returns(T.untyped) }
     def self.learn!(thing)
     end
   end
 
+  sig { void }
   def test_explain_class_mocks
     Mocktail.replace(Training)
     stubs { Training.teach(:jerry) }.with { "🐾" }
@@ -188,6 +203,7 @@ class ExplainTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_explain_method_calls_on_instance
     thing = Mocktail.of(Thing)
     thing.do
@@ -211,6 +227,7 @@ class ExplainTest < Minitest::Test
     end
   end
 
+  sig { void }
   def test_explain_method_calls_on_singleton
     Mocktail.replace(Training)
     stubs { Training.teach(:jerry) }.with { "🐾" }

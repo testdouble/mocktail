@@ -1,10 +1,13 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 require "bigdecimal"
 
 module Mocktail::Matchers
   class NumericTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
     def test_numeric_types
       subject = Numeric.new
 

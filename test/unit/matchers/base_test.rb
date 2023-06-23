@@ -1,9 +1,12 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 module Mocktail::Matchers
   class BaseTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
     def test_default_method_stubs
       skip unless runtime_type_checking_disabled?
 

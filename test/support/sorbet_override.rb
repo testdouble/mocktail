@@ -1,3 +1,5 @@
+# typed: strict
+
 # Override Sorbet's runtime checks inside a given block's execution to allow
 # testing of, among other things, Mocktail's own runtime type checks.
 # See doc: https://sorbet.org/docs/tconfiguration
@@ -13,6 +15,8 @@
 #   # …
 # end
 module SorbetOverride
+  extend T::Sig
+
   class RuntimeCheckConfig < T::Struct
     prop :inline_type, T::Boolean, default: true
     prop :call_validation, T::Boolean, default: true
@@ -20,6 +24,7 @@ module SorbetOverride
   end
   RUNTIME_CHECK_CONFIG = RuntimeCheckConfig.new
 
+  sig { params(blk: T.proc.returns(T.untyped)).returns(T.untyped) }
   def self.disable_inline_type_checks(&blk)
     RUNTIME_CHECK_CONFIG.inline_type = false
     ret = blk.call
@@ -27,6 +32,7 @@ module SorbetOverride
     ret
   end
 
+  sig { params(blk: T.proc.returns(T.untyped)).returns(T.untyped) }
   def self.disable_call_validation_checks(&blk)
     RUNTIME_CHECK_CONFIG.call_validation = false
     ret = blk.call
@@ -34,6 +40,7 @@ module SorbetOverride
     ret
   end
 
+  sig { params(blk: T.proc.returns(T.untyped)).returns(T.untyped) }
   def self.disable_sig_builder_checks(&blk)
     RUNTIME_CHECK_CONFIG.sig_builder = false
     ret = blk.call

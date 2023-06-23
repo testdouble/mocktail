@@ -12,11 +12,64 @@ module Mocktail
 
     class Fib
       def lie(truth, lies:)
+        :bald_faced
       end
     end
 
+    module Curse
+      def swear(words)
+        :dirty_rotten
+      end
+    end
+
+    def test_declares_dry_class_from_module
+      fake_curse_class = @subject.declare_from_module(Curse, [:swear])
+      fake_curse = fake_curse_class.new
+
+      assert_nil fake_curse.swear(%w[bad words])
+      e = assert_raises(NoMethodError) { fake_curse.clean_it_up! }
+      assert_equal <<~MSG, e.message
+        No method `Mocktail::DeclaresDryClassTest::Curse#clean_it_up!' exists for call:
+
+          clean_it_up!()
+
+        Need to define the method? Here's a sample definition:
+
+          def clean_it_up!
+          end
+
+      MSG
+      assert fake_curse.is_a?(Curse)
+      assert fake_curse.kind_of?(Curse) # standard:disable Style/ClassCheck
+      assert_match(/#<Mocktail of Mocktail::DeclaresDryClassTest::Curse:0x/, fake_curse.to_s)
+      assert_match(/#<Mocktail of Mocktail::DeclaresDryClassTest::Curse:0x/, fake_curse.inspect)
+    end
+
+    def test_declares_dry_class_from_class
+      fake_fib_class = @subject.declare_from_class(Fib, [:lie])
+      fake_fib = fake_fib_class.new
+
+      assert_nil fake_fib.lie("truth", lies: "lies")
+      e = assert_raises(NoMethodError) { fake_fib.be_honest }
+      assert_equal <<~MSG, e.message
+        No method `Mocktail::DeclaresDryClassTest::Fib#be_honest' exists for call:
+
+          be_honest()
+
+        Need to define the method? Here's a sample definition:
+
+          def be_honest
+          end
+
+      MSG
+      assert fake_fib.is_a?(Fib)
+      assert fake_fib.kind_of?(Fib) # standard:disable Style/ClassCheck
+      assert_match(/#<Mocktail of Mocktail::DeclaresDryClassTest::Fib:0x/, fake_fib.to_s)
+      assert_match(/#<Mocktail of Mocktail::DeclaresDryClassTest::Fib:0x/, fake_fib.inspect)
+    end
+
     def test_calls_handle_dry_call_with_what_we_want
-      fake_fib_class = @subject.declare(Fib, [:lie])
+      fake_fib_class = @subject.declare_from_class(Fib, [:lie])
       fake_fib = fake_fib_class.new
       handles_dry_call = Mocktail.of_next(HandlesDryCall)
 
@@ -43,7 +96,7 @@ module Mocktail
     end
 
     def test_handles_args_with_unfortunate_names
-      fake_class = @subject.declare(ExtremelyUnfortunateArgNames, [:welp])
+      fake_class = @subject.declare_from_class(ExtremelyUnfortunateArgNames, [:welp])
       fake = fake_class.new
       handles_dry_call = Mocktail.of_next(HandlesDryCall)
 

@@ -16,11 +16,12 @@ module Mocktail
       @grabs_original_method_parameters = T.let(GrabsOriginalMethodParameters.new, GrabsOriginalMethodParameters)
     end
 
-    sig { params(type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).returns(T::Class[Object]) }
-    def declare(type, instance_methods)
+    sig {
+      type_parameters(:T)
+        .params(type: T.all(T.type_parameter(:T), T::Class[T.anything]), instance_methods: T::Array[Symbol]).returns(T.type_parameter(:T))
+    }
+    def declare_from_class(type, instance_methods)
       dry_class = Class.new(Object) {
-        include type if type.instance_of?(Module)
-
         define_method :initialize do |*args, **kwargs, &blk|
         end
 
@@ -31,26 +32,53 @@ module Mocktail
           }
         end
 
-        if type.instance_of?(Class)
-          define_method :instance_of?, ->(thing) {
-            type == thing
+        define_method :instance_of?, ->(thing) {
+          type == thing
+        }
+      }
+
+      add_more_methods!(dry_class, type, instance_methods)
+
+      T.unsafe(dry_class) # This is all fake! That's the whole point—it's not a real Foo, it's just some new class that quacks like a Foo
+    end
+
+    sig {
+      type_parameters(:T)
+        .params(type: T.all(T.type_parameter(:T), Module), instance_methods: T::Array[Symbol]).returns(T::Class[T.type_parameter(:T)])
+    }
+    def declare_from_module(type, instance_methods)
+      dry_class = Class.new(Object) {
+        include type
+
+        define_method :initialize do |*args, **kwargs, &blk|
+        end
+
+        [:is_a?, :kind_of?].each do |method_name|
+          define_method method_name, ->(thing) {
+            # Mocktails extend from Object, so share the same ancestors, plus the passed type
+            [type, *DEFAULT_ANCESTORS].include?(thing)
           }
         end
       }
 
-      # These have special implementations, but if the user defines
-      # any of them on the object itself, then they'll be replaced with normal
-      # mocked methods. YMMV
+      add_more_methods!(dry_class, type, instance_methods)
+
+      T.unsafe(dry_class) # Sorbet apparently can't see the dynamic include of the module and types this as T::Class[Object]
+    end
+
+    private
+
+    # These have special implementations, but if the user defines
+    # any of them on the object itself, then they'll be replaced with normal
+    # mocked methods. YMMV
+    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
+    def add_more_methods!(dry_class, type, instance_methods)
       add_stringify_methods!(dry_class, :to_s, type, instance_methods)
       add_stringify_methods!(dry_class, :inspect, type, instance_methods)
       define_method_missing_errors!(dry_class, type, instance_methods)
 
       define_double_methods!(dry_class, type, instance_methods)
-
-      dry_class
     end
-
-    private
 
     sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def define_double_methods!(dry_class, type, instance_methods)

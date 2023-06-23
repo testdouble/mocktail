@@ -290,18 +290,43 @@ class Mocktail::DeclaresDryClass
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#20
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#23
   sig do
-    params(
-      type: T.any(::Module, T::Class[T.anything]),
-      instance_methods: T::Array[::Symbol]
-    ).returns(T::Class[::Object])
+    type_parameters(:T)
+      .params(
+        type: T.all(T.type_parameter(:T), T::Class[T.anything]),
+        instance_methods: T::Array[::Symbol]
+      ).returns(T.type_parameter(:T))
   end
-  def declare(type, instance_methods); end
+  def declare_from_class(type, instance_methods); end
+
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#49
+  sig do
+    type_parameters(:T)
+      .params(
+        type: T.all(::Module, T.type_parameter(:T)),
+        instance_methods: T::Array[::Symbol]
+      ).returns(T::Class[T.type_parameter(:T)])
+  end
+  def declare_from_module(type, instance_methods); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#86
+  # These have special implementations, but if the user defines
+  # any of them on the object itself, then they'll be replaced with normal
+  # mocked methods. YMMV
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#75
+  sig do
+    params(
+      dry_class: T::Class[::Object],
+      type: T.any(::Module, T::Class[T.anything]),
+      instance_methods: T::Array[::Symbol]
+    ).void
+  end
+  def add_more_methods!(dry_class, type, instance_methods); end
+
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#114
   sig do
     params(
       dry_class: T::Class[::Object],
@@ -312,7 +337,7 @@ class Mocktail::DeclaresDryClass
   end
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#56
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#84
   sig do
     params(
       dry_class: T::Class[::Object],
@@ -322,7 +347,7 @@ class Mocktail::DeclaresDryClass
   end
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#107
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#135
   sig do
     params(
       dry_class: T::Class[::Object],

@@ -18,6 +18,9 @@ module T
         def parameters
         end
       end
+
+      module SingletonMethodHooks
+      end
     end
   end
 end

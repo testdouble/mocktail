@@ -1303,6 +1303,12 @@ class Mocktail::RedefinesSingletonMethods
   # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#13
   sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def redefine(type); end
+
+  private
+
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#72
+  sig { params(method: ::Method).returns(T::Boolean) }
+  def sorbet_method_hook?(method); end
 end
 
 # source://mocktail//lib/mocktail/registers_matcher.rb#4
@@ -1788,6 +1794,8 @@ module T
         sig { returns(T::Array[T::Array[Symbol]]) }
         def parameters; end
       end
+
+      module SingletonMethodHooks; end
     end
 
     module RuntimeLevels

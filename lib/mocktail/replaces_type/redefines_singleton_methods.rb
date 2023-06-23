@@ -16,7 +16,7 @@ module Mocktail
 
       type_replacement.original_methods = type.singleton_methods.map { |name|
         type.method(name)
-      } - [type_replacement.replacement_new]
+      }.reject { |method| sorbet_method_hook?(method) } - [type_replacement.replacement_new]
 
       declare_singleton_method_missing_errors!(type)
       handles_dry_call = @handles_dry_call
@@ -64,6 +64,13 @@ module Mocktail
             )
           )
         }
+    end
+
+    private
+
+    sig { params(method: Method).returns(T::Boolean) }
+    def sorbet_method_hook?(method)
+      method.owner == T::Private::Methods::SingletonMethodHooks
     end
   end
 end

@@ -13,15 +13,10 @@ module Mocktail
       @gathers_fakeable_instance_methods = T.let(GathersFakeableInstanceMethods.new, GathersFakeableInstanceMethods)
     end
 
-    sig { params(type: T.any(T::Class[T.anything], Module)).returns(Double) }
+    sig { params(type: T::Class[T.anything]).returns(Double) }
     def make(type)
       dry_methods = @gathers_fakeable_instance_methods.gather(type)
-      dry_type = case type
-      when Class
-        @declares_dry_class.declare_from_class(type, dry_methods)
-      when Module
-        @declares_dry_class.declare_from_module(type, dry_methods)
-      end
+      dry_type = @declares_dry_class.declare(type, dry_methods)
 
       Double.new(
         original_type: type,

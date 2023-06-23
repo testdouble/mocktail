@@ -64,11 +64,15 @@ class OfTest < Minitest::Test
   end
 
   sig { void }
-  def test_module
-    not_a_class = SorbetOverride.disable_call_validation_checks do
-      # This SEEMS not expressable in Sorbet
-      # See: https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686331001121759
+  def test_module_without_typechecking
+    not_a_class = if runtime_type_checking_disabled?
       T.unsafe(Mocktail).of(NotAClass)
+    else
+      SorbetOverride.disable_call_validation_checks do
+        # This SEEMS not expressable in Sorbet
+        # See: https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686331001121759
+        T.unsafe(Mocktail).of(NotAClass)
+      end
     end
 
     assert_match(/^#<Mocktail of OfTest::NotAClass:0x[0-9a-f]+>$/, not_a_class.inspect)

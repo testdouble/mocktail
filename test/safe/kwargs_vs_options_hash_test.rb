@@ -1,20 +1,26 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class KwargsVsOptionsHashTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class Charity
+    extend T::Sig
+
+    sig { params(amount: T.untyped).returns(T.untyped) }
     def donate(amount:)
       raise "Unimplemented"
     end
 
+    sig { params(opts: T.untyped).returns(T.untyped) }
     def give(opts)
       raise "Unimplemented"
     end
   end
 
+  sig { void }
   def test_handles_kwargs
     aclu = Mocktail.of(Charity)
 
@@ -24,6 +30,7 @@ class KwargsVsOptionsHashTest < Minitest::Test
     assert_nil aclu.donate(amount: "money?")
   end
 
+  sig { void }
   def test_handles_options_hashes
     wbc = Mocktail.of(Charity)
 

@@ -1,26 +1,35 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class OfNextTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
+  sig { void }
   def teardown
     Mocktail.reset
   end
 
   class Neato
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def is_neato?
       true
     end
   end
 
   class Argz
+    extend T::Sig
+
+    sig { params(a: T.untyped, b: T.untyped).void }
     def initialize(a, b:)
       raise "args required!"
     end
   end
 
+  sig { void }
   def test_of_next
     neato_mocktail = Mocktail.of_next(Neato)
     next_neato = Neato.new
@@ -32,6 +41,7 @@ class OfNextTest < Minitest::Test
     assert_equal Neato, third_neato.class
   end
 
+  sig { void }
   def test_of_next_multiples_then_returns_to_normal
     skip unless runtime_type_checking_disabled?
 
@@ -46,6 +56,7 @@ class OfNextTest < Minitest::Test
     assert_equal "args required!", e.message
   end
 
+  sig { void }
   def test_of_next_multiples_with_alias_method
     two_things = Mocktail.of_next_with_count(Argz, 2)
 
@@ -55,6 +66,7 @@ class OfNextTest < Minitest::Test
     assert_equal "args required!", e.message
   end
 
+  sig { void }
   def test_of_single_with_array_typed_alias_method
     one_things = Mocktail.of_next_with_count(Argz, 1)
 
@@ -64,6 +76,7 @@ class OfNextTest < Minitest::Test
     assert_equal "args required!", e.message
   end
 
+  sig { void }
   def test_of_next_multiples_then_returns_to_replaced_version_when_runtime_is_disabled
     skip unless runtime_type_checking_disabled?
 
@@ -77,6 +90,7 @@ class OfNextTest < Minitest::Test
     assert Neato.new.to_s.include?("Mocktail")
   end
 
+  sig { void }
   def test_of_next_multiples_raises_error_when_runtime_is_enabled
     skip if runtime_type_checking_disabled?
 
@@ -100,6 +114,7 @@ class OfNextTest < Minitest::Test
   module AModule
   end
 
+  sig { void }
   def test_not_a_class
     e = SorbetOverride.disable_call_validation_checks do
       assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).of_next(AModule) }
@@ -109,6 +124,7 @@ class OfNextTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_multiple_threads
     [
       thread do

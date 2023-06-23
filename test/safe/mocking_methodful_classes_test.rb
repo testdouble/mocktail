@@ -1,19 +1,25 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class MockingMethodfulClassesTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class OverridesEquals
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def normal_method
     end
 
+    sig { params(other: T.untyped).returns(T.untyped) }
     def ==(other)
       super
     end
   end
 
+  sig { void }
   def test_overriding_equals
     overrides_equals = Mocktail.of(OverridesEquals)
 
@@ -24,6 +30,8 @@ class MockingMethodfulClassesTest < Minitest::Test
   end
 
   class OverridesEverything
+    extend T::Sig
+
     # puts instance_methods.map { |m| ":#{m}," }.join("\n")
     (instance_methods - [:__send__, :object_id, :nil?, :is_a?]).each do |method|
       define_method method, ->(*args, **kwargs, &block) {
@@ -31,10 +39,12 @@ class MockingMethodfulClassesTest < Minitest::Test
       }
     end
 
+    sig { params(arg: T.untyped).returns(T.untyped) }
     def normal_method(arg = nil)
     end
   end
 
+  sig { void }
   def test_overriding_everything
     overrides_everything = Mocktail.of(OverridesEverything)
     overrides_everything.normal_method
@@ -56,6 +66,7 @@ class MockingMethodfulClassesTest < Minitest::Test
     assert_equal stubbings[2]&.satisfaction_count, 1
   end
 
+  sig { void }
   def test_passing_mocks_and_comparing_them
     mock_1 = Mocktail.of(OverridesEverything)
     mock_2 = Mocktail.of(OverridesEverything)
@@ -66,11 +77,15 @@ class MockingMethodfulClassesTest < Minitest::Test
   end
 
   class OverridesNil
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def nil?
       false
     end
   end
 
+  sig { void }
   def test_overrides_nil?
     skip "Can't quite figure out how to fix this"
     # This fails because when an attribute is set to a T::Struct that overrides

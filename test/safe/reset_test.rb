@@ -1,20 +1,26 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class ResetTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class Emailer
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def self.refresh
       "♻️"
     end
 
+    sig { returns(T.untyped) }
     def email
       "📧"
     end
   end
 
+  sig { void }
   def test_resetting_call_counts
     emailer = Mocktail.of(Emailer)
     verify(times: 0) { emailer.email }
@@ -28,6 +34,7 @@ class ResetTest < Minitest::Test
     verify(times: 1) { emailer.email }
   end
 
+  sig { void }
   def test_resetting_stubbings
     emailer = Mocktail.of(Emailer)
     assert_nil emailer.email
@@ -41,6 +48,7 @@ class ResetTest < Minitest::Test
     assert_equal :email, emailer.email
   end
 
+  sig { void }
   def test_resetting_global_replacements
     Mocktail.replace(Emailer)
     assert_nil Emailer.refresh

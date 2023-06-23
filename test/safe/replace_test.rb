@@ -1,38 +1,50 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class ReplaceTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
+  sig { void }
   def teardown
     Mocktail.reset
   end
 
   class Building
+    extend T::Sig
+
+    sig { params(uom: T.untyped).returns(T.untyped) }
     def self.size(uom:)
       raise "Unimplemented"
     end
   end
 
   class House < Building
+    extend T::Sig
+
+    sig { params(room_name: T.untyped).returns(T.untyped) }
     def self.room(room_name)
       raise "Unimplemented"
     end
 
+    sig { params(title: T.untyped, features: T.untyped, tap: T.untyped).returns(T.untyped) }
     def self.summarize(title = nil, features: [], &tap)
       raise "Unimplemented"
     end
 
+    sig { params(location: T.untyped).void }
     def initialize(location)
       raise "Unimplemented"
     end
 
+    sig { returns(T.untyped) }
     def id
       raise "Unimplemented"
     end
   end
 
+  sig { void }
   def test_replace_class
     return_value = Mocktail.replace(House)
 
@@ -92,15 +104,20 @@ class ReplaceTest < Minitest::Test
   end
 
   module Home
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def self.is_cozy?
       raise "Nope"
     end
 
+    sig { params(family: T.untyped).returns(T.untyped) }
     def self.family=(family)
       raise "unimplemented"
     end
   end
 
+  sig { void }
   def test_replace_module
     Mocktail.replace(Home)
 
@@ -111,6 +128,7 @@ class ReplaceTest < Minitest::Test
     verify { |m| Home.family = m.is_a(Array) }
   end
 
+  sig { void }
   def test_multiple_threads
     [
       thread do
@@ -149,6 +167,7 @@ class ReplaceTest < Minitest::Test
     ].flatten.shuffle.each(&:join)
   end
 
+  sig { void }
   def test_not_a_module_or_a_class
     e = SorbetOverride.disable_call_validation_checks do
       assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).replace(42) }

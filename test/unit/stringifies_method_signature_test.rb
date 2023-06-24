@@ -1,19 +1,26 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 module Mocktail
   class StringifiesMethodSignatureTest < Minitest::Test
-    def setup
-      @subject = StringifiesMethodSignature.new
+    extend T::Sig
+
+    sig { params(name: String).void }
+    def initialize(name)
+      super
+
+      @subject = T.let(StringifiesMethodSignature.new, StringifiesMethodSignature)
     end
 
+    sig { void }
     def test_basic_call
       result = @subject.stringify(signature)
 
       assert_equal "(&blk)", result
     end
 
+    sig { void }
     def test_positional_call
       result = @subject.stringify(signature(
         positional_params: Params.new(all: [:a, :b], required: [:a, :b])
@@ -22,6 +29,7 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
+    sig { void }
     def test_optional_positional_call
       result = @subject.stringify(signature(
         positional_params: Params.new(
@@ -34,6 +42,7 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
+    sig { void }
     def test_kwarg_call
       result = @subject.stringify(signature(
         keyword_params: Params.new(
@@ -46,6 +55,7 @@ module Mocktail
       assert_equal "(a: ((__mocktail_default_args ||= {})[:a] = nil), b: ((__mocktail_default_args ||= {})[:b] = nil), &blk)", result
     end
 
+    sig { void }
     def test_block_call
       result = @subject.stringify(signature(
         block_param: :blocky
@@ -54,12 +64,14 @@ module Mocktail
       assert_equal "(&blocky)", result
     end
 
+    sig { void }
     def test_argless_call
       result = @subject.stringify(signature)
 
       assert_equal "(&blk)", result
     end
 
+    sig { void }
     def test_rest_call
       result = @subject.stringify(signature(
         positional_params: Params.new(all: [:args], rest: :args)
@@ -68,6 +80,7 @@ module Mocktail
       assert_equal "(*args, &blk)", result
     end
 
+    sig { void }
     def test_kwrest_call
       result = @subject.stringify(signature(
         keyword_params: Params.new(all: [:kwargs], rest: :kwargs)
@@ -76,6 +89,7 @@ module Mocktail
       assert_equal "(**kwargs, &blk)", result
     end
 
+    sig { void }
     def test_complex_call
       result = @subject.stringify(signature(
         positional_params: Params.new(all: [:a, :b, :args], required: [:a], optional: [:b], rest: :args),
@@ -96,6 +110,7 @@ module Mocktail
       RUBY
     end
 
+    sig { void }
     def test_dotdotdot_call
       skip if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
       signature = TransformsParams.new.transform(
@@ -108,6 +123,7 @@ module Mocktail
       assert_equal "(*args, **kwargs, &blk)", result
     end
 
+    sig { void }
     def test_dotdotdot_with_args_call
       skip if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
       signature = TransformsParams.new.transform(
@@ -120,6 +136,7 @@ module Mocktail
       assert_equal "(a = ((__mocktail_default_args ||= {})[:a] = nil), b = ((__mocktail_default_args ||= {})[:b] = nil), *args, **kwargs, &blk)", result
     end
 
+    sig { params(positional_params: Params, keyword_params: Params, block_param: T.nilable(Symbol)).returns(Signature) }
     def signature(positional_params: Params.new(all: []), keyword_params: Params.new(all: []), block_param: nil)
       Signature.new(
         positional_params: positional_params,

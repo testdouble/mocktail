@@ -100,7 +100,7 @@ class RegistersMatcherTest < Minitest::Test
 
     [MissingNameMatcher, InvalidNameMatcher].each do |matcher_type|
       e = assert_raises(Mocktail::InvalidMatcherError) do
-        @subject.register(matcher_type)
+        @subject.register(T.unsafe(matcher_type))
       end
       assert_equal <<~MSG.tr("\n", " "), e.message
         #{matcher_type.name}.matcher_name must return a valid method name

@@ -1,34 +1,47 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 class RegistersMatcherTest < Minitest::Test
-  def setup
-    @subject = Mocktail::RegistersMatcher.new
+  extend T::Sig
+
+  sig { params(name: String).void }
+  def initialize(name)
+    super
+
+    @subject = T.let(Mocktail::RegistersMatcher.new, Mocktail::RegistersMatcher)
   end
 
   class ValidMatcher < Mocktail::Matchers::Base
+    extend T::Sig
+
+    sig { params(expected: T.untyped).void }
     def initialize(expected)
       @expected = expected
     end
 
+    sig { returns(Symbol) }
     def self.matcher_name
       :is_pants
     end
 
+    sig { params(actual: T.untyped).returns(T::Boolean) }
     def match?(actual)
       @expected == actual
     end
 
+    sig { returns(String) }
     def inspect
       "m.is_pants(#{T.cast(@expected, Object).inspect})"
     end
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
+  sig { void }
   def test_works_fine_if_the_matcher_is_legit
     @subject.register(ValidMatcher)
 
@@ -45,34 +58,46 @@ class RegistersMatcherTest < Minitest::Test
   end
 
   class MissingNameMatcher < Mocktail::Matchers::Base
+    extend T::Sig
+
     class << self
       undef_method(:matcher_name)
     end
 
+    sig { returns(T::Boolean) }
     def match?
       false
     end
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
-  class InvalidNameMatcher < Mocktail::Matchers::Base
+  class InvalidNameMatcher
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def self.matcher_name
       "42"
     end
 
+    sig { returns(T::Boolean) }
     def match?
       false
     end
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
+  sig { void }
   def test_blows_up_when_misnamed
+    skip unless runtime_type_checking_disabled?
+
     [MissingNameMatcher, InvalidNameMatcher].each do |matcher_type|
       e = assert_raises(Mocktail::InvalidMatcherError) do
         @subject.register(matcher_type)
@@ -84,34 +109,46 @@ class RegistersMatcherTest < Minitest::Test
   end
 
   class NoMatchMatcher < Mocktail::Matchers::Base
+    extend T::Sig
+
+    sig { returns(Symbol) }
     def self.matcher_name
       :no_match
     end
 
     undef_method :match?
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
-  class BadMatchMatcher < Mocktail::Matchers::Base
+  class BadMatchMatcher
+    extend T::Sig
+
+    sig { returns(Symbol) }
     def self.matcher_name
       :bad_match
     end
 
+    sig { returns(T.untyped) }
     def match?
     end
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
+  sig { void }
   def test_blows_up_when_bad_match?
+    skip unless runtime_type_checking_disabled?
+
     [NoMatchMatcher, BadMatchMatcher].each do |matcher_type|
       e = assert_raises(Mocktail::InvalidMatcherError) do
-        @subject.register(matcher_type)
+        @subject.register(T.unsafe(matcher_type))
       end
       assert_equal <<~MSG.tr("\n", " "), e.message
         #{matcher_type.name}#match? must be defined as a one-argument method
@@ -120,19 +157,25 @@ class RegistersMatcherTest < Minitest::Test
   end
 
   module Lol
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def self.matcher_name
       :lol
     end
 
+    sig { returns(T::Boolean) }
     def match?
       false
     end
 
+    sig { returns(T::Boolean) }
     def is_mocktail_matcher?
       true
     end
   end
 
+  sig { void }
   def test_blows_up_when_not_a_class
     skip unless runtime_type_checking_disabled?
 
@@ -145,17 +188,21 @@ class RegistersMatcherTest < Minitest::Test
   end
 
   class MissingFlagMatcher < Mocktail::Matchers::Base
+    extend T::Sig
     undef_method(:is_mocktail_matcher?)
 
+    sig { returns(Symbol) }
     def self.matcher_name
       :missing_flag
     end
 
+    sig { params(actual: T.untyped).returns(T::Boolean) }
     def match?(actual)
       false
     end
   end
 
+  sig { void }
   def test_blows_up_without_flag
     e = assert_raises(Mocktail::InvalidMatcherError) do
       @subject.register(MissingFlagMatcher)

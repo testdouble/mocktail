@@ -1,18 +1,27 @@
-# typed: true
+# typed: strict
 
 require "test_helper"
 
 module Mocktail
   class RaisesNeatoNoMethodErrorTest < Minitest::Test
-    def setup
-      @subject = RaisesNeatoNoMethodError.new
+    extend T::Sig
+
+    sig { params(name: String).void }
+    def initialize(name)
+      super
+
+      @subject = T.let(RaisesNeatoNoMethodError.new, RaisesNeatoNoMethodError)
     end
 
     class Garage
+      extend T::Sig
+
+      sig { returns(T.untyped) }
       def close
       end
     end
 
+    sig { void }
     def test_basic_call
       e = assert_raises(NoMethodError) {
         @subject.call(Call.new(
@@ -37,6 +46,7 @@ module Mocktail
       MSG
     end
 
+    sig { void }
     def test_convoluted_call
       e = assert_raises(NoMethodError) {
         @subject.call(Call.new(
@@ -61,6 +71,7 @@ module Mocktail
       MSG
     end
 
+    sig { void }
     def test_did_you_mean_dictionary
       e = assert_raises(NoMethodError) {
         @subject.call(Call.new(
@@ -92,6 +103,7 @@ module Mocktail
       MSG
     end
 
+    sig { void }
     def test_singleton_call
       e = assert_raises(NoMethodError) {
         @subject.call(Call.new(

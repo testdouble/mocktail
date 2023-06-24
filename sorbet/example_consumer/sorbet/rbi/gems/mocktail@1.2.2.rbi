@@ -96,7 +96,7 @@ module Mocktail
   end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#13
+# source://mocktail//lib/mocktail/errors.rb#12
 class Mocktail::AmbiguousDemonstrationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/share/bind.rb#4
@@ -725,7 +725,7 @@ class Mocktail::InitializesMocktail
   def init; end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#15
+# source://mocktail//lib/mocktail/errors.rb#14
 class Mocktail::InvalidMatcherError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#4
@@ -1073,7 +1073,7 @@ class Mocktail::Matchers::That < ::Mocktail::Matchers::Base
   end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#11
+# source://mocktail//lib/mocktail/errors.rb#10
 class Mocktail::MissingDemonstrationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#25
@@ -1670,7 +1670,7 @@ class Mocktail::TransformsParams
   def name_unnamed_params(params); end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#19
+# source://mocktail//lib/mocktail/errors.rb#18
 class Mocktail::TypeCheckingError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/type_replacement.rb#4
@@ -1706,7 +1706,7 @@ class Mocktail::TypeReplacementData < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#7
+# source://mocktail//lib/mocktail/errors.rb#6
 class Mocktail::UnexpectedError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/value/unsatisfying_call.rb#4
@@ -1740,7 +1740,7 @@ class Mocktail::UnsatisfyingCallExplanation
   def type; end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#9
+# source://mocktail//lib/mocktail/errors.rb#8
 class Mocktail::UnsupportedMocktail < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/version.rb#4
@@ -1775,7 +1775,7 @@ class Mocktail::ValidatesArguments
   end
 end
 
-# source://mocktail//lib/mocktail/errors.rb#17
+# source://mocktail//lib/mocktail/errors.rb#16
 class Mocktail::VerificationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/verifies_call.rb#8

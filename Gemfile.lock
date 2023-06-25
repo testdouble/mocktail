@@ -61,6 +61,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     sorbet (0.5.10884)
       sorbet-static (= 0.5.10884)
+    sorbet-eraser (0.1.1)
     sorbet-runtime (0.5.10884)
     sorbet-static (0.5.10884-universal-darwin-14)
     sorbet-static (0.5.10884-universal-darwin-15)
@@ -124,6 +125,7 @@ DEPENDENCIES
   rake
   rubocop-sorbet
   simplecov
+  sorbet-eraser
   sorbet-static
   spoom
   standard

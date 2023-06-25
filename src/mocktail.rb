@@ -1,6 +1,9 @@
 # typed: strict
 
-require "sorbet-runtime"
+require "pathname"
+
+require_relative "mocktail/typed"
+require "sorbet-runtime" if Mocktail::TYPED
 
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"
@@ -30,6 +33,7 @@ require_relative "mocktail/version"
 module Mocktail
   extend T::Sig
   extend DSL
+  BASE_PATH = T.let((Pathname.new(__FILE__) + "..").to_s, String)
 
   # Returns an instance of `type` whose implementation is mocked out
   sig {

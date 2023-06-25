@@ -1,12 +1,8 @@
 # typed: strict
 
-require "pathname"
-
 module Mocktail
   class CleansBacktrace
     extend T::Sig
-
-    BASE_PATH = T.let((Pathname.new(__FILE__) + "../../..").to_s, String)
 
     sig {
       type_parameters(:T)

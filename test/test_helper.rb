@@ -9,8 +9,7 @@ require "sorbet-runtime"
 
 ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"] = "true"
 
-TEST_SRC_DIRECTORY = T.let(ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || "src", String)
-$LOAD_PATH.unshift File.expand_path("../#{TEST_SRC_DIRECTORY}", __dir__)
+$LOAD_PATH.unshift File.expand_path("../#{ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || "src"}", __dir__)
 require "mocktail"
 require "minitest/autorun"
 
@@ -32,7 +31,8 @@ class Minitest::Test
 
   sig { returns(T::Boolean) }
   def runtime_type_checking_disabled?
-    T::Private::RuntimeLevels.default_checked_level == :never
+    !T.unsafe(Mocktail::TYPED) ||
+      T::Private::RuntimeLevels.default_checked_level == :never
   end
 
   sig { params(thing: T.anything).void }

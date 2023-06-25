@@ -26,7 +26,7 @@ module Mocktail
     sig { void }
     def test_one_prepended_frame
       internal_frames = [
-        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail.rb:22:in `of'"
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail.rb:22:in `of'"
       ]
       error = make_error(
         prepend: internal_frames
@@ -45,14 +45,14 @@ module Mocktail
     sig { void }
     def test_only_removes_prepended_frames
       prepended_frames = [
-        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail.rb:22:in `of'",
-        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail/stuff.rb:425:in (run)",
-        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail/things/and/cool.rb"
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail.rb:22:in `of'",
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail/stuff.rb:425:in (run)",
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail/things/and/cool.rb"
       ]
       error = make_error(
         prepend: prepended_frames,
         append: [
-          "#{TEST_SRC_DIRECTORY}/mocktail/how/could/this/happen.rb:11:in `sure'"
+          "#{Mocktail::BASE_PATH}/mocktail/how/could/this/happen.rb:11:in `sure'"
         ]
       )
       original = T.must(error.backtrace).dup
@@ -74,9 +74,9 @@ module Mocktail
     rescue Mocktail::Error => e
       e.tap do |e|
         e.set_backtrace(
-          prepend.map { |path| File.join(Dir.pwd, path) } +
+          prepend +
           e.backtrace +
-          append.map { |path| File.join(Dir.pwd, path) }
+          append
         )
       end
     end

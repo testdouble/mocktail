@@ -5,7 +5,7 @@ module Mocktail::Matchers
     extend T::Sig
     extend T::Helpers
 
-    if T::Private::RuntimeLevels.default_checked_level != :never
+    if T.unsafe(Mocktail::TYPED) && T::Private::RuntimeLevels.default_checked_level != :never
       abstract!
     end
 

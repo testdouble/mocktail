@@ -5,7 +5,9 @@ module Mocktail::Matchers
     extend T::Sig
     extend T::Helpers
 
-    abstract! unless T::Private::RuntimeLevels.default_checked_level == :never
+    if T::Private::RuntimeLevels.default_checked_level != :never
+      abstract!
+    end
 
     # Custom matchers can receive any args, kwargs, or block they want. Usually
     # single-argument, though, so that's defaulted here and in #insepct

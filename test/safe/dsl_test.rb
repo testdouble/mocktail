@@ -10,8 +10,8 @@ class DslTest < Minitest::Test
     assert_equal unwrap(Mocktail.method(:stubs)).parameters, unwrap(Mocktail.method(:verify)).parameters
   end
 
-  sig { params(method: Method).returns(T::Private::Methods::Signature) }
+  sig { params(method: Method).returns(T.any(T::Private::Methods::Signature, Method)) }
   def unwrap(method)
-    T::Private::Methods.signature_for_method(method)
+    T::Private::Methods.signature_for_method(method) || method
   end
 end

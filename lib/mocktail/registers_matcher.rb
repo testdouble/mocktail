@@ -50,7 +50,7 @@ module Mocktail
     sig { params(matcher_type: T.class_of(Matchers::Base)).returns(T::Boolean) }
     def invalid_match?(matcher_type)
       params = @grabs_original_method_parameters.grab(matcher_type.instance_method(:match?))
-      params.size > 1 || ![:req, :opt].include?(T.unsafe(params.first)[0])
+      params.size > 1 || ![:req, :opt].include?(T.unsafe(params).first[0])
     rescue NameError
       true
     end

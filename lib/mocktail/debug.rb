@@ -20,9 +20,9 @@ module Mocktail
     def self.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
       return unless ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"]
       raise Mocktail::Error
-    rescue => e
+    rescue Mocktail::Error => e
       base_path = Pathname.new(__FILE__).dirname.to_s
-      backtrace_minus_this_and_whoever_called_this = T.must(e.backtrace)[2..]
+      backtrace_minus_this_and_whoever_called_this = e.backtrace&.[](2..)
       internal_call_sites = backtrace_minus_this_and_whoever_called_this&.take_while { |call_site|
         # the "in `block" is very confusing but necessary to include lines after
         # a stubs { blah.foo }.with { … } call, since that's when most of the

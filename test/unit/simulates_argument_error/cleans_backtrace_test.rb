@@ -26,7 +26,7 @@ module Mocktail
     sig { void }
     def test_one_prepended_frame
       internal_frames = [
-        "lib/mocktail/mocktail.rb:22:in `of'"
+        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail.rb:22:in `of'"
       ]
       error = make_error(
         prepend: internal_frames
@@ -45,14 +45,14 @@ module Mocktail
     sig { void }
     def test_only_removes_prepended_frames
       prepended_frames = [
-        "lib/mocktail/mocktail.rb:22:in `of'",
-        "lib/mocktail/mocktail/stuff.rb:425:in (run)",
-        "lib/mocktail/mocktail/things/and/cool.rb"
+        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail.rb:22:in `of'",
+        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail/stuff.rb:425:in (run)",
+        "#{TEST_SRC_DIRECTORY}/mocktail/mocktail/things/and/cool.rb"
       ]
       error = make_error(
         prepend: prepended_frames,
         append: [
-          "lib/mocktail/how/could/this/happen.rb:11:in `sure'"
+          "#{TEST_SRC_DIRECTORY}/mocktail/how/could/this/happen.rb:11:in `sure'"
         ]
       )
       original = T.must(error.backtrace).dup

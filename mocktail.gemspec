@@ -1,4 +1,8 @@
-require_relative "lib/mocktail/version"
+begin
+  require_relative "lib/mocktail/version"
+rescue LoadError
+  require_relative "src/mocktail/version"
+end
 
 Gem::Specification.new do |spec|
   spec.name = "mocktail"

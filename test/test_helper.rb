@@ -5,9 +5,12 @@ SimpleCov.start do
   SimpleCov.add_filter "/test/"
 end
 
+require "sorbet-runtime"
+
 ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"] = "true"
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+TEST_SRC_DIRECTORY = T.let(ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || "src", String)
+$LOAD_PATH.unshift File.expand_path("../#{TEST_SRC_DIRECTORY}", __dir__)
 require "mocktail"
 require "minitest/autorun"
 

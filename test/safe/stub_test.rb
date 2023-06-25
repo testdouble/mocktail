@@ -318,7 +318,7 @@ class StubTest < Minitest::Test
     e = assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) { 4 } }
     # Make sure the backtrace doesn't contain gem library paths
     refute e.backtrace.any? { |frame|
-      frame.include?("mocktail/lib")
+      frame.match?(/mocktail\/(src|lib)/)
     }, "Library paths should not appear in backtrace:\n#{e.backtrace.join("\n")}"
 
     # Make sure the message contains the call

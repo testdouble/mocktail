@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "-----> Deleting lib/ and copying src/ to lib/"
+rm -rf lib
+cp -r src/ lib
+
+echo "-----> Erasing sorbet sigs from lib/ (for non-Sorbet users)"
+bundle exec sorbet-eraser "lib/**/*.rb"
+echo "-----> Overwriting Mocktail::TYPED constant for lib/"
+cat << RUBY > lib/mocktail/typed.rb
+module Mocktail
+  TYPED = false
+end
+RUBY
+
+echo "-----> Copying src/ to lib/mocktail/sorbet/ (for Sorbet users)"
+cp -r src/ lib/mocktail/sorbet
+
+echo "-----> Running Standard against the code"
+bundle exec rake standard:fix

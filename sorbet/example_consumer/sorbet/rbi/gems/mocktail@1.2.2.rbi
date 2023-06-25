@@ -6,7 +6,7 @@
 
 # typed: true
 
-# source://mocktail//lib/mocktail/collects_calls.rb#3
+# source://mocktail//lib/mocktail/typed.rb#1
 module Mocktail
   extend ::Mocktail::DSL
 
@@ -15,89 +15,77 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail.rb#137
-    sig { returns(::Mocktail::Cabinet) }
+    # source://mocktail//lib/mocktail.rb#117
     def cabinet; end
 
     # An alias for Mocktail.explain(double).reference.calls
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail.rb#129
-    sig do
-      params(
-        double: ::Object,
-        method_name: T.nilable(T.any(::String, ::Symbol))
-      ).returns(T::Array[::Mocktail::Call])
-    end
+    # source://mocktail//lib/mocktail.rb#109
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail.rb#87
-    sig { returns(::Mocktail::Matchers::Captor) }
+    # @return [Mocktail::Matchers::Captor]
+    #
+    # source://mocktail//lib/mocktail.rb#77
     def captor; end
 
-    # source://mocktail//lib/mocktail.rb#113
-    sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
+    # @param thing [Object]
+    # @return [Explanation]
+    #
+    # source://mocktail//lib/mocktail.rb#97
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail.rb#118
-    sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
+    # @return [Array<Mocktail::UnsatisfyingCallExplanation>]
+    #
+    # source://mocktail//lib/mocktail.rb#101
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail.rb#82
-    sig { returns(::Mocktail::MatcherPresentation) }
+    # @return [Mocktail::MatcherPresentation]
+    #
+    # source://mocktail//lib/mocktail.rb#73
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
     # source://mocktail//lib/mocktail.rb#40
-    sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail.rb#51
-    sig do
-      type_parameters(:T)
-        .params(
-          type: T::Class[T.all(::Object, T.type_parameter(:T))],
-          count: T.nilable(::Integer)
-        ).returns(T.type_parameter(:T))
-    end
+    # source://mocktail//lib/mocktail.rb#47
     def of_next(type, count: T.unsafe(nil)); end
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail.rb#77
-    sig do
-      type_parameters(:T)
-        .params(
-          type: T::Class[T.all(::Object, T.type_parameter(:T))],
-          count: ::Integer
-        ).returns(T::Array[T.type_parameter(:T)])
-    end
+    # source://mocktail//lib/mocktail.rb#69
     def of_next_with_count(type, count); end
 
-    # source://mocktail//lib/mocktail.rb#92
-    sig { params(matcher: T.class_of(Mocktail::Matchers::Base)).void }
+    # @param matcher [T.class_of(Mocktail::Matchers::Base)]
+    # @return [void]
+    #
+    # source://mocktail//lib/mocktail.rb#81
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail.rb#99
-    sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+    # source://mocktail//lib/mocktail.rb#88
     def replace(type); end
 
-    # source://mocktail//lib/mocktail.rb#105
-    sig { void }
+    # @return [void]
+    #
+    # source://mocktail//lib/mocktail.rb#93
     def reset; end
   end
 end
 
 # source://mocktail//lib/mocktail/errors.rb#12
 class Mocktail::AmbiguousDemonstrationError < ::Mocktail::Error; end
+
+# source://mocktail//lib/mocktail.rb#36
+Mocktail::BASE_PATH = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/share/bind.rb#4
 module Mocktail::Bind
@@ -111,60 +99,81 @@ end
 
 # source://mocktail//lib/mocktail/value/cabinet.rb#8
 class Mocktail::Cabinet
-  # source://mocktail//lib/mocktail/value/cabinet.rb#24
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#19
   def initialize; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#15
-  sig { returns(T::Array[::Mocktail::Call]) }
+  # @return [Array<Call>]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#13
   def calls; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#85
-  sig { params(double: ::Mocktail::Double).returns(T::Array[::Mocktail::Call]) }
+  # @param double [Double]
+  # @return [Array<Call>]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#71
   def calls_for_double(double); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#12
-  sig { params(demonstration_in_progress: T::Boolean).void }
-  def demonstration_in_progress=(demonstration_in_progress); end
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#11
+  def demonstration_in_progress=(_arg0); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#65
-  sig { returns(T::Boolean) }
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#54
   def demonstration_in_progress?; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#70
-  sig { params(thing: T.anything).returns(T.nilable(::Mocktail::Double)) }
+  # @param thing [T.anything]
+  # @return [Double, nil]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#58
   def double_for_instance(thing); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#33
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#27
   def reset!; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#50
-  sig { params(call: ::Mocktail::Call).void }
+  # @param call [Call]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#42
   def store_call(call); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#45
-  sig { params(double: ::Mocktail::Double).void }
+  # @param double [Double]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#38
   def store_double(double); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#55
-  sig { params(stubbing: Mocktail::Stubbing[T.anything]).void }
+  # @param stubbing [Stubbing[T.anything]]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#46
   def store_stubbing(stubbing); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#60
-  sig { params(unsatisfying_call: ::Mocktail::UnsatisfyingCall).void }
+  # @param unsatisfying_call [UnsatisfyingCall]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#50
   def store_unsatisfying_call(unsatisfying_call); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#18
-  sig { returns(T::Array[Mocktail::Stubbing[T.anything]]) }
+  # @return [Array<Stubbing[T.anything]>]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#15
   def stubbings; end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#78
-  sig { params(double: ::Mocktail::Double).returns(T::Array[Mocktail::Stubbing[T.anything]]) }
+  # @param double [Double]
+  # @return [Array<Stubbing[T.anything]>]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#65
   def stubbings_for_double(double); end
 
-  # source://mocktail//lib/mocktail/value/cabinet.rb#21
-  sig { returns(T::Array[::Mocktail::UnsatisfyingCall]) }
+  # @return [Array<UnsatisfyingCall>]
+  #
+  # source://mocktail//lib/mocktail/value/cabinet.rb#17
   def unsatisfying_calls; end
 end
 
@@ -183,16 +192,18 @@ class Mocktail::Call < ::T::Struct
   # Because T::Struct compares with referential equality, we need
   # to redefine the equality methods to compare the values of the attributes.
   #
-  # source://mocktail//lib/mocktail/value/call.rb#27
-  sig { params(other: T.nilable(T.anything)).returns(T::Boolean) }
+  # source://mocktail//lib/mocktail/value/call.rb#26
   def ==(other); end
 
-  # source://mocktail//lib/mocktail/value/call.rb#32
-  sig { params(other: T.anything).returns(T::Boolean) }
+  # @param other [T.anything]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/call.rb#30
   def eql?(other); end
 
-  # source://mocktail//lib/mocktail/value/call.rb#47
-  sig { returns(::Integer) }
+  # @return [Integer]
+  #
+  # source://mocktail//lib/mocktail/value/call.rb#44
   def hash; end
 
   class << self
@@ -201,33 +212,42 @@ class Mocktail::Call < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/share/cleans_backtrace.rb#6
+# source://mocktail//lib/mocktail/share/cleans_backtrace.rb#4
 class Mocktail::CleansBacktrace
-  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#16
-  sig { type_parameters(:T).params(error: T.all(::StandardError, T.type_parameter(:T))).returns(T.type_parameter(:T)) }
+  # @param error [T.all(T.type_parameter(:T), StandardError)]
+  # @return [T.type_parameter(:T)]
+  #
+  # source://mocktail//lib/mocktail/share/cleans_backtrace.rb#7
   def clean(error); end
 end
 
-# source://mocktail//lib/mocktail/share/cleans_backtrace.rb#9
-Mocktail::CleansBacktrace::BASE_PATH = T.let(T.unsafe(nil), String)
-
 # source://mocktail//lib/mocktail/collects_calls.rb#4
 class Mocktail::CollectsCalls
-  # source://mocktail//lib/mocktail/collects_calls.rb#8
-  sig { params(double: ::Object, method_name: T.nilable(::Symbol)).returns(T::Array[::Mocktail::Call]) }
+  # @param double [Object]
+  # @param method_name [Symbol, nil]
+  # @return [Array<Call>]
+  #
+  # source://mocktail//lib/mocktail/collects_calls.rb#7
   def collect(double, method_name); end
 end
 
 # source://mocktail//lib/mocktail/share/creates_identifier.rb#4
 class Mocktail::CreatesIdentifier
-  # source://mocktail//lib/mocktail/share/creates_identifier.rb#10
-  sig { params(s: T.anything, default: ::String, max_length: ::Integer).returns(::String) }
+  # @param s [T.anything]
+  # @param default [String]
+  # @param max_length [Integer]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/creates_identifier.rb#9
   def create(s, default: T.unsafe(nil), max_length: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/creates_identifier.rb#33
-  sig { params(id: ::String, default: ::String).returns(::String) }
+  # @param id [String]
+  # @param default [String]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/creates_identifier.rb#31
   def unreserved(id, default); end
 end
 
@@ -236,29 +256,24 @@ Mocktail::CreatesIdentifier::KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/dsl.rb#4
 module Mocktail::DSL
-  # source://mocktail//lib/mocktail/dsl.rb#18
-  sig do
-    type_parameters(:T)
-      .params(
-        ignore_block: T::Boolean,
-        ignore_extra_args: T::Boolean,
-        ignore_arity: T::Boolean,
-        times: T.nilable(::Integer),
-        demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T))
-      ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
-  end
+  # @param ignore_block [Boolean]
+  # @param ignore_extra_args [Boolean]
+  # @param ignore_arity [Boolean]
+  # @param times [Integer, nil]
+  # @param demo [T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))]
+  # @return [Mocktail::Stubbing[T.type_parameter(:T)]]
+  #
+  # source://mocktail//lib/mocktail/dsl.rb#7
   def stubs(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 
-  # source://mocktail//lib/mocktail/dsl.rb#37
-  sig do
-    params(
-      ignore_block: T::Boolean,
-      ignore_extra_args: T::Boolean,
-      ignore_arity: T::Boolean,
-      times: T.nilable(::Integer),
-      demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).void
-    ).void
-  end
+  # @param ignore_block [Boolean]
+  # @param ignore_extra_args [Boolean]
+  # @param ignore_arity [Boolean]
+  # @param times [Integer, nil]
+  # @param demo [T.proc.params(matchers: Mocktail::MatcherPresentation).void]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/dsl.rb#16
   def verify(ignore_block: T.unsafe(nil), ignore_extra_args: T.unsafe(nil), ignore_arity: T.unsafe(nil), times: T.unsafe(nil), &demo); end
 end
 
@@ -278,26 +293,25 @@ module Mocktail::Debug
     # MockingMethodfulClassesTest, because it mocks every defined method on the
     # mocked BasicObject
     #
+    # @return [void]
+    #
     # source://mocktail//lib/mocktail/debug.rb#20
-    sig { void }
     def guard_against_mocktail_accidentally_calling_mocks_if_debugging!; end
   end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#6
 class Mocktail::DeclaresDryClass
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#12
-  sig { void }
+  # @return [void] a new instance of DeclaresDryClass
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#23
-  sig do
-    type_parameters(:T)
-      .params(
-        type: T.all(T.type_parameter(:T), T::Class[T.anything]),
-        instance_methods: T::Array[::Symbol]
-      ).returns(T.type_parameter(:T))
-  end
+  # @param type [T.all(T.type_parameter(:T), T::Class[T.anything])]
+  # @param instance_methods [Array<Symbol>]
+  # @return [T.type_parameter(:T)]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#18
   def declare(type, instance_methods); end
 
   private
@@ -306,45 +320,37 @@ class Mocktail::DeclaresDryClass
   # any of them on the object itself, then they'll be replaced with normal
   # mocked methods. YMMV
   #
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#55
-  sig do
-    params(
-      dry_class: T::Class[::Object],
-      type: T.any(::Module, T::Class[T.anything]),
-      instance_methods: T::Array[::Symbol]
-    ).void
-  end
+  # @param dry_class [T::Class[Object]]
+  # @param type [T::Class[T.anything], Module]
+  # @param instance_methods [Array<Symbol>]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#50
   def add_more_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#94
-  sig do
-    params(
-      dry_class: T::Class[::Object],
-      method_name: ::Symbol,
-      type: T.any(::Module, T::Class[T.anything]),
-      instance_methods: T::Array[::Symbol]
-    ).void
-  end
+  # @param dry_class [T::Class[Object]]
+  # @param method_name [Symbol]
+  # @param type [T::Class[T.anything], Module]
+  # @param instance_methods [Array<Symbol>]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#87
   def add_stringify_methods!(dry_class, method_name, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#64
-  sig do
-    params(
-      dry_class: T::Class[::Object],
-      type: T.any(::Module, T::Class[T.anything]),
-      instance_methods: T::Array[::Symbol]
-    ).void
-  end
+  # @param dry_class [T::Class[Object]]
+  # @param type [T::Class[T.anything], Module]
+  # @param instance_methods [Array<Symbol>]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#58
   def define_double_methods!(dry_class, type, instance_methods); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#115
-  sig do
-    params(
-      dry_class: T::Class[::Object],
-      type: T.any(::Module, T::Class[T.anything]),
-      instance_methods: T::Array[::Symbol]
-    ).void
-  end
+  # @param dry_class [T::Class[Object]]
+  # @param type [T::Class[T.anything], Module]
+  # @param instance_methods [Array<Symbol>]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class.rb#107
   def define_method_missing_errors!(dry_class, type, instance_methods); end
 end
 
@@ -366,61 +372,59 @@ end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#7
 class Mocktail::DescribesUnsatisfiedStubbing
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#11
-  sig { void }
+  # @return [void] a new instance of DescribesUnsatisfiedStubbing
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#10
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#16
-  sig { params(dry_call: ::Mocktail::Call).returns(::Mocktail::UnsatisfyingCall) }
+  # @param dry_call [Mocktail::Call]
+  # @return [Mocktail::UnsatisfyingCall]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/describes_unsatisfied_stubbing.rb#14
   def describe(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#6
 class Mocktail::DeterminesMatchingCalls
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#10
-  sig do
-    params(
-      real_call: ::Mocktail::Call,
-      demo_call: ::Mocktail::Call,
-      demo_config: ::Mocktail::DemoConfig
-    ).returns(T::Boolean)
-  end
+  # @param real_call [Call]
+  # @param demo_call [Call]
+  # @param demo_config [DemoConfig]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#9
   def determine(real_call, demo_call, demo_config); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#23
-  sig do
-    params(
-      real_args: T::Array[T.untyped],
-      demo_args: T::Array[T.untyped],
-      ignore_extra_args: T::Boolean
-    ).returns(T::Boolean)
-  end
+  # @param real_args [Array<T.untyped>]
+  # @param demo_args [Array<T.untyped>]
+  # @param ignore_extra_args [Boolean]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#21
   def args_match?(real_args, demo_args, ignore_extra_args); end
 
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#50
-  sig do
-    params(
-      real_block: T.nilable(::Proc),
-      demo_block: T.nilable(::Proc),
-      ignore_block: T::Boolean
-    ).returns(T::Boolean)
-  end
+  # @param real_block [Proc, nil]
+  # @param demo_block [Proc, nil]
+  # @param ignore_block [Boolean]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#46
   def blocks_match?(real_block, demo_block, ignore_block); end
 
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#37
-  sig do
-    params(
-      real_kwargs: T::Hash[::Symbol, T.untyped],
-      demo_kwargs: T::Hash[::Symbol, T.untyped],
-      ignore_extra_args: T::Boolean
-    ).returns(T::Boolean)
-  end
+  # @param real_kwargs [Hash{Symbol => T.untyped}]
+  # @param demo_kwargs [Hash{Symbol => T.untyped}]
+  # @param ignore_extra_args [Boolean]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#34
   def kwargs_match?(real_kwargs, demo_kwargs, ignore_extra_args); end
 
-  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#63
-  sig { params(real_arg: T.untyped, demo_arg: T.untyped).returns(T::Boolean) }
+  # @param real_arg [T.untyped]
+  # @param demo_arg [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/share/determines_matching_calls.rb#58
   def match?(real_arg, demo_arg); end
 end
 
@@ -452,21 +456,27 @@ class Mocktail::DoubleData < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#36
+# source://mocktail//lib/mocktail/value/explanation.rb#30
 class Mocktail::DoubleExplanation < ::Mocktail::Explanation
-  # source://mocktail//lib/mocktail/value/explanation.rb#41
-  sig { params(reference: ::Mocktail::DoubleData, message: ::String).void }
+  # @param reference [DoubleData]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#33
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#38
-  sig { override.returns(::Mocktail::DoubleData) }
+  # @return [DoubleData]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#31
   def reference; end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#4
 class Mocktail::EnsuresImitationSupport
-  # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#8
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/ensures_imitation_support.rb#7
   def ensure(type); end
 end
 
@@ -475,77 +485,98 @@ class Mocktail::Error < ::StandardError; end
 
 # source://mocktail//lib/mocktail/explains_nils.rb#7
 class Mocktail::ExplainsNils
-  # source://mocktail//lib/mocktail/explains_nils.rb#11
-  sig { void }
+  # @return [void] a new instance of ExplainsNils
+  #
+  # source://mocktail//lib/mocktail/explains_nils.rb#10
   def initialize; end
 
-  # source://mocktail//lib/mocktail/explains_nils.rb#17
-  sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
+  # @return [Array<UnsatisfyingCallExplanation>]
+  #
+  # source://mocktail//lib/mocktail/explains_nils.rb#15
   def explain; end
 end
 
 # source://mocktail//lib/mocktail/explains_thing.rb#7
 class Mocktail::ExplainsThing
-  # source://mocktail//lib/mocktail/explains_thing.rb#11
-  sig { void }
+  # @return [void] a new instance of ExplainsThing
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#10
   def initialize; end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#17
-  sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
+  # @param thing [Object]
+  # @return [Explanation]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#15
   def explain(thing); end
 
   private
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#54
-  sig { params(double: ::Mocktail::Double).returns(::Mocktail::DoubleData) }
+  # @param double [Double]
+  # @return [DoubleData]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#50
   def data_for_double(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#78
-  sig { params(type_replacement: ::Mocktail::TypeReplacement).returns(::Mocktail::TypeReplacementData) }
+  # @param type_replacement [TypeReplacement]
+  # @return [TypeReplacementData]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#72
   def data_for_type_replacement(type_replacement); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#106
-  sig do
-    params(
-      double_data: T.any(::Mocktail::DoubleData, ::Mocktail::TypeReplacementData),
-      method: ::Symbol
-    ).returns(::String)
-  end
+  # @param double_data [DoubleData, TypeReplacementData]
+  # @param method [Symbol]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#98
   def describe_dry_method(double_data, method); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#64
-  sig { params(double: ::Mocktail::Double).returns(::Mocktail::DoubleExplanation) }
+  # @param double [Double]
+  # @return [DoubleExplanation]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#59
   def double_explanation(double); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#33
-  sig { params(thing: ::Object).returns(T.nilable(::Mocktail::FakeMethodExplanation)) }
+  # @param thing [Object]
+  # @return [FakeMethodExplanation, nil]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#30
   def fake_method_explanation_for(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#132
-  sig { params(thing: ::Object).returns(::Mocktail::NoExplanation) }
+  # @param thing [Object]
+  # @return [NoExplanation]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#123
   def no_explanation(thing); end
 
-  # source://mocktail//lib/mocktail/explains_thing.rb#92
-  sig { params(type_replacement: ::Mocktail::TypeReplacement).returns(::Mocktail::ReplacedTypeExplanation) }
+  # @param type_replacement [TypeReplacement]
+  # @return [ReplacedTypeExplanation]
+  #
+  # source://mocktail//lib/mocktail/explains_thing.rb#85
   def replaced_type_explanation(type_replacement); end
 end
 
 # source://mocktail//lib/mocktail/value/explanation.rb#4
 class Mocktail::Explanation
-  # source://mocktail//lib/mocktail/value/explanation.rb#14
-  sig { params(reference: ::Mocktail::ExplanationData, message: ::String).void }
+  # @param reference [Mocktail::ExplanationData]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#11
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#11
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#9
   def message; end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#8
-  sig { returns(::Mocktail::ExplanationData) }
+  # @return [Mocktail::ExplanationData]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#7
   def reference; end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#20
-  sig { returns(T.class_of(Mocktail::Explanation)) }
+  # @return [T.class_of(Explanation)]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#16
   def type; end
 end
 
@@ -555,18 +586,16 @@ end
 module Mocktail::ExplanationData
   include ::Kernel
 
-  interface!
-
   # @abstract
+  # @return [Array<Mocktail::Call>]
   #
-  # source://mocktail//lib/mocktail/value/explanation_data.rb#12
-  sig { abstract.returns(T::Array[::Mocktail::Call]) }
+  # source://mocktail//lib/mocktail/value/explanation_data.rb#10
   def calls; end
 
   # @abstract
+  # @return [Array<Mocktail::Stubbing[T.anything]>]
   #
-  # source://mocktail//lib/mocktail/value/explanation_data.rb#16
-  sig { abstract.returns(T::Array[Mocktail::Stubbing[T.anything]]) }
+  # source://mocktail//lib/mocktail/value/explanation_data.rb#13
   def stubbings; end
 end
 
@@ -584,79 +613,105 @@ class Mocktail::FakeMethodData < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#58
+# source://mocktail//lib/mocktail/value/explanation.rb#48
 class Mocktail::FakeMethodExplanation < ::Mocktail::Explanation
-  # source://mocktail//lib/mocktail/value/explanation.rb#63
-  sig { params(reference: ::Mocktail::FakeMethodData, message: ::String).void }
+  # @param reference [FakeMethodData]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#51
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#60
-  sig { override.returns(::Mocktail::FakeMethodData) }
+  # @return [FakeMethodData]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#49
   def reference; end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#6
 class Mocktail::FindsSatisfaction
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#10
-  sig { void }
+  # @return [void] a new instance of FindsSatisfaction
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#15
-  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.anything])) }
+  # @param dry_call [Call]
+  # @return [Stubbing[T.anything], nil]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing/finds_satisfaction.rb#13
   def find(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#6
 class Mocktail::FindsVerifiableCalls
-  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#10
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#15
-  sig { params(recording: ::Mocktail::Call, demo_config: ::Mocktail::DemoConfig).returns(T::Array[::Mocktail::Call]) }
+  # @param recording [Call]
+  # @param demo_config [DemoConfig]
+  # @return [Array<Call>]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/finds_verifiable_calls.rb#13
   def find(recording, demo_config); end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#7
 class Mocktail::FulfillsStubbing
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#11
-  sig { void }
+  # @return [void] a new instance of FulfillsStubbing
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#10
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#17
-  sig { params(dry_call: ::Mocktail::Call).returns(T.anything) }
+  # @param dry_call [Call]
+  # @return [T.anything]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#15
   def fulfill(dry_call); end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#28
-  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(Mocktail::Stubbing[T.anything])) }
+  # @param dry_call [Call]
+  # @return [Stubbing[T.anything], nil]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#25
   def satisfaction(dry_call); end
 
   private
 
-  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#37
-  sig { params(dry_call: ::Mocktail::Call).void }
+  # @param dry_call [Call]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/fulfills_stubbing.rb#33
   def store_unsatisfying_call!(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#4
 class Mocktail::GathersCallsOfMethod
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#8
-  sig { params(dry_call: ::Mocktail::Call).returns(T::Array[::Mocktail::Call]) }
+  # @param dry_call [Call]
+  # @return [Array<Call>]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error/gathers_calls_of_method.rb#7
   def gather(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#4
 class Mocktail::GathersFakeableInstanceMethods
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#8
-  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Array[::Symbol]) }
+  # @param type [T::Class[T.anything], Module]
+  # @return [Array<Symbol>]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#7
   def gather(type); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#19
-  sig { params(type: T.any(::Module, T::Class[T.anything]), method_name: ::Symbol).returns(T::Boolean) }
+  # @param type [T::Class[T.anything], Module]
+  # @param method_name [Symbol]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#17
   def ignore?(type, method_name); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#24
-  sig { returns(T::Array[::Module]) }
+  # @return [Array<Module>]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/gathers_fakeable_instance_methods.rb#21
   def ignored_ancestors; end
 end
 
@@ -669,61 +724,71 @@ class Mocktail::GrabsOriginalMethodParameters
   # If the method isn't wrapped by Sorbet, this will return the #instance_method,
   # per usual
   #
+  # @param method [UnboundMethod, Method, nil]
+  # @return [Array<Array<Symbol>>]
+  #
   # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#14
-  sig { params(method: T.nilable(T.any(::Method, ::UnboundMethod))).returns(T::Array[T::Array[::Symbol]]) }
   def grab(method); end
 
   private
 
-  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#27
-  sig { params(method: T.any(::Method, ::UnboundMethod)).returns(T.nilable(::T::Private::Methods::Signature)) }
+  # @param method [UnboundMethod, Method]
+  # @return [T::Private::Methods::Signature, nil]
+  #
+  # source://mocktail//lib/mocktail/grabs_original_method_parameters.rb#26
   def sorbet_wrapped_method(method); end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_call.rb#8
 class Mocktail::HandlesDryCall
-  # source://mocktail//lib/mocktail/handles_dry_call.rb#12
-  sig { void }
+  # @return [void] a new instance of HandlesDryCall
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call.rb#19
-  sig { params(dry_call: ::Mocktail::Call).returns(T.anything) }
+  # @param dry_call [Call]
+  # @return [T.anything]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call.rb#17
   def handle(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/handles_dry_new_call.rb#4
 class Mocktail::HandlesDryNewCall
-  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#8
-  sig { void }
+  # @return [void] a new instance of HandlesDryNewCall
+  #
+  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#7
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#16
-  sig do
-    params(
-      type: T::Class[T.anything],
-      args: T::Array[T.anything],
-      kwargs: T::Hash[::Symbol, T.anything],
-      block: T.nilable(::Proc)
-    ).returns(T.anything)
-  end
+  # @param type [T::Class[T.anything]]
+  # @param args [Array<T.anything>]
+  # @param kwargs [Hash{Symbol => T.anything}]
+  # @param block [Proc, nil]
+  # @return [T.anything]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_new_call.rb#14
   def handle(type, args, kwargs, block); end
 end
 
 # source://mocktail//lib/mocktail/imitates_type.rb#7
 class Mocktail::ImitatesType
-  # source://mocktail//lib/mocktail/imitates_type.rb#12
-  sig { void }
+  # @return [void] a new instance of ImitatesType
+  #
+  # source://mocktail//lib/mocktail/imitates_type.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type.rb#22
-  sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
+  # @param type [T::Class[T.type_parameter(:T)]]
+  # @return [T.type_parameter(:T)]
+  #
+  # source://mocktail//lib/mocktail/imitates_type.rb#16
   def imitate(type); end
 end
 
 # source://mocktail//lib/mocktail/initializes_mocktail.rb#4
 class Mocktail::InitializesMocktail
-  # source://mocktail//lib/mocktail/initializes_mocktail.rb#8
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/initializes_mocktail.rb#7
   def init; end
 end
 
@@ -732,19 +797,24 @@ class Mocktail::InvalidMatcherError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#4
 class Mocktail::LogsCall
-  # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#8
-  sig { params(dry_call: ::Mocktail::Call).void }
+  # @param dry_call [Call]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/logs_call.rb#7
   def log(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#7
 class Mocktail::MakesDouble
-  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#11
-  sig { void }
+  # @return [void] a new instance of MakesDouble
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#10
   def initialize; end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#17
-  sig { params(type: T::Class[T.anything]).returns(::Mocktail::Double) }
+  # @param type [T::Class[T.anything]]
+  # @return [Double]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double.rb#15
   def make(type); end
 end
 
@@ -781,8 +851,13 @@ class Mocktail::MatcherPresentation
   sig { params(pattern: T.any(String, Regexp)).returns(String) }
   def matches(pattern); end
 
-  # source://mocktail//lib/mocktail/matcher_presentation.rb#13
-  sig { params(name: ::Symbol, args: T.anything, kwargs: T.anything, blk: T.nilable(::Proc)).returns(T.anything) }
+  # @param name [Symbol]
+  # @param args [T.anything]
+  # @param kwargs [T.anything]
+  # @param blk [Proc, nil]
+  # @return [T.anything]
+  #
+  # source://mocktail//lib/mocktail/matcher_presentation.rb#11
   def method_missing(name, *args, **kwargs, &blk); end
 
   sig { type_parameters(:T).params(unexpected: T.type_parameter(:T)).returns(T.type_parameter(:T)) }
@@ -796,28 +871,37 @@ class Mocktail::MatcherPresentation
 
   private
 
-  # source://mocktail//lib/mocktail/matcher_presentation.rb#8
-  sig { params(name: ::Symbol, include_private: T::Boolean).returns(T::Boolean) }
+  # @param name [Symbol]
+  # @param include_private [Boolean]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matcher_presentation.rb#7
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
 # source://mocktail//lib/mocktail/value/matcher_registry.rb#4
 class Mocktail::MatcherRegistry
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#13
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#18
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).void }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#15
   def add(matcher_type); end
 
-  # source://mocktail//lib/mocktail/value/matcher_registry.rb#23
-  sig { params(name: ::Symbol).returns(T.nilable(T.class_of(Mocktail::Matchers::Base))) }
+  # @param name [Symbol]
+  # @return [T.class_of(Matchers::Base), nil]
+  #
+  # source://mocktail//lib/mocktail/value/matcher_registry.rb#19
   def get(name); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/matcher_registry.rb#8
-    sig { returns(::Mocktail::MatcherRegistry) }
+    # @return [MatcherRegistry]
+    #
+    # source://mocktail//lib/mocktail/value/matcher_registry.rb#7
     def instance; end
   end
 end
@@ -827,21 +911,26 @@ module Mocktail::Matchers; end
 
 # source://mocktail//lib/mocktail/matchers/any.rb#4
 class Mocktail::Matchers::Any < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/any.rb#13
-  sig { void }
+  # @return [void] a new instance of Any
+  #
+  # source://mocktail//lib/mocktail/matchers/any.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/any.rb#23
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/any.rb#19
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/any.rb#18
-  sig { params(actual: T.anything).returns(T::Boolean) }
+  # @param actual [T.anything]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/any.rb#15
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/any.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/any.rb#7
     def matcher_name; end
   end
 end
@@ -853,29 +942,34 @@ class Mocktail::Matchers::Base
   # Custom matchers can receive any args, kwargs, or block they want. Usually
   # single-argument, though, so that's defaulted here and in #insepct
   #
-  # source://mocktail//lib/mocktail/matchers/base.rb#13
-  sig { params(expected: ::BasicObject).void }
+  # @param expected [BasicObject]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/matchers/base.rb#15
   def initialize(expected); end
 
-  # source://mocktail//lib/mocktail/matchers/base.rb#28
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/base.rb#27
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/base.rb#33
-  sig { returns(::TrueClass) }
+  # @return [true]
+  #
+  # source://mocktail//lib/mocktail/matchers/base.rb#31
   def is_mocktail_matcher?; end
 
+  # @param actual [T.untyped]
   # @raise [Mocktail::InvalidMatcherError]
+  # @return [Boolean]
   #
   # source://mocktail//lib/mocktail/matchers/base.rb#23
-  sig { params(actual: T.untyped).returns(T::Boolean) }
   def match?(actual); end
 
   class << self
     # @raise [Mocktail::InvalidMatcherError]
+    # @return [Symbol]
     #
-    # source://mocktail//lib/mocktail/matchers/base.rb#18
-    sig { returns(::Symbol) }
+    # source://mocktail//lib/mocktail/matchers/base.rb#19
     def matcher_name; end
   end
 end
@@ -896,73 +990,92 @@ end
 #
 # source://mocktail//lib/mocktail/matchers/captor.rb#17
 class Mocktail::Matchers::Captor
-  # source://mocktail//lib/mocktail/matchers/captor.rb#62
-  sig { void }
+  # @return [void] a new instance of Captor
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#55
   def initialize; end
 
   # This T.untyped is intentional. Even though a Capture is surely returned,
   # in order for a verification demonstration to pass its own type check,
   # it needs to think it's being returned whatever parameter is expected
   #
-  # source://mocktail//lib/mocktail/matchers/captor.rb#59
-  sig { returns(T.untyped) }
+  # @return [T.untyped]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#53
   def capture; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#67
-  sig { returns(T::Boolean) }
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#59
   def captured?; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#72
-  sig { returns(T.untyped) }
+  # @return [T.untyped]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#63
   def value; end
 end
 
 # source://mocktail//lib/mocktail/matchers/captor.rb#20
 class Mocktail::Matchers::Captor::Capture < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/captor.rb#32
-  sig { void }
+  # @return [void] a new instance of Capture
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#29
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#45
-  sig { returns(T::Boolean) }
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#40
   def captured?; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#50
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#44
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#38
-  sig { params(actual: T.untyped).returns(::TrueClass) }
+  # @param actual [T.untyped]
+  # @return [true]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#34
   def match?(actual); end
 
-  # source://mocktail//lib/mocktail/matchers/captor.rb#29
-  sig { returns(T.untyped) }
+  # Returns the value of attribute value.
+  #
+  # @return [T.untyped]
+  #
+  # source://mocktail//lib/mocktail/matchers/captor.rb#27
   def value; end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/captor.rb#24
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/captor.rb#23
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/includes.rb#4
 class Mocktail::Matchers::Includes < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/includes.rb#13
-  sig { params(expecteds: T.untyped).void }
+  # @param expecteds [T.untyped]
+  # @return [void] a new instance of Includes
+  #
+  # source://mocktail//lib/mocktail/matchers/includes.rb#11
   def initialize(*expecteds); end
 
-  # source://mocktail//lib/mocktail/matchers/includes.rb#28
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/includes.rb#24
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/includes.rb#18
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/includes.rb#15
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/includes.rb#7
     def matcher_name; end
   end
 end
@@ -970,8 +1083,9 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_hash.rb#4
 class Mocktail::Matchers::IncludesHash < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_hash.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/includes_hash.rb#7
     def matcher_name; end
   end
 end
@@ -979,8 +1093,9 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_key.rb#4
 class Mocktail::Matchers::IncludesKey < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_key.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/includes_key.rb#7
     def matcher_name; end
   end
 end
@@ -988,89 +1103,110 @@ end
 # source://mocktail//lib/mocktail/matchers/includes_string.rb#4
 class Mocktail::Matchers::IncludesString < ::Mocktail::Matchers::Includes
   class << self
-    # source://mocktail//lib/mocktail/matchers/includes_string.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/includes_string.rb#7
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/is_a.rb#4
 class Mocktail::Matchers::IsA < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/is_a.rb#13
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/is_a.rb#11
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/is_a.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/is_a.rb#7
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/matches.rb#4
 class Mocktail::Matchers::Matches < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/matches.rb#13
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/matches.rb#11
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/matches.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/matches.rb#7
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/not.rb#4
 class Mocktail::Matchers::Not < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/not.rb#13
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/not.rb#11
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/not.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/not.rb#7
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/numeric.rb#4
 class Mocktail::Matchers::Numeric < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#13
-  sig { void }
+  # @return [void] a new instance of Numeric
+  #
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#23
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#19
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/numeric.rb#18
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/numeric.rb#15
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/numeric.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/numeric.rb#7
     def matcher_name; end
   end
 end
 
 # source://mocktail//lib/mocktail/matchers/that.rb#4
 class Mocktail::Matchers::That < ::Mocktail::Matchers::Base
-  # source://mocktail//lib/mocktail/matchers/that.rb#13
-  sig { params(blk: T.nilable(T.proc.params(actual: T.untyped).returns(T.untyped))).void }
+  # @param blk [T.proc.params(actual: T.untyped).returns(T.untyped), nil]
+  # @return [void] a new instance of That
+  #
+  # source://mocktail//lib/mocktail/matchers/that.rb#11
   def initialize(&blk); end
 
-  # source://mocktail//lib/mocktail/matchers/that.rb#28
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/matchers/that.rb#24
   def inspect; end
 
-  # source://mocktail//lib/mocktail/matchers/that.rb#21
-  sig { params(actual: T.untyped).returns(T::Boolean) }
+  # @param actual [T.untyped]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/matchers/that.rb#18
   def match?(actual); end
 
   class << self
-    # source://mocktail//lib/mocktail/matchers/that.rb#8
-    sig { returns(::Symbol) }
+    # @return [Symbol]
+    #
+    # source://mocktail//lib/mocktail/matchers/that.rb#7
     def matcher_name; end
   end
 end
@@ -1078,14 +1214,18 @@ end
 # source://mocktail//lib/mocktail/errors.rb#10
 class Mocktail::MissingDemonstrationError < ::Mocktail::Error; end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#25
+# source://mocktail//lib/mocktail/value/explanation.rb#21
 class Mocktail::NoExplanation < ::Mocktail::Explanation
-  # source://mocktail//lib/mocktail/value/explanation.rb#30
-  sig { params(reference: ::Mocktail::NoExplanationData, message: ::String).void }
+  # @param reference [NoExplanationData]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#24
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#27
-  sig { override.returns(::Mocktail::NoExplanationData) }
+  # @return [NoExplanationData]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#22
   def reference; end
 end
 
@@ -1096,15 +1236,15 @@ class Mocktail::NoExplanationData < ::T::Struct
   const :thing, T.untyped
 
   # @raise [Error]
+  # @return [Array<Mocktail::Call>]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#11
-  sig { override.returns(T::Array[::Mocktail::Call]) }
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#10
   def calls; end
 
   # @raise [Error]
+  # @return [Array<Mocktail::Stubbing[T.anything]>]
   #
-  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#16
-  sig { override.returns(T::Array[Mocktail::Stubbing[T.anything]]) }
+  # source://mocktail//lib/mocktail/value/no_explanation_data.rb#14
   def stubbings; end
 
   class << self
@@ -1120,12 +1260,14 @@ class Mocktail::Params < ::T::Struct
   prop :optional, T::Array[::Symbol], default: T.unsafe(nil)
   prop :rest, T.nilable(::Symbol)
 
-  # source://mocktail//lib/mocktail/value/signature.rb#13
-  sig { returns(T::Array[::Symbol]) }
+  # @return [Array<Symbol>]
+  #
+  # source://mocktail//lib/mocktail/value/signature.rb#12
   def allowed; end
 
-  # source://mocktail//lib/mocktail/value/signature.rb#18
-  sig { returns(T::Boolean) }
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/signature.rb#16
   def rest?; end
 
   class << self
@@ -1136,298 +1278,335 @@ end
 
 # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#8
 class Mocktail::RaisesNeatoNoMethodError
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#12
-  sig { void }
+  # @return [void] a new instance of RaisesNeatoNoMethodError
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#11
   def initialize; end
 
+  # @param call [Call]
   # @raise [NoMethodError]
+  # @return [void]
   #
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#19
-  sig { params(call: ::Mocktail::Call).void }
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#17
   def call(call); end
 
   private
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#63
-  sig { params(block: T.nilable(::Proc)).returns(T.nilable(::String)) }
+  # @param block [Proc, nil]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#57
   def block_param(block); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#81
-  sig { params(call: ::Mocktail::Call).returns(T.nilable(::String)) }
+  # @param call [Call]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#73
   def corrections(call); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#70
-  sig { params(identifiers: T::Array[::String]).returns(T::Array[::String]) }
+  # @param identifiers [Array<String>]
+  # @return [Array<String>]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#63
   def count_repeats(identifiers); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#56
-  sig { params(kwargs: T::Hash[::Symbol, T.anything]).returns(T.nilable(::String)) }
+  # @param kwargs [Hash{Symbol => T.anything}]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#51
   def kwparams_list(kwargs); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#36
-  sig { params(call: ::Mocktail::Call).returns(T.nilable(::String)) }
+  # @param call [Call]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#33
   def params(call); end
 
-  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#47
-  sig { params(args: T::Array[T.anything]).returns(T.nilable(::String)) }
+  # @param args [Array<T.anything>]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/raises_neato_no_method_error.rb#43
   def params_list(args); end
 end
 
 # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#8
 class Mocktail::RaisesVerificationError
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#12
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#19
-  sig do
-    params(
-      recording: ::Mocktail::Call,
-      verifiable_calls: T::Array[::Mocktail::Call],
-      demo_config: ::Mocktail::DemoConfig
-    ).void
-  end
+  # @param recording [Call]
+  # @param verifiable_calls [Array<Call>]
+  # @param demo_config [DemoConfig]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#17
   def raise(recording, verifiable_calls, demo_config); end
 
   private
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#50
-  sig do
-    params(
-      recording: ::Mocktail::Call,
-      verifiable_calls: T::Array[::Mocktail::Call],
-      demo_config: ::Mocktail::DemoConfig
-    ).returns(T.nilable(::String))
-  end
+  # @param recording [Call]
+  # @param verifiable_calls [Array<Call>]
+  # @param demo_config [DemoConfig]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#46
   def describe_other_calls(recording, verifiable_calls, demo_config); end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#39
-  sig { params(demo_config: ::Mocktail::DemoConfig, count: ::Integer).returns(T.nilable(::String)) }
+  # @param demo_config [DemoConfig]
+  # @param count [Integer]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#36
   def describe_verifiable_times_called(demo_config, count); end
 
-  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#66
-  sig { params(s: ::String, count: T.nilable(::Integer)).returns(::String) }
+  # @param s [String]
+  # @param count [Integer, nil]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/verifies_call/raises_verification_error.rb#61
   def pl(s, count); end
 end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#4
 class Mocktail::ReconcilesArgsWithParams
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#8
-  sig { params(signature: ::Mocktail::Signature).returns(T::Boolean) }
+  # @param signature [Signature]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#7
   def reconcile(signature); end
 
   private
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#16
-  sig { params(arg_params: ::Mocktail::Params, args: T::Array[T.untyped]).returns(T::Boolean) }
+  # @param arg_params [Params]
+  # @param args [Array<T.untyped>]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#14
   def args_match?(arg_params, args); end
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#22
-  sig { params(kwarg_params: ::Mocktail::Params, kwargs: T::Hash[::Symbol, T.untyped]).returns(T::Boolean) }
+  # @param kwarg_params [Params]
+  # @param kwargs [Hash{Symbol => T.untyped}]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/reconciles_args_with_params.rb#19
   def kwargs_match?(kwarg_params, kwargs); end
 end
 
 # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#4
 class Mocktail::ReconstructsCall
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#19
-  sig do
-    params(
-      double: ::Object,
-      call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.anything]),
-      dry_class: T::Class[::Object],
-      type: T.any(::Module, T::Class[T.anything]),
-      method: ::Symbol,
-      original_method: T.any(::Method, ::UnboundMethod),
-      signature: ::Mocktail::Signature
-    ).returns(::Mocktail::Call)
-  end
+  # @param double [Object]
+  # @param call_binding [Binding]
+  # @param default_args [Hash{Symbol => T.anything}, nil]
+  # @param dry_class [T::Class[Object]]
+  # @param type [Module, T::Class[T.anything]]
+  # @param method [Symbol]
+  # @param original_method [UnboundMethod, Method]
+  # @param signature [Signature]
+  # @return [Call]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#7
   def reconstruct(double:, call_binding:, default_args:, dry_class:, type:, method:, original_method:, signature:); end
 
   private
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#39
-  sig do
-    params(
-      signature: ::Mocktail::Signature,
-      call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.anything])
-    ).returns(T::Array[T.anything])
-  end
+  # @param signature [Signature]
+  # @param call_binding [Binding]
+  # @param default_args [Hash{Symbol => T.anything}, nil]
+  # @return [Array<T.anything>]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#23
   def args_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#52
-  sig do
-    params(
-      signature: ::Mocktail::Signature,
-      call_binding: ::Binding,
-      default_args: T.nilable(T::Hash[::Symbol, T.anything])
-    ).returns(T::Hash[::Symbol, T.anything])
-  end
+  # @param signature [Signature]
+  # @param call_binding [Binding]
+  # @param default_args [Hash{Symbol => T.anything}, nil]
+  # @return [Hash{Symbol => T.anything}]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#32
   def kwargs_for(signature, call_binding, default_args); end
 
-  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#62
-  sig do
-    params(
-      params: ::Mocktail::Params,
-      default_args: T.nilable(T::Hash[::Symbol, T.anything])
-    ).returns([T::Array[::Symbol], T.nilable(::Symbol)])
-  end
+  # @param params [Params]
+  # @param default_args [Hash{Symbol => T.anything}, nil]
+  # @return [Array(Array<Symbol>, [Symbol, nil])]
+  #
+  # source://mocktail//lib/mocktail/imitates_type/makes_double/declares_dry_class/reconstructs_call.rb#41
   def non_default_args(params, default_args); end
 end
 
 # source://mocktail//lib/mocktail/records_demonstration.rb#4
 class Mocktail::RecordsDemonstration
-  # source://mocktail//lib/mocktail/records_demonstration.rb#14
-  sig do
-    type_parameters(:T)
-      .params(
-        demonstration: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T)),
-        demo_config: ::Mocktail::DemoConfig
-      ).returns(::Mocktail::Call)
-  end
+  # @param demonstration [T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))]
+  # @param demo_config [DemoConfig]
+  # @return [Call]
+  #
+  # source://mocktail//lib/mocktail/records_demonstration.rb#7
   def record(demonstration, demo_config); end
 end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#4
 class Mocktail::RecreatesMessage
-  # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#8
-  sig { params(signature: ::Mocktail::Signature).returns(::String) }
+  # @param signature [Signature]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/recreates_message.rb#7
   def recreate(signature); end
 end
 
 # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#4
 class Mocktail::RedefinesNew
-  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#8
-  sig { void }
+  # @return [void] a new instance of RedefinesNew
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#7
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#13
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_new.rb#11
   def redefine(type); end
 end
 
 # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#4
 class Mocktail::RedefinesSingletonMethods
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#8
-  sig { void }
+  # @return [void] a new instance of RedefinesSingletonMethods
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#7
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#47
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#44
   def declare_singleton_method_missing_errors!(type); end
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#13
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#11
   def redefine(type); end
 
   private
 
-  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#72
-  sig { params(method: ::Method).returns(T::Boolean) }
+  # @param method [Method]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/replaces_type/redefines_singleton_methods.rb#68
   def sorbet_method_hook?(method); end
 end
 
 # source://mocktail//lib/mocktail/registers_matcher.rb#4
 class Mocktail::RegistersMatcher
-  # source://mocktail//lib/mocktail/registers_matcher.rb#8
-  sig { void }
+  # @return [void] a new instance of RegistersMatcher
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#7
   def initialize; end
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#13
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).void }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#11
   def register(matcher_type); end
 
   private
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#59
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#53
   def invalid_flag?(matcher_type); end
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#51
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#46
   def invalid_match?(matcher_type); end
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#43
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#39
   def invalid_name?(matcher_type); end
 
-  # source://mocktail//lib/mocktail/registers_matcher.rb#38
-  sig { params(matcher_type: T.class_of(Mocktail::Matchers::Base)).returns(T::Boolean) }
+  # @param matcher_type [T.class_of(Matchers::Base)]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/registers_matcher.rb#35
   def invalid_type?(matcher_type); end
 end
 
 # source://mocktail//lib/mocktail/registers_stubbing.rb#6
 class Mocktail::RegistersStubbing
-  # source://mocktail//lib/mocktail/registers_stubbing.rb#10
-  sig { void }
+  # @return [void] a new instance of RegistersStubbing
+  #
+  # source://mocktail//lib/mocktail/registers_stubbing.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/registers_stubbing.rb#21
-  sig do
-    type_parameters(:T)
-      .params(
-        demonstration: T.proc.params(matchers: ::Mocktail::MatcherPresentation).returns(T.type_parameter(:T)),
-        demo_config: ::Mocktail::DemoConfig
-      ).returns(Mocktail::Stubbing[T.type_parameter(:T)])
-  end
+  # @param demonstration [T.proc.params(matchers: Mocktail::MatcherPresentation).returns(T.type_parameter(:T))]
+  # @param demo_config [DemoConfig]
+  # @return [Mocktail::Stubbing[T.type_parameter(:T)]]
+  #
+  # source://mocktail//lib/mocktail/registers_stubbing.rb#13
   def register(demonstration, demo_config); end
 end
 
-# source://mocktail//lib/mocktail/value/explanation.rb#47
+# source://mocktail//lib/mocktail/value/explanation.rb#39
 class Mocktail::ReplacedTypeExplanation < ::Mocktail::Explanation
-  # source://mocktail//lib/mocktail/value/explanation.rb#52
-  sig { params(reference: ::Mocktail::TypeReplacementData, message: ::String).void }
+  # @param reference [TypeReplacementData]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#42
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/explanation.rb#49
-  sig { override.returns(::Mocktail::TypeReplacementData) }
+  # @return [TypeReplacementData]
+  #
+  # source://mocktail//lib/mocktail/value/explanation.rb#40
   def reference; end
 end
 
 # source://mocktail//lib/mocktail/replaces_next.rb#4
 class Mocktail::ReplacesNext
-  # source://mocktail//lib/mocktail/replaces_next.rb#8
-  sig { void }
+  # @return [void] a new instance of ReplacesNext
+  #
+  # source://mocktail//lib/mocktail/replaces_next.rb#7
   def initialize; end
 
+  # @param type [T::Class[T.all(T.type_parameter(:T), Object)]]
+  # @param count [Integer]
   # @raise [UnsupportedMocktail]
+  # @return [Array<T.type_parameter(:T)>]
   #
-  # source://mocktail//lib/mocktail/replaces_next.rb#28
-  sig do
-    type_parameters(:T)
-      .params(
-        type: T::Class[T.all(::Object, T.type_parameter(:T))],
-        count: ::Integer
-      ).returns(T::Array[T.type_parameter(:T)])
-  end
+  # source://mocktail//lib/mocktail/replaces_next.rb#17
   def replace(type, count); end
 
-  # source://mocktail//lib/mocktail/replaces_next.rb#19
-  sig do
-    type_parameters(:T)
-      .params(
-        type: T::Class[T.all(::Object, T.type_parameter(:T))]
-      ).returns(T.type_parameter(:T))
-  end
+  # @param type [T::Class[T.all(T.type_parameter(:T), Object)]]
+  # @return [T.type_parameter(:T)]
+  #
+  # source://mocktail//lib/mocktail/replaces_next.rb#13
   def replace_once(type); end
 end
 
 # source://mocktail//lib/mocktail/replaces_type.rb#8
 class Mocktail::ReplacesType
-  # source://mocktail//lib/mocktail/replaces_type.rb#12
-  sig { void }
+  # @return [void] a new instance of ReplacesType
+  #
+  # source://mocktail//lib/mocktail/replaces_type.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/replaces_type.rb#20
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/replaces_type.rb#18
   def replace(type); end
 end
 
 # source://mocktail//lib/mocktail/resets_state.rb#4
 class Mocktail::ResetsState
-  # source://mocktail//lib/mocktail/resets_state.rb#8
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/resets_state.rb#7
   def reset; end
 end
 
@@ -1452,12 +1631,14 @@ class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   #
   # It's very fun and confusing and a great time.
   #
+  # @param type [T::Class[T.anything], Module]
+  # @return [void]
+  #
   # source://mocktail//lib/mocktail/replaces_type/runs_sorbet_sig_blocks_before_replacement.rb#26
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def run(type); end
 end
 
-# source://mocktail//lib/mocktail/value/signature.rb#23
+# source://mocktail//lib/mocktail/value/signature.rb#21
 class Mocktail::Signature < ::T::Struct
   const :positional_params, ::Mocktail::Params
   const :positional_args, T::Array[T.anything]
@@ -1472,100 +1653,131 @@ class Mocktail::Signature < ::T::Struct
   end
 end
 
-# source://mocktail//lib/mocktail/value/signature.rb#33
+# source://mocktail//lib/mocktail/value/signature.rb#31
 Mocktail::Signature::DEFAULT_BLOCK_PARAM = T.let(T.unsafe(nil), String)
 
-# source://mocktail//lib/mocktail/value/signature.rb#31
+# source://mocktail//lib/mocktail/value/signature.rb#29
 Mocktail::Signature::DEFAULT_REST_ARGS = T.let(T.unsafe(nil), String)
 
-# source://mocktail//lib/mocktail/value/signature.rb#32
+# source://mocktail//lib/mocktail/value/signature.rb#30
 Mocktail::Signature::DEFAULT_REST_KWARGS = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/simulates_argument_error.rb#10
 class Mocktail::SimulatesArgumentError
-  # source://mocktail//lib/mocktail/simulates_argument_error.rb#14
-  sig { void }
+  # @return [void] a new instance of SimulatesArgumentError
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error.rb#13
   def initialize; end
 
-  # source://mocktail//lib/mocktail/simulates_argument_error.rb#23
-  sig { params(dry_call: ::Mocktail::Call).returns(T.nilable(::ArgumentError)) }
+  # @param dry_call [Call]
+  # @return [ArgumentError, nil]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error.rb#21
   def simulate(dry_call); end
 end
 
 # source://mocktail//lib/mocktail/share/stringifies_call.rb#4
 class Mocktail::StringifiesCall
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#8
-  sig { params(call: ::Mocktail::Call, anonymous_blocks: T::Boolean, always_parens: T::Boolean).returns(::String) }
+  # @param call [Call]
+  # @param anonymous_blocks [Boolean]
+  # @param always_parens [Boolean]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#7
   def stringify(call, anonymous_blocks: T.unsafe(nil), always_parens: T.unsafe(nil)); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#13
-  sig do
-    params(
-      calls: T::Array[::Mocktail::Call],
-      nonzero_message: ::String,
-      zero_message: ::String,
-      anonymous_blocks: T::Boolean,
-      always_parens: T::Boolean
-    ).returns(::String)
-  end
+  # @param calls [Array<Call>]
+  # @param nonzero_message [String]
+  # @param zero_message [String]
+  # @param anonymous_blocks [Boolean]
+  # @param always_parens [Boolean]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#11
   def stringify_multiple(calls, nonzero_message:, zero_message:, anonymous_blocks: T.unsafe(nil), always_parens: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#47
-  sig { params(args: T::Array[::Object]).returns(T.nilable(::String)) }
+  # @param args [Array<Object>]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#43
   def argify(args); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#30
-  sig { params(call: ::Mocktail::Call, parens: T::Boolean).returns(T.nilable(::String)) }
+  # @param call [Call]
+  # @param parens [Boolean]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#27
   def args_to_s(call, parens: T.unsafe(nil)); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#65
-  sig { params(block: T.nilable(::Proc), anonymous: T::Boolean).returns(T.nilable(::String)) }
+  # @param block [Proc, nil]
+  # @param anonymous [Boolean]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#58
   def blockify(block, anonymous:); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#53
-  sig { params(kwargs: T::Hash[::Symbol, ::Object]).returns(T.nilable(::String)) }
+  # @param kwargs [Hash{Symbol => Object}]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#48
   def kwargify(kwargs); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#59
-  sig { params(block: T.nilable(::Proc)).returns(T.nilable(::String)) }
+  # @param block [Proc, nil]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#53
   def lambdafy(block); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#76
-  sig { params(block: ::Proc).returns(::String) }
+  # @param block [Proc]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#68
   def source_locationify(block); end
 
-  # source://mocktail//lib/mocktail/share/stringifies_call.rb#81
-  sig { params(path: ::String).returns(::String) }
+  # @param path [String]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_call.rb#72
   def strip_pwd(path); end
 end
 
 # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#4
 class Mocktail::StringifiesMethodName
-  # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#8
-  sig { params(call: ::Mocktail::Call).returns(::String) }
+  # @param call [Call]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/share/stringifies_method_name.rb#7
   def stringify(call); end
 end
 
 # source://mocktail//lib/mocktail/stringifies_method_signature.rb#4
 class Mocktail::StringifiesMethodSignature
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#8
-  sig { params(signature: ::Mocktail::Signature).returns(::String) }
+  # @param signature [Signature]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#7
   def stringify(signature); end
 
   private
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#45
-  sig { params(signature: ::Mocktail::Signature).returns(::String) }
+  # @param signature [Signature]
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#41
   def block(signature); end
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#32
-  sig { params(signature: ::Mocktail::Signature).returns(T.nilable(::String)) }
+  # @param signature [Signature]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#29
   def keyword(signature); end
 
-  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#19
-  sig { params(signature: ::Mocktail::Signature).returns(T.nilable(::String)) }
+  # @param signature [Signature]
+  # @return [String, nil]
+  #
+  # source://mocktail//lib/mocktail/stringifies_method_signature.rb#17
   def positional(signature); end
 end
 
@@ -1579,12 +1791,15 @@ class Mocktail::Stubbing < ::T::Struct
   const :recording, ::Mocktail::Call
   prop :effect, T.nilable(T.proc.params(call: ::Mocktail::Call).returns(MethodReturnType))
 
-  # source://mocktail//lib/mocktail/value/stubbing.rb#16
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/stubbing.rb#15
   def satisfied!; end
 
-  # source://mocktail//lib/mocktail/value/stubbing.rb#21
-  sig { params(block: T.proc.params(call: ::Mocktail::Call).returns(MethodReturnType)).void }
+  # @param block [T.proc.params(call: Mocktail::Call).returns(MethodReturnType)]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/stubbing.rb#19
   def with(&block); end
 
   class << self
@@ -1593,82 +1808,107 @@ class Mocktail::Stubbing < ::T::Struct
   end
 end
 
+# source://mocktail//lib/mocktail/typed.rb#2
+Mocktail::TYPED = T.let(T.unsafe(nil), FalseClass)
+
 # The TopShelf is where we keep all the more global, dangerous state.
 # In particular, this is where Mocktail manages state related to singleton
 # method replacements carried out with Mocktail.replace(ClassOrModule)
 #
 # source://mocktail//lib/mocktail/value/top_shelf.rb#7
 class Mocktail::TopShelf
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#19
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#17
   def initialize; end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#50
-  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Boolean) }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#43
   def new_replaced?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#60
-  sig { params(type: T::Class[T.anything]).returns(T::Boolean) }
+  # @param type [T::Class[T.anything]]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#51
   def of_next_registered?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#45
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#39
   def register_new_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#55
-  sig { params(type: T::Class[T.anything]).void }
+  # @param type [T::Class[T.anything]]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#47
   def register_of_next_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#70
-  sig { params(type: T.any(::Module, T::Class[T.anything])).void }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#59
   def register_singleton_method_replacement!(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#40
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#35
   def reset_current_thread!; end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#75
-  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T::Boolean) }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#63
   def singleton_methods_replaced?(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#26
-  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(::Mocktail::TypeReplacement) }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [TypeReplacement]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#23
   def type_replacement_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#33
-  sig { params(type: T.any(::Module, T::Class[T.anything])).returns(T.nilable(::Mocktail::TypeReplacement)) }
+  # @param type [Module, T::Class[T.anything]]
+  # @return [TypeReplacement, nil]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#29
   def type_replacement_if_exists_for(type); end
 
-  # source://mocktail//lib/mocktail/value/top_shelf.rb#65
-  sig { params(type: T::Class[T.anything]).void }
+  # @param type [T::Class[T.anything]]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/top_shelf.rb#55
   def unregister_of_next_replacement!(type); end
 
   class << self
-    # source://mocktail//lib/mocktail/value/top_shelf.rb#11
-    sig { returns(::Mocktail::TopShelf) }
+    # @return [TopShelf]
+    #
+    # source://mocktail//lib/mocktail/value/top_shelf.rb#10
     def instance; end
   end
 end
 
 # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#6
 class Mocktail::TransformsParams
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#10
-  sig { void }
+  # @return [void] a new instance of TransformsParams
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#9
   def initialize; end
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#15
-  sig do
-    params(
-      dry_call: ::Mocktail::Call,
-      params: T.nilable(T::Array[T::Array[::Symbol]])
-    ).returns(::Mocktail::Signature)
-  end
+  # @param dry_call [Call]
+  # @param params [Array<Array<Symbol>>, nil]
+  # @return [Signature]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#13
   def transform(dry_call, params: T.unsafe(nil)); end
 
   private
 
-  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#48
-  sig { params(params: T::Array[T::Array[::Symbol]]).returns(T::Array[T::Array[::Symbol]]) }
+  # @param params [Array<Array<Symbol>>]
+  # @return [Array<Array<Symbol>>]
+  #
+  # source://mocktail//lib/mocktail/simulates_argument_error/transforms_params.rb#45
   def name_unnamed_params(params); end
 end
 
@@ -1698,8 +1938,9 @@ class Mocktail::TypeReplacementData < ::T::Struct
   const :calls, T::Array[::Mocktail::Call]
   const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
-  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#15
-  sig { returns(T.any(::Module, T::Class[T.anything])) }
+  # @return [T::Class[T.anything], Module]
+  #
+  # source://mocktail//lib/mocktail/value/type_replacement_data.rb#14
   def double; end
 
   class << self
@@ -1725,54 +1966,69 @@ end
 
 # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#4
 class Mocktail::UnsatisfyingCallExplanation
-  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#14
-  sig { params(reference: ::Mocktail::UnsatisfyingCall, message: ::String).void }
+  # @param reference [UnsatisfyingCall]
+  # @param message [String]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#11
   def initialize(reference, message); end
 
-  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#11
-  sig { returns(::String) }
+  # @return [String]
+  #
+  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#9
   def message; end
 
-  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#8
-  sig { returns(::Mocktail::UnsatisfyingCall) }
+  # @return [UnsatisfyingCall]
+  #
+  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#7
   def reference; end
 
-  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#20
-  sig { returns(T.class_of(Mocktail::UnsatisfyingCallExplanation)) }
+  # @return [T.class_of(UnsatisfyingCallExplanation)]
+  #
+  # source://mocktail//lib/mocktail/value/unsatisfying_call_explanation.rb#16
   def type; end
 end
 
 # source://mocktail//lib/mocktail/errors.rb#8
 class Mocktail::UnsupportedMocktail < ::Mocktail::Error; end
 
-# source://mocktail//lib/mocktail/version.rb#4
+# source://mocktail//lib/mocktail/version.rb#11
 Mocktail::VERSION = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#4
 class Mocktail::ValidatesArguments
-  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#32
-  sig { void }
+  # @return [void] a new instance of ValidatesArguments
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#28
   def initialize; end
 
-  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#37
-  sig { params(dry_call: ::Mocktail::Call).returns(::NilClass) }
+  # @param dry_call [Call]
+  # @return [nil]
+  #
+  # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#32
   def validate(dry_call); end
 
   class << self
+    # @return [void]
+    #
     # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#7
-    sig { void }
     def disable!; end
 
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#17
-    sig { returns(T::Boolean) }
+    # @return [Boolean]
+    #
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#15
     def disabled?; end
 
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#12
-    sig { void }
+    # @return [void]
+    #
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#11
     def enable!; end
 
-    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#22
-    sig { params(disable: T.nilable(T::Boolean), blk: T.proc.returns(T.anything)).void }
+    # @param disable [Boolean, nil]
+    # @param blk [T.proc.returns(T.anything)]
+    # @return [void]
+    #
+    # source://mocktail//lib/mocktail/handles_dry_call/validates_arguments.rb#19
     def optional(disable, &blk); end
   end
 end
@@ -1782,23 +2038,25 @@ class Mocktail::VerificationError < ::Mocktail::Error; end
 
 # source://mocktail//lib/mocktail/verifies_call.rb#8
 class Mocktail::VerifiesCall
-  # source://mocktail//lib/mocktail/verifies_call.rb#12
-  sig { void }
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/verifies_call.rb#11
   def initialize; end
 
-  # source://mocktail//lib/mocktail/verifies_call.rb#19
-  sig do
-    params(
-      demo: T.proc.params(matchers: ::Mocktail::MatcherPresentation).void,
-      demo_config: ::Mocktail::DemoConfig
-    ).void
-  end
+  # @param demo [T.proc.params(matchers: Mocktail::MatcherPresentation).void]
+  # @param demo_config [DemoConfig]
+  # @return [void]
+  #
+  # source://mocktail//lib/mocktail/verifies_call.rb#17
   def verify(demo, demo_config); end
 
   private
 
-  # source://mocktail//lib/mocktail/verifies_call.rb#32
-  sig { params(verifiable_call_count: ::Integer, demo_config: ::Mocktail::DemoConfig).returns(T::Boolean) }
+  # @param verifiable_call_count [Integer]
+  # @param demo_config [DemoConfig]
+  # @return [Boolean]
+  #
+  # source://mocktail//lib/mocktail/verifies_call.rb#29
   def verification_satisfied?(verifiable_call_count, demo_config); end
 end
 

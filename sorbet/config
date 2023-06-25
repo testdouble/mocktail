@@ -4,3 +4,4 @@
 --ignore=Rakefile
 --ignore=vendor/
 --ignore=sorbet/example_consumer/
+--ignore=lib/

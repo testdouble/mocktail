@@ -1,8 +1,10 @@
 # typed: strict
 
-require "simplecov"
-SimpleCov.start do
-  SimpleCov.add_filter "/test/"
+if ENV["COVER"]
+  require "simplecov"
+  SimpleCov.start do
+    SimpleCov.add_filter "/test/"
+  end
 end
 
 require "sorbet-runtime"

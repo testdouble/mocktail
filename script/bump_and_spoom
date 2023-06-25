@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-bundle exec spoom bump "$1" || true
-./script/test
-git add .
-./script/spoom_me
-git commit -m "Enable typing on $1"

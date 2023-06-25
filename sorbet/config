@@ -1,5 +1,6 @@
 --dir
 .
 --ignore=tmp/
+--ignore=Rakefile
 --ignore=vendor/
 --ignore=sorbet/example_consumer/

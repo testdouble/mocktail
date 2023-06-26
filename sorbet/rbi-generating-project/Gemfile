@@ -1,0 +1,4 @@
+source "https://rubygems.org"
+
+gem "mocktail", require: false, path: "../.."
+gem "tapioca", require: false

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "mocktail", path: "../.."
+gem "mocktail", path: "../..", require: "mocktail/sorbet"
 
 gem "standard"
 gem "minitest"

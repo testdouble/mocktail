@@ -1,7 +1,3 @@
-if defined?(Mocktail::TYPED)
-  # TODO warning if required again
-end
-
 require_relative "typed"
 
 # Constant boolean, so won't statically type-check, but `T.unsafe` can't be used

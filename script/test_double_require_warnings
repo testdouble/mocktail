@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require "open3"
+
+def assert_warning(command:, warning:)
+  stdout, stderr, status = Open3.capture3(command)
+  if stderr != warning
+    fail <<~MSG
+      Expected the correct error message on STDERR but it was wrong"
+
+      Expected:
+      #{warning}
+
+      Actual:
+      #{stderr}
+    MSG
+
+  end
+  fail "Expected empty STDOUT, but was #{stdout.inspect}" unless stdout.empty?
+  fail "Expected command to exit 0, but was #{status.exitstatus}" unless status.success?
+end
+
+puts "Test requiring 'mocktail' and then 'mocktail/sorbet' gives the right warning"
+assert_warning(
+  command: <<~CMD,
+    bundle exec ruby -e 'require_relative "lib/mocktail/sorbet"; require_relative "lib/mocktail"'
+  CMD
+  warning: <<~WARN
+    `require "mocktail"' was called, but Mocktail was already required as `require "mocktail/sorbet"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITHOUT sorbet runtime checks, remove whatever is requiring `mocktail/sorbet'.
+  WARN
+)
+
+puts "Test requiring 'mocktail/sorbet' and then 'mocktail' gives the right warning"
+assert_warning(
+  command: <<~CMD,
+    bundle exec ruby -e 'require_relative "lib/mocktail"; require_relative "lib/mocktail/sorbet"'
+  CMD
+  warning: <<~WARN
+    `require "mocktail/sorbet"' was called, but Mocktail was already required as `require "mocktail"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITH sorbet runtime checks, remove whatever is requiring `mocktail'.
+  WARN
+)

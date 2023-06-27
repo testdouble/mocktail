@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "../share/bind"
 
 # The Cabinet stores all thread-local state, so anything that goes here

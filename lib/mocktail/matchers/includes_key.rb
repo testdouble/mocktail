@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail::Matchers
   class IncludesKey < Includes
     extend T::Sig

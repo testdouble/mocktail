@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Removes all the sigil comments from the top of our sorbet-free code
+
+# Find all files that start with "# typed" in the first line
+files=$(grep -rl '^# typed' --exclude-dir=lib/mocktail/sorbet lib/*)
+
+# Loop through each file and delete the first line
+for file in $files
+do
+    # Check if we're on a Mac
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' '1d' $file
+    else
+        sed -i '1d' $file
+    fi
+done

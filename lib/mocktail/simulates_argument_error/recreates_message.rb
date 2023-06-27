@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class RecreatesMessage
     extend T::Sig

@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail::Matchers
   class IsA < Base
     extend T::Sig

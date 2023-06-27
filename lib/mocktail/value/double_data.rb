@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "call"
 require_relative "stubbing"
 

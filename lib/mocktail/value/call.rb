@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class Call < T::Struct
     extend T::Sig

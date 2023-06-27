@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class Error < StandardError; end
 

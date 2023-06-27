@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class CollectsCalls
     extend T::Sig

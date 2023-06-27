@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class DemoConfig < T::Struct
     const :ignore_block, default: false

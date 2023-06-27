@@ -15,6 +15,9 @@ module Mocktail
 end
 RUBY
 
+echo "-----> Erasing sorbet 'typed: ' sigils from lib/mocktail"
+./script/strip_sigils
+
 echo "-----> Copying src/ to lib/mocktail/sorbet/ (for Sorbet users)"
 cp -r src/ lib/mocktail/sorbet
 

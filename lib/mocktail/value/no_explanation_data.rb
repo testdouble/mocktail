@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class NoExplanationData < T::Struct
     extend T::Sig

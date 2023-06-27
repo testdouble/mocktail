@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class Double < T::Struct
     const :original_type

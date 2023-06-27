@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail::Matchers
   class Any < Base
     extend T::Sig

@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class ReconcilesArgsWithParams
     extend T::Sig

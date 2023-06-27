@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   # The gemspec will define Module::VERSION as loaded from lib/, but if the
   # user loads mocktail/sorbet, its version file will be effectively redefining

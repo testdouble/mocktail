@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "simulates_argument_error/transforms_params"
 require_relative "simulates_argument_error/reconciles_args_with_params"
 require_relative "simulates_argument_error/recreates_message"

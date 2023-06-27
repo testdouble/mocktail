@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class UnsatisfyingCall < T::Struct
     const :call

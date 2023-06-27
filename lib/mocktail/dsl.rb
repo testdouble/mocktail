@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   module DSL
     extend T::Sig

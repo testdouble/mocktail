@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class RecordsDemonstration
     extend T::Sig

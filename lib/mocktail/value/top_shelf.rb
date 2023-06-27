@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   # The TopShelf is where we keep all the more global, dangerous state.
   # In particular, this is where Mocktail manages state related to singleton

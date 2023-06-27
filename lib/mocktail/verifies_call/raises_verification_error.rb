@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "raises_verification_error/gathers_calls_of_method"
 require_relative "../share/stringifies_method_name"
 require_relative "../share/stringifies_call"

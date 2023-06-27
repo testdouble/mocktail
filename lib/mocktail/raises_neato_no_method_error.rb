@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "share/stringifies_call"
 require_relative "share/stringifies_method_name"
 require_relative "share/creates_identifier"

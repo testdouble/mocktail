@@ -31,9 +31,9 @@ module Mocktail
       }&.reject { |call_site| call_site.include?("in `block") } || []
 
       approved_call_sites = [
-        /fulfills_stubbing.rb:(18|20)/,
-        /validates_arguments.rb:(20|23)/,
-        /validates_arguments.rb:(23|26)/
+        /fulfills_stubbing.rb:(16|20)/,
+        /validates_arguments.rb:(18|23)/,
+        /validates_arguments.rb:(21|26)/
       ]
       if internal_call_sites.any? && approved_call_sites.none? { |approved_call_site|
         internal_call_sites.first&.match?(approved_call_site)

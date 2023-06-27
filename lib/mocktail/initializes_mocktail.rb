@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class InitializesMocktail
     extend T::Sig

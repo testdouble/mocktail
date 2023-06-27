@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   module ExplanationData
     extend T::Helpers

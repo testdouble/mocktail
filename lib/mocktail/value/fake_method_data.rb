@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class FakeMethodData < T::Struct
     include ExplanationData

@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class Stubbing < T::Struct
     extend T::Sig

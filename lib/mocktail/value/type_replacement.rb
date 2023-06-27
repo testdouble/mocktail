@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class TypeReplacement < T::Struct
     const :type

@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class GrabsOriginalMethodParameters
     extend T::Sig

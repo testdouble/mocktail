@@ -1,5 +1,3 @@
-# typed: strict
-
 require "pathname"
 
 require_relative "mocktail/initialize_based_on_type_system_mode_switching"

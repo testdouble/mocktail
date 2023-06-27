@@ -1,5 +1,3 @@
-# typed: true
-
 module Mocktail
   module Bind
     # sig intentionally omitted, because the wrapper will cause infinite recursion if certain methods are mocked

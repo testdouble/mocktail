@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "replaces_type/redefines_new"
 require_relative "replaces_type/redefines_singleton_methods"
 require_relative "replaces_type/runs_sorbet_sig_blocks_before_replacement"

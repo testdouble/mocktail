@@ -1,5 +1,3 @@
-# typed: strict
-
 require_relative "../../share/cleans_backtrace"
 require_relative "../../share/bind"
 

@@ -1,5 +1,3 @@
-# typed: strict
-
 module Mocktail
   class TypeReplacementData < T::Struct
     extend T::Sig

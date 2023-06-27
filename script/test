@@ -5,6 +5,9 @@ set -e
 echo "-----> Running Mocktail's test against src"
 COVER=true bundle exec rake
 
+echo "-----> Type-checking Mocktail source"
+bundle exec srb tc
+
 echo "-----> Building src/mocktail into lib/mocktail and lib/mocktail/sorbet"
 ./script/build
 
@@ -14,7 +17,7 @@ MOCKTAIL_TEST_SRC_DIRECTORY="lib" bundle exec rake
 echo "-----> Running Mocktail's test against lib/mocktail/sorbet"
 MOCKTAIL_TEST_SRC_DIRECTORY="lib/mocktail/sorbet" bundle exec rake
 
-echo "-----> Type-checking Mocktail itself"
-bundle exec srb tc
+echo "-----> Type-checking the copy of Mocktail in lib/mocktail/sorbet"
+$ be srb tc --ignore src/ --dir lib/mocktail/sorbet
 
 ./script/test_sorbet_example

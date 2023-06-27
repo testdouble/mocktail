@@ -7,8 +7,6 @@ if ENV["COVER"]
   end
 end
 
-require "sorbet-runtime"
-
 ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"] = "true"
 
 $LOAD_PATH.unshift File.expand_path("../#{ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || "src"}", __dir__)

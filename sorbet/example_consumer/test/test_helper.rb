@@ -1,6 +1,5 @@
 # typed: true
 
-require "sorbet-runtime"
 require "mocktail/sorbet" # <-- the special sauce!
 require "minitest/autorun"
 

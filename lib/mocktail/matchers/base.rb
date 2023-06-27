@@ -6,7 +6,7 @@ module Mocktail::Matchers
     extend T::Helpers
 
     if Mocktail::TYPED && T::Private::RuntimeLevels.default_checked_level != :never
-      abstract!
+
     end
 
     # Custom matchers can receive any args, kwargs, or block they want. Usually

@@ -5,3 +5,5 @@
 --ignore=vendor/
 --ignore=sorbet/example_consumer/
 --ignore=lib/
+# Ignore b/c these stubs will confuse the typechecker and generate a bunch of errors, even tho #typed: false
+--ignore=test/support/sorbet_stubs.rb

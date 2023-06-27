@@ -2,8 +2,7 @@
 
 require "pathname"
 
-require_relative "mocktail/typed"
-require "sorbet-runtime" if Mocktail::TYPED
+require_relative "mocktail/initialize_based_on_type_system_mode_switching"
 
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"

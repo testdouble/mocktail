@@ -8,10 +8,10 @@ COVER=true bundle exec rake
 echo "-----> Building src/mocktail into lib/mocktail and lib/mocktail/sorbet"
 ./script/build
 
-echo "-----> Running Mocktail's test against src"
+echo "-----> Running Mocktail's test against lib"
 MOCKTAIL_TEST_SRC_DIRECTORY="lib" bundle exec rake
 
-echo "-----> Running Mocktail's test against src"
+echo "-----> Running Mocktail's test against lib/mocktail/sorbet"
 MOCKTAIL_TEST_SRC_DIRECTORY="lib/mocktail/sorbet" bundle exec rake
 
 echo "-----> Type-checking Mocktail itself"

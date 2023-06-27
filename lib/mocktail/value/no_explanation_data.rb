@@ -5,7 +5,7 @@ module Mocktail
     extend T::Sig
     include ExplanationData
 
-    const :thing, T.untyped
+    const :thing
 
     def calls
       raise Error.new("No calls have been recorded for #{thing.inspect}, because Mocktail doesn't know what it is.")

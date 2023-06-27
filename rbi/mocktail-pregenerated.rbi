@@ -19,7 +19,7 @@ module Mocktail
     # Anything returned by this is undocumented and could change at any time, so
     # don't commit code that relies on it!
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#145
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#140
     sig { returns(::Mocktail::Cabinet) }
     def cabinet; end
 
@@ -27,7 +27,7 @@ module Mocktail
     # Takes an optional second parameter of the method name to filter only
     # calls to that method
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#137
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#132
     sig do
       params(
         double: ::Object,
@@ -36,32 +36,32 @@ module Mocktail
     end
     def calls(double, method_name = T.unsafe(nil)); end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#95
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#90
     sig { returns(::Mocktail::Matchers::Captor) }
     def captor; end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#121
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#116
     sig { params(thing: ::Object).returns(::Mocktail::Explanation) }
     def explain(thing); end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#126
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#121
     sig { returns(T::Array[::Mocktail::UnsatisfyingCallExplanation]) }
     def explain_nils; end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#90
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#85
     sig { returns(::Mocktail::MatcherPresentation) }
     def matchers; end
 
     # Returns an instance of `type` whose implementation is mocked out
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#48
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#43
     sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
     # stubs its constructor to return that fake the next time klass.new is called
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#59
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#54
     sig do
       type_parameters(:T)
         .params(
@@ -73,7 +73,7 @@ module Mocktail
 
     # An alias of of_next that always returns an array of fakes
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#85
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#80
     sig do
       type_parameters(:T)
         .params(
@@ -83,18 +83,18 @@ module Mocktail
     end
     def of_next_with_count(type, count); end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#100
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#95
     sig { params(matcher: T.class_of(Mocktail::Matchers::Base)).void }
     def register_matcher(matcher); end
 
     # Replaces every singleton method on `type` with a fake, and when instantiated
     # or included will also fake instance methods
     #
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#107
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#102
     sig { params(type: T.any(::Module, T::Class[T.anything])).void }
     def replace(type); end
 
-    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#113
+    # source://mocktail//lib/mocktail/sorbet/mocktail.rb#108
     sig { void }
     def reset; end
   end
@@ -103,6 +103,7 @@ end
 # source://mocktail//lib/mocktail/sorbet/mocktail/errors.rb#12
 class Mocktail::AmbiguousDemonstrationError < ::Mocktail::Error; end
 
+# source://mocktail//lib/mocktail/sorbet/mocktail.rb#35
 # source://mocktail//lib/mocktail/sorbet/mocktail.rb#40
 # source://mocktail//lib/mocktail/sorbet/mocktail.rb#36
 Mocktail::BASE_PATH = T.let(T.unsafe(nil), String)

@@ -2,12 +2,7 @@
 
 require "pathname"
 
-require_relative "mocktail/typed"
-if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
-  require "sorbet-runtime"
-else
-  require "sorbet/eraser"
-end
+require_relative "mocktail/initialize_based_on_type_system_mode_switching"
 
 require_relative "mocktail/collects_calls"
 require_relative "mocktail/debug"

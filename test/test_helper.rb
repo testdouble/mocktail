@@ -13,7 +13,12 @@ $LOAD_PATH.unshift File.expand_path("../#{ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || 
 require "mocktail"
 require "minitest/autorun"
 
-require_relative "support/sorbet_override"
+# T is not defined yet, so we can't use T.unsafe to pass typechecking
+if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
+  require_relative "support/sorbet_override"
+else
+  require_relative "support/sorbet_stubs"
+end
 
 class Minitest::Test
   extend T::Sig

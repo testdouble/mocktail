@@ -4,19 +4,19 @@ module Mocktail
   class Call < T::Struct
     extend T::Sig
 
-    const :singleton, T.nilable(T::Boolean)
-    const :double, T.untyped, default: nil
-    const :original_type, T.nilable(T.any(T::Class[T.anything], Module))
-    const :dry_type, T.nilable(T.any(T::Class[T.anything], Module))
-    const :method, T.nilable(Symbol), without_accessors: true
-    const :original_method, T.nilable(T.any(UnboundMethod, Method))
-    const :args, T::Array[T.untyped], default: []
-    const :kwargs, T::Hash[Symbol, T.untyped], default: {}
+    const :singleton
+    const :double, default: nil
+    const :original_type
+    const :dry_type
+    const :method, without_accessors: true
+    const :original_method
+    const :args, default: []
+    const :kwargs, default: {}
     # At present, there's no way to type optional/variadic params in blocks
     #   (i.e. `T.proc.params(*T.untyped).returns(T.untyped)` doesn't work)
     #
     # See: https://github.com/sorbet/sorbet/issues/1142#issuecomment-1586195730
-    const :block, T.nilable(Proc)
+    const :block
 
     attr_reader :method
 

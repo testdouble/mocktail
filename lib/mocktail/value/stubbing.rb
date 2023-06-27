@@ -6,11 +6,11 @@ module Mocktail
     extend T::Generic
     MethodReturnType = type_member
 
-    const :demonstration, T.proc.params(matchers: Mocktail::MatcherPresentation).returns(MethodReturnType)
-    const :demo_config, DemoConfig
-    prop :satisfaction_count, Integer, default: 0
-    const :recording, Call
-    prop :effect, T.nilable(T.proc.params(call: Mocktail::Call).returns(MethodReturnType))
+    const :demonstration
+    const :demo_config
+    prop :satisfaction_count, default: 0
+    const :recording
+    prop :effect
 
     def satisfied!
       self.satisfaction_count += 1

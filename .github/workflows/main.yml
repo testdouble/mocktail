@@ -27,5 +27,8 @@ jobs:
         cd sub_projects/rbi_generator
         bundle install
         cd ../..
+        cd sub_projects/untyped_user
+        bundle install
+        cd ../..
     - name: Run the test script
       run: ./script/test

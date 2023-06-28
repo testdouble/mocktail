@@ -10,7 +10,7 @@ gem "simplecov"
 gem "m"
 
 gem "sorbet-static"
+gem "sorbet-eraser"
 gem "tapioca"
 gem "spoom"
 gem "rubocop-sorbet"
-gem "sorbet-eraser"

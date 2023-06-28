@@ -1,0 +1,21 @@
+PATH
+  remote: ../..
+  specs:
+    mocktail (1.2.2)
+      sorbet-runtime (~> 0.5.9204)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.18.1)
+    sorbet-runtime (0.5.10885)
+
+PLATFORMS
+  arm64-darwin-22
+
+DEPENDENCIES
+  minitest
+  mocktail!
+
+BUNDLED WITH
+   2.4.13

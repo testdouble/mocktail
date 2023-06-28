@@ -5,5 +5,5 @@ require_relative "typed"
 if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
   require "sorbet-runtime"
 else
-  require "sorbet/eraser"
+  require "t"
 end

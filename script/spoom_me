@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
+set -xeuo pipefail
+
 bundle exec spoom coverage --save
 bundle exec spoom coverage report
 bundle exec spoom coverage open

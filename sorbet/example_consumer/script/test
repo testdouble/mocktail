@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -xeuo pipefail
 
 echo "-----> [Sorbet Example Project] Nuking and regenerating Mocktail RBI files"
 rm -rf sorbet/rbi/gems/mocktail*

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -xeuo pipefail
 
 echo "-----> Running Mocktail's test against src"
 COVER=true bundle exec rake

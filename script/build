@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -xeuo pipefail
 
 echo "-----> Deleting lib/ and copying src/ to lib/"
 rm -rf lib

@@ -5,5 +5,5 @@ require_relative "typed"
 if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
   require "sorbet-runtime"
 else
-  require "t"
+  require "#{Gem.loaded_specs["sorbet-eraser"].gem_dir}/lib/t"
 end

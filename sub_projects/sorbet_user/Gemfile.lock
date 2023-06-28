@@ -2,6 +2,7 @@ PATH
   remote: ../..
   specs:
     mocktail (1.2.2)
+      sorbet-eraser (~> 0.3.1)
       sorbet-runtime (~> 0.5.9204)
 
 GEM
@@ -52,6 +53,7 @@ GEM
     ruby-progressbar (1.13.0)
     sorbet (0.5.10885)
       sorbet-static (= 0.5.10885)
+    sorbet-eraser (0.3.1)
     sorbet-runtime (0.5.10885)
     sorbet-static (0.5.10885-universal-darwin-22)
     sorbet-static-and-runtime (0.5.10885)

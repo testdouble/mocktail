@@ -21,6 +21,6 @@ echo "-----> Ensuring that double-requiring Mocktail produces the right warning 
 script/test_double_require_warnings
 
 echo "-----> Type-checking the copy of Mocktail in lib/mocktail/sorbet"
-$ be srb tc --ignore src/ --dir lib/mocktail/sorbet
+$ bundle exec srb tc --ignore src/ --dir lib/mocktail/sorbet
 
 ./script/test_sorbet_example

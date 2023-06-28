@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     mocktail (1.2.2)
+      sorbet-eraser (~> 0.3.1)
       sorbet-runtime (~> 0.5.9204)
 
 GEM
@@ -125,7 +126,6 @@ DEPENDENCIES
   rake
   rubocop-sorbet
   simplecov
-  sorbet-eraser
   sorbet-static
   spoom
   standard

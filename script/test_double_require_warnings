@@ -26,7 +26,7 @@ assert_warning(
     bundle exec ruby -e 'require "#{Dir.pwd}/lib/mocktail/sorbet"; require "#{Dir.pwd}/lib/mocktail"'
   CMD
   warning: <<~WARN
-    `require "mocktail"' was called, but Mocktail was already required as `require "mocktail/sorbet"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITHOUT sorbet runtime checks, remove whatever is requiring `mocktail/sorbet'.
+    `require "mocktail"' was called, but Mocktail was already required as `require "mocktail/sorbet"', so we're NOT going to load it to avoid constants from being redefined. If you want to use Mocktail WITHOUT sorbet runtime checks, remove whatever is requiring `mocktail/sorbet'.
   WARN
 )
 
@@ -36,6 +36,6 @@ assert_warning(
     bundle exec ruby -e 'require "#{Dir.pwd}/lib/mocktail"; require "#{Dir.pwd}/lib/mocktail/sorbet"'
   CMD
   warning: <<~WARN
-    `require "mocktail/sorbet"' was called, but Mocktail was already required as `require "mocktail"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITH sorbet runtime checks, remove whatever is requiring `mocktail'.
+    `require "mocktail/sorbet"' was called, but Mocktail was already required as `require "mocktail"', so we're NOT going to load it to avoid constants from being redefined. If you want to use Mocktail WITH sorbet runtime checks, remove whatever is requiring `mocktail'.
   WARN
 )

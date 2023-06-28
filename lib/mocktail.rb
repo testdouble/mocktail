@@ -2,9 +2,9 @@ require "pathname"
 
 if defined?(Mocktail::TYPED)
   if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
-    warn "`require \"mocktail\"' was called, but Mocktail was already required as `require \"mocktail/sorbet\"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITHOUT sorbet runtime checks, remove whatever is requiring `mocktail/sorbet'."
+    warn "`require \"mocktail\"' was called, but Mocktail was already required as `require \"mocktail/sorbet\"', so we're NOT going to load it to avoid constants from being redefined. If you want to use Mocktail WITHOUT sorbet runtime checks, remove whatever is requiring `mocktail/sorbet'."
   else
-    warn "`require \"mocktail/sorbet\"' was called, but Mocktail was already required as `require \"mocktail\"', so we're bailing out to avoid constants from being redefined. If you want to use Mocktail WITH sorbet runtime checks, remove whatever is requiring `mocktail'."
+    warn "`require \"mocktail/sorbet\"' was called, but Mocktail was already required as `require \"mocktail\"', so we're NOT going to load it to avoid constants from being redefined. If you want to use Mocktail WITH sorbet runtime checks, remove whatever is requiring `mocktail'."
   end
   return
 end

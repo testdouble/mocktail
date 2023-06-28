@@ -966,8 +966,8 @@ Sorbet signatures has been narrowed to the greatest reasonable extent:
   implemented with `method_missing`](/lib/mocktail/matcher_presentation.rb), so
   you'll probably want to create an RBI file that specifies your matcher's
   signature on `Mocktail::MatcherPresentation`. See this example from this
-  repo's [example matcher signature](/sorbet/example_consumer/rbi/mocktail.rbi)
-  and the `Is5Matcher` in [its test](/sorbet/example_consumer/test/sorbet_test.rb)
+  repo's [example matcher signature](/sub_projects/sorbet_user/rbi/mocktail.rbi)
+  and the `Is5Matcher` in [its test](/sub_projects/sorbet_user/test/sorbet_test.rb)
 
 ### I'm seeing a TypeError and it has to do with Sorbet and I don't care about Sorbet
 

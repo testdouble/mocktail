@@ -3,7 +3,7 @@
 --ignore=tmp/
 --ignore=Rakefile
 --ignore=vendor/
---ignore=sorbet/example_consumer/
+--ignore=sub_projects/sorbet_user/
 --ignore=lib/
 # Ignore b/c these stubs will confuse the typechecker and generate a bunch of errors, even tho #typed: false
 --ignore=test/support/sorbet_stubs.rb

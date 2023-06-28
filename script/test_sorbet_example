@@ -2,5 +2,5 @@
 
 set -e
 
-cd sorbet/example_consumer
+cd sub_projects/sorbet_user
 ./script/test

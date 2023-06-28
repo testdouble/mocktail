@@ -32,14 +32,14 @@ cat << RUBY > lib/mocktail.rb
 require_relative "mocktail/sorbet"
 RUBY
 
-echo "----------> ❷ Generating sorbet sigs via tapioca in sorbet/rbi-generating-project"
-cd sorbet/rbi-generating-project
+echo "----------> ❷ Generating sorbet sigs via tapioca in sub_projects/rbi_generator"
+cd sub_projects/rbi_generator
 bundle
 bundle exec tapioca gem --all --exclude=tapioca ast diff-lcs erubi netrc parser prettier_print racc rbi spoom syntax_tree thor unparser sorbet yard parallel yard-sorbet
 cd ../..
 
 echo "----------> ❸ Moving the generated RBI to rbi/mocktail-pregenerated.rbi"
-cp sorbet/rbi-generating-project/sorbet/rbi/gems/mocktail@*.rbi rbi/mocktail-pregenerated.rbi
+cp sub_projects/rbi_generator/sorbet/rbi/gems/mocktail@*.rbi rbi/mocktail-pregenerated.rbi
 mv lib/mocktail.rb.nope lib/mocktail.rb
 
 

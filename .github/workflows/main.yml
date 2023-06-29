@@ -20,15 +20,6 @@ jobs:
     - name: Install gem dependencies
       run: |
         gem install bundler
-        bundle install
-        cd sub_projects/sorbet_user
-        bundle install
-        cd ../..
-        cd sub_projects/rbi_generator
-        bundle install
-        cd ../..
-        cd sub_projects/untyped_user
-        bundle install
-        cd ../..
+        ./script/setup
     - name: Run the test script
       run: ./script/test

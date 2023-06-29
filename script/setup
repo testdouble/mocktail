@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+bundle
+
+cd sub_projects/rbi_generator/
+bundle
+cd ../..
+
+cd sub_projects/sorbet_user/
+bundle
+cd ../..
+
+cd sub_projects/untyped_user/
+bundle
+cd ../..

@@ -5,16 +5,6 @@ set -xeuo pipefail
 echo "-----> [Sorbet Example Project] Nuking and regenerating Mocktail RBI files"
 rm -rf sorbet/rbi/gems/mocktail*
 bin/tapioca gems
-# TODO HACK for weird erasures from tapioca gems
-# https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1686419185397299
-cat << EOF >> sorbet/rbi/gems/mocktail@1.2.2.rbi
-class Mocktail::Stubbing
-  MethodReturnType = type_member
-end
-EOF
-
-
-
 
 echo "-----> [Sorbet Example Project] Type-checking"
 bundle exec srb tc

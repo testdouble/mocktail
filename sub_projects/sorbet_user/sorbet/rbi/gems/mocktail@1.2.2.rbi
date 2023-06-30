@@ -1852,6 +1852,3 @@ module T
     end
   end
 end
-class Mocktail::Stubbing
-  MethodReturnType = type_member
-end

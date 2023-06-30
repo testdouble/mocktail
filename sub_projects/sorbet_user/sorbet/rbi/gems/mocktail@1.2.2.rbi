@@ -1852,11 +1852,6 @@ module T
     end
   end
 end
-
-module Mocktail::ExplanationData
-  include Kernel
-end
-
 class Mocktail::Stubbing
   MethodReturnType = type_member
 end

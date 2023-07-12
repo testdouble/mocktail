@@ -14,7 +14,7 @@ module Mocktail
     # happens unintentionally. This works in conjunction with the test
     # MockingMethodfulClassesTest, because it mocks every defined method on the
     # mocked BasicObject
-
+    sig { void }
     def self.guard_against_mocktail_accidentally_calling_mocks_if_debugging!
       return unless ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"]
       raise Mocktail::Error

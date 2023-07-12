@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     mocktail (1.2.2)
-      sorbet-eraser (~> 0.3.1)
-      sorbet-runtime (~> 0.5.9204)
+      sorbet-eraser (~> 0.4.0)
+      sorbet-runtime (~> 0.5.10911)
 
 GEM
   remote: https://rubygems.org/
@@ -62,7 +62,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     sorbet (0.5.10911)
       sorbet-static (= 0.5.10911)
-    sorbet-eraser (0.3.1)
+    sorbet-eraser (0.4.0)
     sorbet-runtime (0.5.10911)
     sorbet-static (0.5.10911-universal-darwin-14)
     sorbet-static (0.5.10911-universal-darwin-15)

@@ -226,5 +226,14 @@ class LintRoller::Rules < ::Struct
   end
 end
 
+# source://lint_roller//lib/lint_roller/support/merges_upstream_metadata.rb#2
+module LintRoller::Support; end
+
+# source://lint_roller//lib/lint_roller/support/merges_upstream_metadata.rb#3
+class LintRoller::Support::MergesUpstreamMetadata
+  # source://lint_roller//lib/lint_roller/support/merges_upstream_metadata.rb#4
+  def merge(plugin_yaml, upstream_yaml); end
+end
+
 # source://lint_roller//lib/lint_roller/version.rb#2
 LintRoller::VERSION = T.let(T.unsafe(nil), String)

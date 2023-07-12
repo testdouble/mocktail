@@ -4,6 +4,9 @@
 --ignore=Rakefile
 --ignore=vendor/
 --ignore=sub_projects/sorbet_user/
+--ignore=sub_projects/rbi_generator/
 --ignore=lib/
 # Ignore b/c these stubs will confuse the typechecker and generate a bunch of errors, even tho #typed: false
 --ignore=test/support/sorbet_stubs.rb
+# Ignore b/c this pregenerated rbi is for consumers of the gem, not the gem itself
+--ignore=rbi/mocktail-pregenerated.rbi

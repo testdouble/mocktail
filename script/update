@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+echo "-----> Updating root gems"
+bundle update
+
+echo "-----> Updating 'sub_projects/rbi_generator' gems"
+cd sub_projects/rbi_generator
+bundle update
+cd ../..
+
+echo "-----> Updating 'sub_projects/sorbet_user' gems"
+cd sub_projects/sorbet_user
+bundle update
+cd ../..
+
+echo "-----> Updating 'sub_projects/untyped_user' gems"
+cd sub_projects/untyped_user
+bundle update
+cd ../..

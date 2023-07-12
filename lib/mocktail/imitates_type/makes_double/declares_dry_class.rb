@@ -4,23 +4,18 @@ module Mocktail
   class DeclaresDryClass
     extend T::Sig
 
-    DEFAULT_ANCESTORS = T.let(T.must(Class.new(Object).ancestors[1..]), T::Array[T.any(T::Class[T.anything], Module)])
+    DEFAULT_ANCESTORS = Class.new(Object).ancestors[1..]
 
-    sig { void }
     def initialize
-      @raises_neato_no_method_error = T.let(RaisesNeatoNoMethodError.new, RaisesNeatoNoMethodError)
-      @transforms_params = T.let(TransformsParams.new, TransformsParams)
-      @stringifies_method_signature = T.let(StringifiesMethodSignature.new, StringifiesMethodSignature)
-      @grabs_original_method_parameters = T.let(GrabsOriginalMethodParameters.new, GrabsOriginalMethodParameters)
+      @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
+      @transforms_params = TransformsParams.new
+      @stringifies_method_signature = StringifiesMethodSignature.new
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
     end
 
-    sig {
-      type_parameters(:T)
-        .params(type: T.all(T.type_parameter(:T), T::Class[T.anything]), instance_methods: T::Array[Symbol]).returns(T.type_parameter(:T))
-    }
     def declare(type, instance_methods)
       dry_class = Class.new(Object) {
-        include type if T.unsafe(type).is_a?(Module) && !T.unsafe(type).is_a?(Class)
+        include type if type.is_a?(Module) && !type.is_a?(Class)
 
         define_method :initialize do |*args, **kwargs, &blk|
         end
@@ -32,7 +27,7 @@ module Mocktail
           }
         end
 
-        if T.unsafe(type).is_a?(Class)
+        if type.is_a?(Class)
           define_method :instance_of?, ->(thing) {
             type == thing
           }
@@ -41,7 +36,7 @@ module Mocktail
 
       add_more_methods!(dry_class, type, instance_methods)
 
-      T.unsafe(dry_class) # This is all fake! That's the whole point—it's not a real Foo, it's just some new class that quacks like a Foo
+      dry_class  # This is all fake! That's the whole point—it's not a real Foo, it's just some new class that quacks like a Foo
     end
 
     private
@@ -49,7 +44,7 @@ module Mocktail
     # These have special implementations, but if the user defines
     # any of them on the object itself, then they'll be replaced with normal
     # mocked methods. YMMV
-    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
+
     def add_more_methods!(dry_class, type, instance_methods)
       add_stringify_methods!(dry_class, :to_s, type, instance_methods)
       add_stringify_methods!(dry_class, :inspect, type, instance_methods)
@@ -58,7 +53,6 @@ module Mocktail
       define_double_methods!(dry_class, type, instance_methods)
     end
 
-    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def define_double_methods!(dry_class, type, instance_methods)
       instance_methods.each do |method_name|
         dry_class.undef_method(method_name) if dry_class.method_defined?(method_name)
@@ -88,7 +82,6 @@ module Mocktail
       end
     end
 
-    sig { params(dry_class: T::Class[Object], method_name: Symbol, type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def add_stringify_methods!(dry_class, method_name, type, instance_methods)
       dry_class.define_singleton_method method_name, -> {
         if (id_matches = super().match(/:([0-9a-fx]+)>$/))
@@ -109,7 +102,6 @@ module Mocktail
       end
     end
 
-    sig { params(dry_class: T::Class[Object], type: T.any(T::Class[T.anything], Module), instance_methods: T::Array[Symbol]).void }
     def define_method_missing_errors!(dry_class, type, instance_methods)
       return if instance_methods.include?(:method_missing)
 

@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "sorbet-runtime", "~> 0.5.9204"
-  spec.add_dependency "sorbet-eraser", "~> 0.4.0"
+  spec.add_dependency "sorbet-eraser", "~> 0.3.1"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

@@ -2,14 +2,14 @@ PATH
   remote: ../..
   specs:
     mocktail (1.2.2)
-      sorbet-eraser (~> 0.4.0)
-      sorbet-runtime (~> 0.5.10911)
+      sorbet-eraser (~> 0.3.1)
+      sorbet-runtime (~> 0.5.9204)
 
 GEM
   remote: https://rubygems.org/
   specs:
     minitest (5.18.1)
-    sorbet-eraser (0.4.0)
+    sorbet-eraser (0.3.1)
     sorbet-runtime (0.5.10911)
 
 PLATFORMS

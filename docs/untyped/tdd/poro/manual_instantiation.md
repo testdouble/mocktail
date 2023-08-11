@@ -1,4 +1,4 @@
-# Manually instantiating mocks
+# Manually instantiating mocks with `Mocktail.of(SomeClassOrModule)`
 
 The method we use to instantiate instances of mocks for a given class or module
 is [Mocktail.of](/docs/support/api.md#mocktailof).
@@ -51,9 +51,32 @@ will return `nil` by default (unless stubbed with
 assert that the fake `payment_processor`'s `establish_connection` method using
 [Mocktail.verify](/docs/support/api.md#mocktailverify).
 
+## Creating mocks of a given module
+
+It's worth noting that `Mocktail.of` will gladly receive a module as an argument
+and then create a one-off class only for the purpose of faking it:
+
+``` ruby
+module Currency
+  def convert(from)
+  end
+end
+
+currency = Mocktail.of(Currency)
+=> #<Mocktail of Currency:0x0000000104a36510>
+
+currency.class
+=> #<Class including module for mocktail of Currency:0x00000001077d4620>
+```
+
+The above `currency` mock object will have a fake `convert` method on it, just
+as an instance of a class including the `Currency` module would.
+
+## You did it!
+
 So there you go, you've got what you need to create mock instances and pass them
 to your subjects.
 
-**Delve deeper and explore more about [stubbing and verifying interactions](../../stubbing_and_verifying.md)**
+**Delve deeper and explore more about [stubbing and verifying interactions](../../stubbing_and_verifying.md).**
 
-**Go back and consider other ways to [create mocks](../../tdd.md)**
+**Go back and consider other ways to [create mocks](../../tdd.md).**

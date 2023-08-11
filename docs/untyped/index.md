@@ -55,6 +55,6 @@ end
 But configuration will only get you so far.  Once your prep is complete, it's
 time to roll up your sleeves and get to work.
 
-**Incorporate Mocktail into your [test-driven development workflow](tdd.md)**
+**Incorporate Mocktail into your [test-driven development workflow](tdd.md).**
 
-**Leverage Mocktail's metaprogramming essence for [other testing utilities](other_uses.md)**
+**Leverage Mocktail's metaprogramming essence for [other testing utilities](other_uses.md).**

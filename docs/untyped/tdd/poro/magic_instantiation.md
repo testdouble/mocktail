@@ -113,6 +113,17 @@ result = subject.have_things
 assert_equal [:alpha, :omega], result
 ```
 
+## This doesn't work for modules
+
+If you want Mocktail to create a mock instance from a reference to a module,
+however, `Mocktail.of_next` won't work—there's no `new` method for it to
+override or for the subject to reference! The best way to do it is either to
+create a test-scoped class that includes the module yourself first (and passing
+that class to the subject somehow so it can call `new` on it) or to give up on
+trying to use `of_next` in favor of
+[Mocktail.of](/docs/support/api.md#mocktailof), which can accept a module and
+return a mock instance.
+
 ## Behold your awesome power!
 
 If your coding style supports it, maximizing `Mocktail.of_next` usage in your

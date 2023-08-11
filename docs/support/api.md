@@ -24,12 +24,12 @@ methods.
       * [m.that](#mthat)
     * [Custom matchers](#custom-matchers)
   * [Mocktail.captor](#mocktailcaptor)
-* [Mocking singleton methods](#mocking-singleton-methods)
+* [Mocking class and module methods](#mocking-class-and-module-methods)
   * [Mocktail.replace](#mocktailreplace)
 * [Debugging](#debugging)
   * [Mocktail.explain](#mocktailexplain)
     * [Fake instances created by Mocktail](#fake-instances-created-by-mocktail)
-    * [Modules and classes with singleton methods replaced](#modules-and-classes-with-singleton-methods-replaced)
+    * [Modules and classes with their methods replaced](#modules-and-classes-with-their-methods-replaced)
     * [Methods on faked instances and replaced types](#methods-on-faked-instances-and-replaced-types)
     * [Undefined methods](#undefined-methods)
   * [Mocktail.explain_nils](#mocktailexplain_nils)
@@ -465,15 +465,15 @@ payload = payload_captor.value # {:imagine=>"that", :this=>"is", :a=>"huge", :ob
 assert_equal "huge", payload[:a]
 ```
 
-## Mocking singleton methods
+## Mocking class and module methods
 
 ### Mocktail.replace
 
 Mocktail was written to support isolated test-driven development, which usually
 results in a lot of boring classes and instance methods. But sometimes you need
-to mock singleton methods on classes or modules, and we support that too.
+to mock methods on classes or modules, and we support that too.
 
-When you call `Mocktail.replace(type)`, all of the singleton methods on the
+When you call `Mocktail.replace(type)`, all of the methods defined on the
 provided type are replaced with fake methods available for stubbing and
 verification. It's really that simple.
 
@@ -496,11 +496,11 @@ stubs { Bartender.cliche_greeting }.with { "Norm!" }
 ```
 
 [**Obligatory warning:** Mocktail does its best to ensure that other threads
-won't be affected when you replace the singleton methods on a type, but your
-mileage may very! Singleton methods are global and code that introspects or
-invokes a replaced method in a peculiar-enough way could lead to hard-to-track
-down bugs. (If this concerns you, then the fact that class methods are
-effectively global state may be a great reason not to rely too heavily on
+won't be affected when you replace the globally-referenceable methods on a type,
+but your mileage may very! Singleton methods are global and code that
+introspects or invokes a replaced method in a peculiar-enough way could lead to
+hard-to-track down bugs. (If this concerns you, then the fact that class methods
+are effectively global state may be a great reason not to rely too heavily on
 them!)]
 
 ## Debugging
@@ -562,14 +562,13 @@ It has these mocked methods:
 
 ```
 
-#### Modules and classes with singleton methods replaced
+#### Modules and classes with their methods replaced
 
 If you've called `Mocktail.replace()` on a class or module, it can also be
 passed to `Mocktail.explain()` for a summary of all the stubbing configurations
-and calls made against its faked singleton methods for the currently running
-thread.
+and calls made against its faked methods for the currently running thread.
 
-Imagine a `Shop` class with `self.open!` and `self.close!` singleton methods:
+Imagine a `Shop` class with `self.open!` and `self.close!` methods:
 
 ```ruby
 Mocktail.replace(Shop)
@@ -591,7 +590,7 @@ explanation.reference.stubbings #=> all stubbings configured for each method
 And `explanation.message` will return:
 
 ```ruby
-`Shop' is a class that has had its singleton methods faked.
+`Shop' is a class that has had its methods faked.
 
 It has these mocked methods:
   - close!
@@ -652,7 +651,7 @@ The explanation will also contain a `message` like this:
   fill(:chilled, 50)
 ```
 
-Replaced singleton methods can also be passed to `explain()`, so something like
+Replaced class methods can also be passed to `explain()`, so something like
 `Mocktail.explain(Shop.method(:open!))` from the earlier example would also work
 (with `Shop` being the `receiver` on the explanation's `reference`).
 

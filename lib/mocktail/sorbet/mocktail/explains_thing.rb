@@ -93,7 +93,7 @@ module Mocktail
       type_replacement_data = data_for_type_replacement(type_replacement)
 
       ReplacedTypeExplanation.new(type_replacement_data, <<~MSG)
-        `#{type_replacement.type}' is a #{type_replacement.type.class.to_s.downcase} that has had its singleton methods faked.
+        `#{type_replacement.type}' is a #{type_replacement.type.class.to_s.downcase} that has had its methods faked.
 
         It has these mocked methods:
         #{type_replacement_data.replaced_method_names.map { |method| "  - #{method}" }.join("\n")}

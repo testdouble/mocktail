@@ -10,6 +10,6 @@ before you:
 
 **Use Mocktail to create [fake instances of Ruby classes](tdd/poro.md) you own.**
 
-**Use Mocktail to [fake out singleton ("class" or "module") methods](tdd/singletons.md) of types you own.**
+**Use Mocktail to [fake out class and module methods](tdd/class_methods.md) of types you own.**
 
-**Use Mocktail to [fake out third-party code](tdd/third_party.md) you can't readily change.**
+**Use Mocktail to [fake out third-party code](tdd/third_party.md) you can't readily change yourself.**

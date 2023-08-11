@@ -180,7 +180,7 @@ class ExplainTest < Minitest::Test
     assert_kind_of Mocktail::TypeReplacementData, explanation.reference
 
     assert_equal <<~MSG, explanation.message
-      `ExplainTest::Training' is a module that has had its singleton methods faked.
+      `ExplainTest::Training' is a module that has had its methods faked.
 
       It has these mocked methods:
         - learn!

@@ -1471,7 +1471,7 @@ class Mocktail::RunsSorbetSigBlocksBeforeReplacement
   #
   # Initially, Foo.method(:bar) would == C, but after the type
   # replacement, it would == B (with a reference back to C as the original),
-  # but after while handling a single dry call, our invocation of
+  # but after handling a single dry call, our invocation of
   # GrabsOriginalMethodParameters.grab(Foo.method(:bar)) would invoke the
   # Sorbet `sig` block, which has the net effect of redefining the method back
   # to A.

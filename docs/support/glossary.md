@@ -45,3 +45,22 @@ subject under test to a variable name like `@subject` in every test so that test
 cases can be moved between file listings with less effort. It has the added
 benefit of always clarifying the thing being tested from any other
 [dependencies](#dependency) referenced in the test.
+
+# Wrapper object
+
+A wrapper object, sometimes referred to as an adapter (or even "[scar
+tissue](https://www.destroyallsoftware.com/talks/boundaries)") is often
+introduced to wrap code whose API can't be readily changed in response to being
+difficult to mock out in a test (e.g. a third-party library, a utility
+maintained by another team, etc). Wrappers typically act as a solitary
+chokepoint for an application's use of a third-party API, which can serve a
+couple of key benefits:
+
+* Wrappers self-document the extent to which a codebase uses a particular
+dependency and make it easy to assess swapping it for an alternative without
+requiring changes to be made throughout the codebase
+* If a wrapper is written around a hard-to-mock (and therefore hard-to-use)
+third-party API, then the wrapper can effectively serve as a rug under which the
+complexity of that API can be swept by exposing its behavior through
+easier-to-mock (and therefore easier-to-use) method signatures and return values
+that look and feel similar to those found in the rest of the codebase

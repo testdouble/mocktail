@@ -21,8 +21,10 @@ Mocktail:
 
 **Mocking out _just one_ method on an [otherwise real object](faq/partial_mocks.md).**
 
-**Recording method invocations while [calling through to its real implementation](faq/verifying_real_interactions.md).**
+**Recording method invocations while [calling through to their real implementation](faq/verifying_real_interactions.md).**
 
 **Using Mocktail to fix an existing test that's [failing in a gnarly way you don't understand](faq/existing_tests.md).**
 
 **Mocking out a method on the subject under test, AKA [the thing you're testing itself](faq/mocking_the_subject.md).**
+
+**Or if you've seen enough, you can take a look at [Mocktail as a TDD tool](../tdd.md).**

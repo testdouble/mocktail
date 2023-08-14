@@ -13,9 +13,9 @@ If that's the case, here's a quick note on why you might be trying to apply
 the wrong solution to the problem.
 
 Suppose you're writing a unit test and trying to control for the network and
-thinking about using a library like Mocktail as a result. To illustrate by means
-of an example: imagine testing a method that makes a network request and does
-one thing if the response succeeds and another thing to handle failures.
+thinking about using a library like Mocktail as a result. To illustrate: imagine
+you're testing a method that makes a network request and does one thing if the
+response succeeds and another thing to handle failures.
 
 You might want to write these two test cases:
 
@@ -33,11 +33,11 @@ def test_failure
 end
 ```
 
-But you may not have an easy way to force one to always exercise the happy path
-in which the request succeeds. Similarly, you would need the other test case to
-consistently travel the sad path in which the request fails. Short of spinning
-up a fake HTTP service, you don't have a lot of options, especially if your
-implementation looks anything like this:
+But you may not have an easy way to force the first test case to always exercise
+the happy path in which the request succeeds. Similarly, you would need a way to
+ensure the other test case to consistently travels the sad path wherein the
+request fails. Short of spinning up a fake HTTP service, you don't have a lot
+of options, especially if your implementation looks anything like this:
 
 ```ruby
 class Computer
@@ -63,9 +63,10 @@ end
 This case is so simple that it may strain credulity, but instead of trying to
 introduce a network-layer mock to your application-layer concern, you might
 consider writing a [wrapper](../support/glossary.md#wrapper-object) around the
-network request that you call whenever your application needs to make a network
-request. Then, instead of your test needing to mock out the entire networking
-stack, it just needs to _mock out the wrapper_ instead.
+`Net::HTTP` API that you don't control and can't change that your application
+can invoke wherever it needs to make a network request. Then, instead of your
+test needing to mock out the entire networking stack, it just needs to _mock out
+the wrapper_ instead.
 
 Here's what the refactored [subject](../support/glossary.md#subject-under-test)
 could look like if we extracted its usage of `Net::HTTP` into an `Http` wrapper

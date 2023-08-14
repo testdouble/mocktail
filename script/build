@@ -34,7 +34,7 @@ RUBY
 
 echo "----------> ❷ Generating sorbet sigs via tapioca in sub_projects/rbi_generator"
 cd sub_projects/rbi_generator
-rm sorbet/rbi/gems/mocktail@*.rbi
+rm -f sorbet/rbi/gems/mocktail@*.rbi
 bundle
 bundle exec tapioca gem --all --exclude=tapioca ast diff-lcs erubi netrc parser prettier_print racc rbi spoom syntax_tree thor unparser sorbet yard parallel yard-sorbet
 cd ../..

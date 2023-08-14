@@ -1,4 +1,4 @@
-# Magically instantiating mocks with `Mocktail.of_next(SomeClass)`
+# Dependency _inception_ by magically instantiating mocks with `Mocktail.of_next(SomeClass)`
 
 Perhaps your typical [subject](/docs/support/glossary.md#subject-under-test)
 instantiates its own [dependencies](/docs/support/glossary.md#dependency):

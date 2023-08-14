@@ -10,6 +10,6 @@ Exactly _how_ you create these mocked instances depends on how you prefer to
 get [dependencies](/docs/support/glossary.md#dependency) into the hands of your
 [subject under test](/docs/support/glossary.md#subject-under-test).
 
-**Manually [pass instances of dependencies to your test subject](poro/manual_instantiation.md) (whether directly or through an intermediary dependency injection technique).**
+**Manually pass instances of dependencies to your test subject, AKA [dependency injection](poro/dependency_injection.md).**
 
-**Allow your subject to [instantiate its dependencies itself](poro/magic_instantiation.md).**
+**Allow your subject to instantiate its dependencies by wielding ✨mocking magic✨, AKA [dependency inception](poro/dependency_inception.md).**

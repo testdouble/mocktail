@@ -1,4 +1,4 @@
-# Manually instantiating mocks with `Mocktail.of(SomeClassOrModule)`
+# Dependency injection by manually instantiating mocks with `Mocktail.of(SomeClassOrModule)`
 
 The method we use to instantiate instances of mocks for a given class or module
 is [Mocktail.of](/docs/support/api.md#mocktailof).

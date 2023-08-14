@@ -8,6 +8,6 @@ abuses that lead to brittle and confusing tests.
 
 Your first choice is a consequential one: how do you want your Mocktail?
 
-**If you want to try the relaxing tonic of type safety, turn to [Mocktail with Sorbet](/docs/sorbet.md).**
+**If you want to try the relaxing tonic of type safety, turn to [Mocktail with Sorbet](/docs/installation_sorbet.md).**
 
-**If you're looking for a modern twist on a classic, reach for [untyped Mocktail](/docs/untyped.md).**
+**If you're looking for a modern twist on a classic, reach for [untyped Mocktail](/docs/installation_untyped.md).**

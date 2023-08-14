@@ -140,3 +140,12 @@ def test_failure
   end
 end
 ```
+
+Anyway, that's why you _probably_ don't want to fake out an HTTP interaction
+directly with Mocktail and should instead look to a purpose-built gem like
+[webmock](https://github.com/bblimke/webmock) or else consider alternative
+designs that make the code in question easier to test.
+
+**If you've heard enough, you can go back and consider [non-TDD use cases for Mocktail](../other_uses.md).**
+
+**Or if you're finally ready to walk the golden path, you can revisit [Mocktail as a TDD tool](../tdd.md).**

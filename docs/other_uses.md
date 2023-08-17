@@ -27,4 +27,7 @@ Mocktail:
 
 **Mocking out a method on the subject under test, AKA [the thing you're testing itself](faq/mocking_the_subject.md).**
 
-**Or if you've seen enough, you can take a look at [Mocktail as a TDD tool](../tdd.md).**
+---
+
+**Once you've seen enough, you can take a second look at [Mocktail as a TDD
+tool](../tdd.md).**

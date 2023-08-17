@@ -1,5 +1,31 @@
 # Glossary of terms
 
+## Arrange-Act-Assert
+
+The three phases of a unit test are said to be "arrange", "act", and "assert".
+(In more plainspoken parlance, these are often translated to "given", "when",
+and "then".) They refer to the three necessary activities that make a test a
+test: setting things up ("arrange"), invoking the [subject under
+test](#subject-under-test) ("act"), and verifying the results ("assert").
+
+Because nearly every test does all three things, tools and conventions are often
+associated with a particular phase. For example, test fixtures and factories
+prepare the prerequisite state of database, so they're normally configured in
+the assert phase. Additionally, tests are sometimes made clearer by demarcating
+the phases with DSLs (like `let` and `it` RSpec) or a line of whitespace. In
+fact, the [rspec-given](https://github.com/rspec-given/rspec-given) library
+exists to explicitly map each activity of a test to one of the three phases,
+both to better express intention and to take advantage of commonality between
+the phases (like memoizing reused setup code).
+
+In the context of Mocktail, mocks are typically created and
+[stubbings](#stubbing) are configured during the arrange phase, while
+verifications take place during the assert phase. A notable advantage of
+[spies](#spy) over [formal mocks](#mock) is that spies allow for assertion after
+the act phase has completed, whereas mocks require assertions to be set up in
+the arrange phase (which violates the natural "arrange-act-assert" phase
+ordering).
+
 ## Dependency
 
 In [isolated unit testing](), a "dependency" almost always refers to a plain ol'

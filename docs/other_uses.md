@@ -1,8 +1,8 @@
 # Other uses for Mocktail
 
 If you're looking to accomplish something with Mocktail that doesn't involve
-test-driven development, let's get real: there's a very high likelihood that
-it's either:
+test-driven development, let's get real. There's a very high likelihood that
+what you're looking to do is either:
 
 1. Not the best tool for the job
 2. Not a job worth doing

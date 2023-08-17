@@ -68,18 +68,19 @@ massive following) but entirely mundane when it came to mocking libraries
 In the experience of the present author, that "splash of mocha" was almost
 always used in cases like the above: to fake out one method in an Active Record
 model in the service of testing another method in the same model. It made the
-initial writing of a test easier, but at the cost of its long-term
-comprehensibility and maintainability.
+initial writing of a test easier, but at the cost of its comprehensibility and
+long-term maintainability.
 
 So, if mocking out a method on the subject isn't the solution, what should you
 do instead?
 
-In almost every case, the the subject is too big and unwieldy and the only
-workable answer is that the method being tested, the method being mocked, or
-perhaps _both_ should be extracted into classes of their own—complete with
-proper names and a clear [dependency](../support/glossary.md#dependency)
-relationship. Only _then_ might an isolated unit test with mocks be appropriate
-as a tool to help specify the terms of that relationship.
+In almost every case, this situation is indicating that the subject is serving
+too many disparate purposes and the only workable answer is that the method
+being tested, the method being mocked, or perhaps _both_ should be extracted
+into classes of their own—complete with proper names and a clear
+[dependency](../support/glossary.md#dependency) relationship. Only _then_ might
+an isolated unit test with mocks be appropriate as a tool to help specify the
+terms of that relationship.
 
 To illustrate, we could carry through this refactor by extracting both methods
 into new classes and referencing them from the original `best_promo` entrypoint

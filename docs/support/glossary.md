@@ -41,7 +41,7 @@ project is implied as the thing depending on the dependency.
 In Gerard Mezsaros' XUnit Patterns, he referred to dependencies less ambiguously
 as [depended-on components (DOC)](http://xunitpatterns.com/DOC.html).
 
-# Isolated unit testing
+## Isolated unit testing
 
 Isolated unit testing (also known as "mockist", "London-school" test-driven
 development, or discovery testing) was most thoroughly defined in Steve Freeman
@@ -243,7 +243,7 @@ for what everyone colloquially prefers to call a "mock".
 pretty great software consultancy with strong ties to the Ruby community and
 which incidentally created and maintains Mocktail.)
 
-# Wrapper object
+## Wrapper object
 
 A wrapper object, sometimes referred to as an adapter (or even "[scar
 tissue](https://www.destroyallsoftware.com/talks/boundaries)") is often

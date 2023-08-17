@@ -29,5 +29,4 @@ Mocktail:
 
 ---
 
-**Once you've seen enough, you can take a second look at [Mocktail as a TDD
-tool](../tdd.md).**
+**Once you've seen enough, you can take a second look at [Mocktail as a TDD tool](tdd.md).**

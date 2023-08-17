@@ -52,7 +52,7 @@ _subject itself_—meaning, a test to validate a subject's public API would fake
 out the subject's private implementation. As a result, no meaningful confidence
 would really be gained from such a test. At best, a test might tell you how the
 `best_promo` method would behave in the hypothetical scenario of however
-`eligible_promotions` was [stubbed](../support/glossary.md#stubbing), but that
+`eligible_promotions` was [stubbed](../support/glossary.md#stub), but that
 isn't a particularly interesting thing to know (much less codify in a test suite
 for perpetuity).
 

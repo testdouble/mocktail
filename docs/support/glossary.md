@@ -19,7 +19,7 @@ both to better express intention and to take advantage of commonality between
 the phases (like memoizing reused setup code).
 
 In the context of Mocktail, mocks are typically created and
-[stubbings](#stubbing) are configured during the arrange phase, while
+[stubbings](#stub) are configured during the arrange phase, while
 verifications take place during the assert phase. A notable advantage of
 [spies](#spy) over [formal mocks](#mock) is that spies allow for assertion after
 the act phase has completed, whereas mocks require assertions to be set up in
@@ -28,7 +28,7 @@ ordering).
 
 ## Dependency
 
-In [isolated unit testing](), a "dependency" almost always refers to a plain ol'
+In [isolated unit testing](#isolated-unit-testing), a "dependency" almost always refers to a plain ol'
 Ruby class for which one or more instances are depended on by a [subject under
 test](#subject-under-test).
 
@@ -62,6 +62,39 @@ by responding to the pain of stubbing and verifying any interactions with the
 dependencies, because (assuming an expressive mocking library) API contracts
 that are hard to fake are generally also hard to use
 
+## Mock
+
+A mock is a specific type of [test double](#test-double) that is typified by
+having any expected invocations specified _in advance_ of invoking the
+[subject](#subject-under-test) (that is, during the [arrange
+phase](#arrange-act-assert), as opposed to the assertion phase). Typically, a
+mock would be configured, the subject invoked, and then the mock would be called
+to verify that its expectations were met.
+
+Mocktail creates test doubles that perform validation as [spies](#spy), but
+Minitest ships with `Minitest::Mock`, which implements traditional mocking
+behavior:
+
+```ruby
+mock = Minitest::Mock.new
+mock.expect(:some_method, :some_arg)
+
+subject.do_stuff(mock)
+
+mock.verify
+# => if `mock.some_method(:some_arg)` is not called, will raise:
+#      MockExpectationError: "expected some_method() => :some_arg"
+```
+
+Mock objects were popularized in the [Extreme
+Programming](https://en.wikipedia.org/wiki/Extreme_programming) community by
+Steve Freeman and others, with their paper on what they termed
+"[Endotesting](https://www2.ccs.neu.edu/research/demeter/related-work/extreme-programming/MockObjectsFinal.PDF)" at the XP 2000 conference.
+Mocking was the dominant method of verifying behavior with test doubles until
+2010, as [test spies](#spy) began to pick up more steam, thanks to the
+popularity of Java's [Mockito](https://site.mockito.org) and
+[Jasmine](https://jasmine.github.io/api/edge/global.html#spyOn) in JavaScript.
+
 ## Partial mock
 
 A partial mock is a [test double](#test-double) that replaces some, but not all,
@@ -69,7 +102,7 @@ of its real functionality with fake functionality. This could refer to its
 state, behavior, or some combination of both. Partial mocks are generally
 considered an antipattern, for several reasons:
 
-* Isolated tests are designed to establish clear boundaries between a
+* [Isolated tests](#isolated-unit-testing) are designed to establish clear boundaries between a
 [subject](#subject-under-test) and its [dependencies](#dependency), so drawing
 that border somewhere in the middle of one of the dependencies represents an
 inherently unclear boundary
@@ -111,16 +144,75 @@ API and, in JavaScript, with Jasmine spies'
 
 A spy is a special sub-type of a [test double](#test-double) that describes a
 fake object that silently records all invocations made against it and provides a
-way for a test to interrogate those interactions. The term "[test
+way for a test to interrogate those interactions in the
+[assert](#arrange-act-assert) phase. The term "[test
 spy](http://xunitpatterns.com/Test%20Spy.html)" was first coined by Gerard
 Mezsaros for his book [XUnit
 Patterns](https://www.amazon.com/xUnit-Test-Patterns-Refactoring-Code/dp/0131495054/).
 
-The "mock" methods created by Mocktail qualify as spies, as they allow
-after-the-fact assertion and introspection via the
-[verify](../support/api.md#mocktailverify),
-[Mocktail.explain](../support/api.md#mocktailexplain), and
-[Mocktail.calls](../support/api.md#mocktailcalls) methods.
+The "mock" methods created by Mocktail can behave as both spies and
+[stubs](#stub), as they allow after-the-fact assertion and introspection via the
+[verify](../support/api.md#mocktailverify) DSL method. (This approach also
+enabled debugging utilities like
+[Mocktail.explain](../support/api.md#mocktailexplain) and
+[Mocktail.calls](../support/api.md#mocktailcalls).)
+
+In general, interactions should only be verified explicitly when the
+[dependency](#dependency) triggers a side effect that doesn't return a
+meaningful value that is able to be observed by the
+[subject](#subject-under-test)'s ultimate result. In such a case, a spy
+is used like this:
+
+```ruby
+copy_machine = Mocktail.of(CopyMachine)
+subject = Accountant.new
+
+subject.record(:secret_stuff, with: copy_machine)
+
+verify { copy_machine.copy(:secret_stuff) }
+# => if `copy_machine.copy` was invoked with `:secret_stuff`, nothing happens.
+# Otherwise, it raises Mocktail::VerificationError:
+#
+# Expected mocktail of `CopyMachine#copy' to be called like:
+#
+#   copy(:secret_stuff)
+#
+# But it was never called.
+```
+
+## Stub
+
+In mocking parlance, a "stub" is a specific type of a [test
+double](#test-double) wherein a function or method is configured in the
+[arrange](#arrange-act-assert) phase of an [isolated
+test](#isolated-unit-testing) to respond with a particular value (or raise a
+particular error). A particular stubbing (that is, a preconfigured response)
+might be applied to all invocations of the stubbed method, or made to depend on
+the arguments provided.
+
+The purpose of stubbing is to facilitate downstream behavior in the
+[subject](#subject-under-test) by configuring an artificial response (return
+values or errors) in a test double of a [dependency](#dependency). Mocktail's
+"mocks" can be used as both stubs and [spies](#spy), so here's an example
+using its [stubs](api.md#mocktailstubs) DSL method:
+
+```ruby
+peeler = Mocktail.of(Peeler)
+subject = Bartender.new(peeler)
+stubs { peeler.peel(:orange) }.with { :peeled_orange }
+stubs { peeler.peel(:lemon) }.with { :peeled_lemon }
+
+result = subject.prep([:orange, :lemon])
+
+assert_equal [:peeled_orange, :peeled_lemon], result
+```
+
+In the example above, the two `stubs` merely enable the `Bartender` subject to
+do its job (of invoking `peel` on each element passed to it). Because the stubs'
+configuration will only return the `:peeled_` symbols if passed the correct
+argument, no explicit assertion that the calls occurred is necessary. Since
+calling `peeler.peel(:grape)` would return nil, the above stubbing is sufficient
+to verify the dependency was invoked appropriately.
 
 ## Subject under test
 

@@ -12,6 +12,9 @@ third-party libraries and frameworks (usually distributed as Ruby gems) or to
 networked services (e.g. an HTTP API). In this use, an integrated application or
 project is implied as the thing depending on the dependency.
 
+In Gerard Mezsaros' XUnit Patterns, he referred to dependencies less ambiguously
+as [depended-on components (DOC)](http://xunitpatterns.com/DOC.html).
+
 # Isolated unit testing
 
 Isolated unit testing (also known as "mockist", "London-school" test-driven
@@ -60,6 +63,23 @@ a lot of confusion, so the increase in complexity represented by partial mocks
 results in test-scoped code that's very difficult to read and understand how it
 is behaving and what that behavior _means_ in terms of what assurances are being
 provided by the test.
+
+## Proxy
+
+In the context of mocking, the word proxy most often describes a [test
+doubles](#test-double) that records all interactions made against its methods
+(like a [spy](#spy)), but unlike every other kind of test double, proceeds to
+call through to the _actual_ implementation of the dependency. This can be seen
+as having the best of both worlds (verifying interactions without violating
+their veracity), but more often results in tests make unnecessarily many
+assertions and promotes the design of code that overly relies on side effects
+over pure functions.
+
+Proxies aren't especially common in mocking libraries, but can be found in rr's
+[mock.proxy](https://github.com/rr/rr/blob/master/doc/03_api_overview.md#mockproxy)
+API and, in JavaScript, with Jasmine spies'
+[callThrough()](https://jasmine.github.io/api/edge/SpyStrategy.html) function.
+
 
 ## Spy
 

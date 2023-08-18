@@ -26,11 +26,40 @@ the act phase has completed, whereas mocks require assertions to be set up in
 the arrange phase (which violates the natural "arrange-act-assert" phase
 ordering).
 
+## Demonstration
+
+Mocktail's API was designed so that you could configure a [stubbing](#stub) or
+[spy verification](#spy) by invoking a mocked [dependency](#dependency)'s method
+_exactly_ as the subject would. This has two benefits: reducing the mental
+overhead of keeping a larger mocking API straight and increasing the
+find-and-replaceability of your code. We call that invocation used to configure
+the mock a "demonstration", because the test is demonstrating how it expects
+the mocked method to be called.
+
+For example, in the following stubbing:
+
+```ruby
+stubs { @highball.stir(times: 3) }.with { :bubbles }
+```
+
+The mock `@highball` has its `stir` method stubbed with the return value
+`:bubbles` when it is invoked as demonstrated above.
+
+Or this verification:
+
+```ruby
+verify { @highball.drink!(speed: SIPPING) }
+```
+
+In this case, `@highball.drink!(speed: SIPPING)` is a demonstration of the call
+we expect to the subject to invoke.
+
+
 ## Dependency
 
-In [isolated unit testing](#isolated-unit-testing), a "dependency" almost always refers to a plain ol'
-Ruby class for which one or more instances are depended on by a [subject under
-test](#subject-under-test).
+In [isolated unit testing](#isolated-unit-testing), a "dependency" almost always
+refers to a plain ol' Ruby class for which one or more instances are depended on
+by a [subject under test](#subject-under-test).
 
 This usage of the word "dependency" in the context of unit testing with mocking
 libraries stands in contrast to most others, where the word most often refers to

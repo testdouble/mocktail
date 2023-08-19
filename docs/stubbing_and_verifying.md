@@ -25,15 +25,6 @@ class Bartop
   def clean_surface(with:)
     # …
   end
-
-  def serve_drink(&taste_test)
-    drink = Drink.new
-    if taste_test.call(drink)
-      drink
-    else
-      raise BadDrinkError
-    end
-  end
 end
 ```
 
@@ -135,53 +126,4 @@ stubs { bartop.clean_surface(with: :rag) }.with { "✨" }
 => "👃"
 > bartop.clean_surface(with: :toothbrush)
 => nil
-```
-
-## Stubbing with block parameters
-
-Blocks are a little trickier, because they're always optional and they don't
-represent a value that can be compared easily with `==`. Instead, when
-configuring a stubbing, the [demonstration](support/glossary.md#demonstration)
-invocation can specify a block param which—very weirdly—receives as its only
-argument the _actual block_ passed by the subject calling it.
-
-The ability to invoke the block arguments that will be later passed to our
-stubbing configuration can allow the test to decide whether a stubbing is
-satisfied based on the behavior of the provided block argument.
-
-This is tricky to follow, so let's review the `serve_drink` method we intend to
-stub first:
-
-```ruby
-def serve_drink(&taste_test)
-  drink = Drink.new(sweetness: rand(100))
-  if taste_test.call(drink)
-    drink
-  else
-    raise BadDrinkError
-  end
-end
-```
-
-As you can see, if the user's block argument (e.g. `taste_test.call(drink)`)
-returns true, then the drink is returned. Otherwise an error is raised.
-
-Now let's imagine a subject that depends on the `Bartop#serve_drink` method and
-we want to test it with our mock instance:
-
-```ruby
-def order_semi_sweet_drink(bartop)
-  bartop.serve_drink do |drink|
-    drink.sweetness > 20 && drink.sweetness < 50
-  end
-end
-```
-
-We could test this interaction by testing the boundaries in what we pass the
-block:
-
-```ruby
-stubs {
-  bartop.serve_drink { |blk| blk.call(Drink.new(sweetness: 20)) }
-}.with { }
 ```

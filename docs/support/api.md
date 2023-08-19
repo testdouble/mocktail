@@ -159,8 +159,9 @@ user_repository.find(43) # => nil
 user_repository.find # => ArgumentError: wrong number of arguments (given 0, expected 1)
 ```
 
-The block passed to `stubs` is called the "demonstration", because it represents
-an example of the kind of calls that Mocktail should match.
+The block passed to `stubs` is called the
+"[demonstration](glossary.md#demonstration)", because it represents an example
+of the kind of calls that Mocktail should match.
 
 If you want to get fancy, you can use matchers to make your demonstration more
 dynamic. For example, you could match any number with:

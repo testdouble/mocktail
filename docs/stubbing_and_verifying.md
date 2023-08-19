@@ -26,8 +26,13 @@ class Bartop
     # …
   end
 
-  def open_faucet(&running_water)
-    # …
+  def serve_drink(&taste_test)
+    drink = Drink.new
+    if taste_test.call(drink)
+      drink
+    else
+      raise BadDrinkError
+    end
   end
 end
 ```
@@ -38,9 +43,9 @@ And we'll work with a mock instance we can create with [Mocktail.of](support/api
 bartop = Mocktail.of(Bartop)
 ```
 
-Initially, `bartop` will return `nil` to any invocation of all its methods,
-but will still respect required parameters and raise `ArgumentError` when
-they're not provided:
+Initially, `bartop` will return `nil` for any invocation of its faked methods,
+but will still require arguments match their specified signature, raising
+`ArgumentError` if they aren't provided:
 
 ```
 > bartop.clean_surface(with: :rag)
@@ -65,13 +70,13 @@ From then onward, calling the method without args will return `:a_coaster`:
 => :a_coaster
 > bartop.place_coaster(1)
 => nil
-irb(main):018:0> bartop.place_coaster(1)
-=> nil
+> bartop.place_coaster()
+=> :a_coaster
 ```
 
-We can stub the same method multiple times. Newer stubbings will override older
-ones, as configured stubbings are matched against invocations on a "last-in
-wins" basis:
+We can also stub the same method multiple times. Newer stubbings will override
+older ones, as configured stubbings are matched against invocations on a
+"last-in wins" basis:
 
 ```ruby
 > stubs { bartop.place_coaster }.with { :a_napkin }
@@ -99,15 +104,15 @@ limit of `2`, `place_coaster` started once again responding with `:a_napkin`.
 
 ## Stubbing with arguments
 
-Of course, you wouldn't need a library to help you stub no-arg methods, so let's
-start passing some values:
+Of course, you wouldn't need a library if all you were stubbing was no-arg
+methods, so let's start passing some values:
 
 ```ruby
 stubs { bartop.place_coaster(1) }.with { :coaster_1 }
 stubs { bartop.place_coaster(2) }.with { :coaster_2 }
 ```
 
-And you can probably guess how these would behave:
+And you can probably guess how these will behave:
 
 ```ruby
 > bartop.place_coaster(2)
@@ -135,10 +140,48 @@ stubs { bartop.clean_surface(with: :rag) }.with { "✨" }
 ## Stubbing with block parameters
 
 Blocks are a little trickier, because they're always optional and they don't
-represent a value you can simply compare with `==`. Instead, when demonstrating
-a stubbing, you actually can access the block and decide for yourself whether
-it should match:
+represent a value that can be compared easily with `==`. Instead, when
+configuring a stubbing, the [demonstration](support/glossary.md#demonstration)
+invocation can specify a block param which—very weirdly—receives as its only
+argument the _actual block_ passed by the subject calling it.
+
+The ability to invoke the block arguments that will be later passed to our
+stubbing configuration can allow the test to decide whether a stubbing is
+satisfied based on the behavior of the provided block argument.
+
+This is tricky to follow, so let's review the `serve_drink` method we intend to
+stub first:
 
 ```ruby
+def serve_drink(&taste_test)
+  drink = Drink.new(sweetness: rand(100))
+  if taste_test.call(drink)
+    drink
+  else
+    raise BadDrinkError
+  end
+end
 ```
 
+As you can see, if the user's block argument (e.g. `taste_test.call(drink)`)
+returns true, then the drink is returned. Otherwise an error is raised.
+
+Now let's imagine a subject that depends on the `Bartop#serve_drink` method and
+we want to test it with our mock instance:
+
+```ruby
+def order_semi_sweet_drink(bartop)
+  bartop.serve_drink do |drink|
+    drink.sweetness > 20 && drink.sweetness < 50
+  end
+end
+```
+
+We could test this interaction by testing the boundaries in what we pass the
+block:
+
+```ruby
+stubs {
+  bartop.serve_drink { |blk| blk.call(Drink.new(sweetness: 20)) }
+}.with { }
+```

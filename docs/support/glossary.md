@@ -1,5 +1,24 @@
 # Glossary of terms
 
+## Argument matcher
+
+When an invocation of a mocked method is compared against its configured
+[stubbings](#stub) or [spy verifications](#spy), every argument must pass an
+equality check to be said to satisfy the stubbing or verification. In cases
+where a test either can't provide arguments that would `==` their actual values
+or where the configuration should match a broader range of values, argument
+matchers can be used to relax or otherwise augment the process of determining
+if a call matches a [demonstration](#demonstration).
+
+Put more explicitly, an argument matcher is a utility method that returns an
+object that provides a means of determining if an expected and actual argument
+"match" and which the mocking library prioritizes over a default equality
+comparison ([source](/src/mocktail/share/determines_matching_calls.rb#L63-L70)).
+
+In Mocktail, argument matchers are provided by its [matcher
+API](api.md#matching-arguments-dynamically) invoked via an optional block
+parameter passed to the demonstration.
+
 ## Arrange-Act-Assert
 
 The three phases of a unit test are said to be "arrange", "act", and "assert".
@@ -25,6 +44,24 @@ verifications take place during the assert phase. A notable advantage of
 the act phase has completed, whereas mocks require assertions to be set up in
 the arrange phase (which violates the natural "arrange-act-assert" phase
 ordering).
+
+## Command-query separation
+
+Command-query separation refers to a design practice of avoiding methods and
+functions that _both_ return a value and have a meaningful side effect. Quoting
+its [Wikipedia entry](https://en.wikipedia.org/wiki/Command–query_separation),
+"asking a question should not change the answer". Discussing this principle in
+the context of mocking is often necessary because there is a tendency for
+developers to see a method they know has a necessary return value _and_ an
+important side effect and feel an urge to _both [stub](#stub) and
+[verify](#spy)_ the same interaction. Whenever that seems like a good idea,
+there's a good chance the [dependent method](#dependency) is violating
+command-query separation and its design should be revisited.
+
+(Stubbing and verifying the same interaction is never necessary from a test
+specification perspective: if the stubbing is necessary for the
+[subject](#subject-under-test) to do its work, an additional verification of the
+same interaction is redundant.)
 
 ## Demonstration
 

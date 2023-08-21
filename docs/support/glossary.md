@@ -191,7 +191,7 @@ units of code as interacting with one or more of these "levels" of abstraction:
 1. Primitive booleans, strings, numbers
 2. Collections of multiple primitives
 3. Value objects containing primitives and collections
-4. Implementers of domain logic that operate on value objects
+4. Implementers of domain logic that operate on [value objects](#value)
 5. [Delegators](#delegator) of implementers of domain logic
 
 When practicing outside-in test-driven development, testing
@@ -385,6 +385,26 @@ for what everyone colloquially prefers to call a "mock".
 ([Test Double](https://testdouble.com) is also the name of a
 pretty great software consultancy with strong ties to the Ruby community and
 which incidentally created and maintains Mocktail.)
+
+## Value
+
+Similar to how [isolated TDD](#isolated-unit-testing) tends to lead to a sharp
+distinction between [delegators](#delegator) that break up the work and small
+units to implement it, struct-like objects to represent values also emerge as
+distinct from objects that contain domain logic that implements features.
+
+Because delegators typically only hold references to their
+[dependencies](#dependency) and are otherwise stateless, their public methods
+tend to receive value objects. Values essentially become the
+"unit of work", and are passed elsewhere, wrapped, transformed, or mutated, and
+returned. Values typically contain primitive data (e.g. booleans, strings, etc.),
+other values, and methods that merely _elucidate_ the data they hold as opposed
+to implementing feature logic.
+
+In Ruby, values are most often implemented as
+[Struct](https://docs.ruby-lang.org/en/master/Struct.html),
+[Data](https://docs.ruby-lang.org/en/master/Data.html), or (in Sorbet)
+[T::Struct](https://sorbet.org/docs/tstruct).
 
 ## Wrapper object
 

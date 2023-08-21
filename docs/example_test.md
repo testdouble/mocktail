@@ -1,0 +1,483 @@
+# An example test with Mocktail
+
+As discussed elsewhere, Mocktail's intended use is to facilitate [test-driven development](tdd.md) of [isolated unit tests](support/glossary.md#isolated-unit-testing) by making it trivially easy to achieve isolation
+between a [subject under test](support/glossary.md#subject-under-test) and its [dependencies](support/glossary.md#dependency)
+
+## A small example problem: slicing fruit
+
+In order to walk through an example test, we need to think of a unit of code
+that is real-world enough to make some kind of sense. And to do that, it's
+useful context to consider what is typically found in a codebase that was
+primarily developed with outside-in test-driven development:
+
+* The average number of dependencies for a
+[delegator](support/glossary.md#delegator) is between 3 and 4
+* Delegators are typically the only units of code whose tests use [test
+doubles](support/glossary.md#test-double), and they tend to simplify their usage
+by _only_ delegating as opposed to performing any logic, thereby avoiding [mixed
+levels of abstraction](support/glossary.md#level-of-abstraction)
+* Because most real-world applications don't exist in a vacuum, a given
+entrypoint for a unit of work will typically shake out into a tree of
+dependencies that (left-to-right) resemble an [extract, transform,
+load](https://en.wikipedia.org/wiki/Extract,_transform,_load) process
+
+As an example that exemplifies the above, let's write a test of a delegator
+that does bar prep: getting fruits from the fridge, slicing them, and storing
+them in a prep station.
+
+One way to identify the jobs to be done is to distill that text down to a list
+of activities:
+
+1. Fetch fruits from the stock room
+2. Slice each fruit
+3. Store each fruit in a prep station
+
+If we were practicing traditional test-driven development, we might start with a
+test that jumps into implementing one of these activities and then continue to
+add test cases until all the responsibilities are covered. If the subject were
+to get too complex as we saddled it with more tasks, we might pause to extract
+those responsibilities into single-responsibility sub-units, which would often
+necessitate moving test code around or otherwise testing those sub-units only
+indirectly through the original subject.
+
+Outside-in test driven development flips the order of operations: once we know
+what the subject needs to do, we imagine new subordinate units to delegate the
+work to and use our test to specify the relationship between the subject and its
+dependencies. We would continue this process until we were left with a number of
+irreducibly simple, single-responsibility units of domain logic that could
+largely be implemented via straightforward tests (without mocks), often as pure
+functions. This way, simplicity is baked into the process instead of an
+afterthought—where classical TDD often succeeds or fails based on the
+practitioner's patience and discipline to remember to refactor.
+
+To make this a little clearer, let's illustrate the ordered list above into imagined dependencies that a delegator might need to accomplish the work:
+
+<p align="center" width="100%">
+  <img src="../img/example_test.png" width="320" alt="an example tree of dependencies that do the above work">
+</p>
+
+Additionally, if we look at the above graph through the assumptions above, we
+end up with 3 dependencies, a subject with nothing to do but to delegate its
+responsibility, and a dependency shape that results in an extract-transform-load
+shape: something to fetch data based on a request, something to perform logic,
+and something to put the result somewhere.
+
+To visualize:
+
+<p align="center" width="100%">
+  <img src="../img/extract_transform_load.png" width="320" alt="illustrating the tree as an ETL process">
+</p>
+
+## Initial test setup
+
+Okay, so with that gameplan, let's start writing a test. We will use [dependency
+inception](tdd/poro/dependency_inception.md) to get our dependencies in the
+hands of our subject using [Mocktail.of_next](support/api.md#mocktailof_next):
+
+```ruby
+require "test_helper"
+
+class PrepsFruitsTest < Minitest::Test
+  def setup
+    @fetches_fruits = Mocktail.of_next(FetchesFruits)
+    @slices_fruit = Mocktail.of_next(SlicesFruit)
+    @stores_fruit = Mocktail.of_next(StoresFruit)
+
+    @subject = PrepsFruits.new
+  end
+
+  def test_prep
+    # TODO
+  end
+end
+```
+
+If we run this test, of course it will fail, because none of the things
+referenced in `setup` exist yet!  That said, it's important to get in the habit
+of running tests early and often to make sure that their message and status
+matches our expectations.
+
+```
+PrepsFruitsTest#test_prep:
+NameError: uninitialized constant PrepsFruitsTest::FetchesFruits
+    example.rb:5:in `setup'
+```
+
+As they say, the goal of each action in TDD is to "make the test pass or change
+the message", so let's rapidly iterate to overcome each of these errors until
+the empty `test_prep` method exits cleanly:
+
+```ruby
+class FetchesFruits
+end
+```
+
+Fails with `uninitialized constant PrepsFruitsTest::SlicesFruit` until we:
+
+```ruby
+class SlicesFruit
+end
+```
+
+Changes the message to `uninitialized constant PrepsFruitsTest::StoresFruit`
+and:
+
+```ruby
+class StoresFruit
+end #=> message is now: `uninitialized constant PrepsFruitsTest::PrepsFruits`
+
+class PrepsFruits
+end #=> …success!
+```
+
+Creating these 4 classes (the subject and its three dependencies) is enough to
+get the test to exit cleanly for now.
+
+## Arrange: creating values and configuring stubbings
+
+Each test has three phases: [arrange, act, and
+assert](support/glossary.md#arrange-act-assert), and it usually makes the most
+sense to start with test setup. Here we'll need to create the
+[values](support/glossary.md#value) that our subject will be acting on as well
+as the [stubbing](support/glossary.md#stub) configurations for each of its
+mocked dependencies.
+
+Like before, we'll rapidly iterate by adding a stubbing, running the test,
+making a change, and changing the message. After you get in the flow, driving
+the design of a system with outside-in test-driven development starts to feel
+like [paint by number](https://en.wikipedia.org/wiki/Paint_by_number).
+
+First, we'll stub the first interaction to fetch the fruit. This will require
+us to specify some value objects (fruits) we hadn't yet, so the stubbing can
+have something to return to the subject.
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  # …TODO
+end
+```
+
+The first error is `uninitialized constant PrepsFruitsTest::Lime`, so let's
+start fixing:
+
+```ruby
+class Lime
+end # message is now: uninitialized constant PrepsFruitsTest::Mango
+
+class Mango
+end # message is now: uninitialized constant PrepsFruitsTest::Pineapple
+
+class Pineapple
+end
+```
+
+After defining `Pineapple`, the next message is interesting!
+
+```ruby
+No method `FetchesFruits#fetch' exists for call:
+
+  fetch([:lime, :mango, :pineapple])
+
+Need to define the method? Here's a sample definition:
+
+  def fetch(lime_mango_pineapple)
+  end
+```
+
+Mocktail can see what we're stubbing and tries to guess the number and name of
+arguments based on what we passed in, generating a little method for us. We can
+paste that in or we can write our own to clear the error and change the message:
+
+```ruby
+class FetchesFruits
+  def fetch(types)
+  end
+end
+```
+
+And now we're back to passing! Let's move onto the next stubbing. This time,
+we'll do something fancy and return a stubbing value that wraps the value passed
+in by introspecting the optional [Call](/src/mocktail/value/call.rb) block param
+of `with` that represents the actual call to a satisfied stub invocation:
+
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { |m| @slices_fruit.slice(m.is_a(Fruit)) }.with { |call|
+    SlicedFruit.new(call.args.first)
+  }
+  # …TODO
+end
+```
+
+This will raise a few new errors for us to clear, starting with `uninitialized
+constant PrepsFruitsTest::Fruit`. Let's clear it:
+
+```ruby
+class Fruit
+end
+
+class Lime < Fruit
+end
+
+class Mango < Fruit
+end
+
+class Pineapple < Fruit
+end
+```
+
+Here's the next error:
+
+```ruby
+No method `SlicesFruit#slice' exists for call:
+
+  slice(is_a(Fruit))
+```
+
+So let's go and create one!
+
+```ruby
+class SlicesFruit
+  def slice(fruit)
+  end
+end
+```
+
+And we're back to passing.
+
+## Act: invoking our subject
+
+Impatient readers will note in frustration that we've created eight classes but
+still haven't _even defined the method to be tested_, `PrepsFood#prep`!
+
+Now that our basic stubs are in place, let's invoke that method as our test's
+"[act](support/glossary.md#arrange-act-assert)" phase:
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { |m| @slices_fruit.slice(m.is_a(Fruit)) }.with { |call|
+    SlicedFruit.new(call.args.first)
+  }
+
+  @subject.prep([:lime, :mango, :pineapple])
+
+  # …TODO
+end
+```
+
+As you might expect, the test is telling us to create the method we're here to
+implement: `undefined method `prep' for #<PrepsFruits:0x0000000105008060>`.
+
+```ruby
+class PrepsFruits
+  def prep(fruit_types)
+  end
+end
+```
+
+And we're passing again.
+
+## Assert: verifying our interactions
+
+Now that we've completed the Arrange and Act, we can deal with the
+[Assert](support/glossary.md#arrange-act-assert) phase of our test.
+
+But how should we assert that the sliced fruit gets stored? None of the code
+exists yet, so the approach we decide for our test will influence the resulting
+API.　To illustrate, we're going to show two different ways to finish writing
+this test and how they might impact the contract between our subject and its
+dependencies.
+
+### Approach 1: verifying the method was called
+
+One approach would be to verifying that `StoresFruit#store` is invoked for each
+`SlicedFruit` instance using [verify](support/api.md#mocktailverify). Let's play
+that out here.
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { |m| @slices_fruit.slice(m.is_a(Fruit)) }.with { |call|
+    SlicedFruit.new(call.args.first)
+  }
+
+  @subject.prep([:lime, :mango, :pineapple])
+
+  verify { |m|
+    @stores_fruit.store(m.that { |sliced_fruit| sliced_fruit.type == Lime })
+  }
+  verify { |m|
+    @stores_fruit.store(m.that { |sliced_fruit| sliced_fruit.type == Mango })
+  }
+  verify { |m|
+    @stores_fruit.store(m.that { |sliced_fruit| sliced_fruit.type == Pineapple })
+  }
+end
+```
+
+Above, we're using another matcher, [m.that](support/api.md#mthat) to simply
+ensure that each `store` was called with one of each type of fruit. There
+are decisions we could have made differently, but they're not especially
+consequential.
+
+One decision worth calling out explicitly is that given the simplicity of this
+example, we're intentionally using more advanced Mocktail features like
+[matchers](support/api.md#matching-arguments-dynamically) and dynamically
+creating values in a stubbing (i.e. `with { |call| … }`) than the situation
+necessarily calls for, simply to demonstrate their use in practice. We could
+have simplified our usage of Mocktail by creating each `SlicedFruit` instance in
+the test and stubbing & verifying it by reference.  This would have added
+another set of variables to track, but would eliminate the need for using any
+`m` argument matchers.
+
+Had we taken that simpler route, the test might look like this:
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  sliced_fruits = fruits.map { |fruit| SlicedFruit.new(fruit) }
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { @slices_fruit.slice(fruits[0]) }.with { sliced_fruits[0] }
+  stubs { @slices_fruit.slice(fruits[1]) }.with { sliced_fruits[1] }
+  stubs { @slices_fruit.slice(fruits[2]) }.with { sliced_fruits[2] }
+
+  @subject.prep([:lime, :mango, :pineapple])
+
+  verify { @stores_fruit.store(sliced_fruits[0]) }
+  verify { @stores_fruit.store(sliced_fruits[1]) }
+  verify { @stores_fruit.store(sliced_fruits[2]) }
+end
+```
+
+Sticking to the first example relying on the matchers, running our test yields
+our next error `No method `StoresFruit#store' exists`. We can fix that:
+
+```ruby
+class StoresFruit
+  def store(fruit)
+  end
+end
+```
+
+Finally, this yields an actual assertion failure:
+
+```
+Mocktail::VerificationError: Expected mocktail of `StoresFruit#store' to be called like:
+
+  store(that {…})
+
+But it was never called.
+```
+
+That means it's time to start implementing the subject method based on
+all the decisions driven out by our test so far. We can write most of
+these interactions in one fell-swoop, because the test setup already forced
+us to make most of the decisions of consequence to the code itself.
+
+Here's how the `PrepsFruit` class might shake out:
+
+```ruby
+class PrepsFruits
+  def initialize
+    @fetches_fruits = FetchesFruits.new
+    @slices_fruit = SlicesFruit.new
+    @stores_fruit = StoresFruit.new
+  end
+
+  def prep(fruit_types)
+    @fetches_fruits.fetch(fruit_types).each do |fruit|
+      sliced_fruit = @slices_fruit.slice(fruit)
+      @stores_fruit.store(sliced_fruit)
+    end
+  end
+end
+```
+
+This may feel like a lot of code to write in one go, but it was all preordained
+by the test, there's not a lot of uncertainty.
+
+Does it work? No! But it changed the message to something we might not have
+realized we never created: `uninitialized constant
+PrepsFruitsTest::SlicedFruit`.
+
+This is actually good news! Because `SlicedFruit.new` is only refrenced inside
+a `stubs…with {}` block, it means the implementation above is successfully
+invoking the first two of three dependencies.
+
+Let's implement our `SlicedFruit` [value object](support/glossary.md#value)
+next, noting that its initializer takes a basic `Fruit` object and (per what we
+specified in our `verify` block), exposes the fruit's class via a `type` method:
+
+```ruby
+class SlicedFruit
+  def initialize(fruit)
+    @fruit = fruit
+  end
+
+  def type
+    @fruit.class
+  end
+end
+```
+
+And… boom! The test passes. That means all of our setup and assertions worked
+and the implementation passes the test!
+
+That said, _never trust a test you haven't seen fail_. To be sure the test's
+passing isn't an indication of a faulty assertion, let's jiggle the handle by
+tweaking one of those verify calls:
+
+```ruby
+verify { |m|
+  @stores_fruit.store(m.that { |sliced_fruit| sliced_fruit.type == :nonsense })
+}
+```
+
+Running the test again, we get an error that tells us that the code is doing
+exactly what we want… yay!
+
+```ruby
+Mocktail::VerificationError: Expected mocktail of `StoresFruit#store' to be called like:
+
+  store(that {…})
+
+It was called differently 3 times:
+
+  store(#<SlicedFruit:0x00000001036357a0 @fruit=#<Lime:0x00000001036d1998>>)
+
+  store(#<SlicedFruit:0x000000010622df10 @fruit=#<Mango:0x00000001036d1808>>)
+
+  store(#<SlicedFruit:0x0000000106226580 @fruit=#<Pineapple:0x00000001036d16f0>>)
+```
+
+We could stop here and call the job done. We have a working `PrepsFruit` class
+that does what it set out to do by loading, slicing, and storing fruits. But
+because this is a tutorial, let's take a moment to reflect on where this test
+led us and how things could have played out differently.
+
+### Approach 2: asserting a result value
+
+Because `each` doesn't return a meaningful value, whenever we see an `each`
+block, whatever it's doing must be a side effect. And since side effects are
+generally less desirable than returning values, it's worth pausing and asking if
+there was a different approach we could have taken.
+
+It turns out, there is! Even though Mocktail offers a `verify` functionality,
+it should be used sparingly, because—like `each`—its only real utility is to
+specify interactions that don't return a value. Methods that return values are
+generally more useful, so let's rewind the clock, delete the production code
+we just wrote, and set up our assertions to interrogate a return value instead
+of verifying calls to `StoresFruit#store`.
+
+
+
+```ruby
+```

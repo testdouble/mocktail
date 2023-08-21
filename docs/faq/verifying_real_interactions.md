@@ -1,9 +1,10 @@
 # Recording interactions on real methods
 
 Okay, so imagine this situation: you have a unit test that, among other things,
-calls some API that doesn't return a meaningful value and you want to make sure
-that you've covered it. Since your test can't observe the result of the call,
-you want to make sure it happened
+calls some API that doesn't return a meaningful
+[value](../support/glossary.md#value) and you want to make sure that you've
+covered it. Since your test can't observe the result of the call, you want to
+make sure it happened
 
 ```ruby
 def roll_dice(dice)

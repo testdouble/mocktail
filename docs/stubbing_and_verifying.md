@@ -142,11 +142,11 @@ stubs { bartop.clean_surface(with: :rag) }.with { "✨" }
 
 ## Stubbing with inexact, dynamic arguments
 
-When fully-isolated, tests will often provide exactly the values that the
-subject will receive at every step, and therefore will be able to provide a
-demonstration to `stubs` that passes the exact arguments passed by the subject,
-or at least expected arguments that will pass an equality check with the actual
-ones used by the subject.
+When fully-isolated, tests will often provide exactly the
+[values](support/glossary.md#value) that the subject will receive at every step,
+and therefore will be able to provide a demonstration to `stubs` that passes the
+exact arguments passed by the subject, or at least expected arguments that will
+pass an equality check with the actual ones used by the subject.
 
 But in more complex cases, you may need to configure a stubbing based on a
 dynamic description of the arguments. Mocktail enables this with [argument
@@ -500,7 +500,7 @@ For more options and complications, check out the full documentation of the
 
 ## Pulling it all together
 
-At this point, you've covered either Mocktail's [sorbet
+At this point, we've covered either Mocktail's [sorbet
 setup](./installation_sorbet.md) or [untyped
 install](./installation_untyped.md). You've learned how to instantiate mocks by
 [dependency injection](tdd/poro/dependency_injection.md), [dependency

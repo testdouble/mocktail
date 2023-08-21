@@ -63,6 +63,37 @@ specification perspective: if the stubbing is necessary for the
 [subject](#subject-under-test) to do its work, an additional verification of the
 same interaction is redundant.)
 
+## Delegator
+
+A delegator is a unit of code (typically a class in Ruby) that performs its work
+primarily by calling through to its [dependencies](#dependency) as opposed to
+implementing domain logic itself. In the broader world of software, the vast
+majority of domain objects mix delegation and domain logic without much concern
+for separating them. When practicing [isolated TDD](#isolated-unit-testing)
+rigorously, however, mixing delegation with domain logic makes for especially
+painful orchestration of [test doubles](#test-double). As a result, delegators
+tend to emerge as a distinct type of unit in a codebase.
+
+Delegators confer a few benefits to a broader codebase:
+
+* They encourage developers to imagine a greater number
+of single-purpose units to implement domain logic, making it easier to adhere to
+the [single-responsibility
+principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
+* Clearly distinguishing between delegators and units that implement domain
+logic results in easy-to-navigate, tree-shaped dependency graphs with fewer
+cycles (when visualizing dependency graphs, delegators are never leaf nodes in the tree, but implementors of domain logic almost always are)
+* Because delegators essentially _only_ interact with other application-defined
+units, they operate at a single [level of abstraction](#level-of-abstraction)
+and make it easier for each unit to which they delegate to also operate at
+a single level of abstraction
+
+To illustrate, a dependency graph of a organized outside-in with delegators will
+often look like this, with only as many layers of delegators as are necessary to
+identify single-purpose units to implement domain logic:
+
+![a tree of dependencies with "logic" as the leaf nodes](../img/delegator_tree.png)
+
 ## Demonstration
 
 Mocktail's API was designed so that you could configure a [stubbing](#stub) or
@@ -113,10 +144,16 @@ Isolated unit testing (also known as "mockist", "London-school" test-driven
 development, or discovery testing) was most thoroughly defined in Steve Freeman
 and Nat Pryce's book [Growing Object-Oriented Software, Guided by
 Tests](https://www.amazon.com/Growing-Object-Oriented-Software-Guided-Tests/dp/0321503627).
+Whereas traditional test-driven development often builds systems "bottom-up" by
+starting with units that implement domain logic (leaving the ultimate
+composition of dependencies up to the individual to compose or extract
+manually), isolated TDD starts "outside-in" and it results in the decomposition
+of a big problem into small units as a matter of course.
+
 In simplest terms, an isolated unit test exercises the behavior of the
 [subject](#subject-under-test) but not of any of its dependencies, instead
 replacing all of them at runtime with alternatives controlled by the test. This
-puts the subject under extreme isolation, allowing the tester to both:
+puts the subject under extreme isolation, allowing the tester to:
 
 * Test the subject's behavior without invoking the behavior of its
 [dependencies](#dependency) and thereby introducing a transitive dependency on
@@ -127,6 +164,14 @@ the a return value or a side effect of a dependency
 by responding to the pain of stubbing and verifying any interactions with the
 dependencies, because (assuming an expressive mocking library) API contracts
 that are hard to fake are generally also hard to use
+
+Code that results from isolated test-driven development tends to result in
+separate classes of units: one that breaks down the work
+([delegators](#delegator)) and another that implements a single aspect of the
+work work as single-purpose units. This approach is typified by tree-shaped
+designs that branch from the program's entry point into a set of delegators and
+a larger number of implementation objects as leaf nods—many of them behaving as
+pure functions.
 
 ## Mock
 

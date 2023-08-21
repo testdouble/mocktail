@@ -88,7 +88,7 @@ units, they operate at a single [level of abstraction](#level-of-abstraction)
 and make it easier for each unit to which they delegate to also operate at
 a single level of abstraction
 
-To illustrate, a dependency graph of a organized outside-in with delegators will
+To illustrate, a dependency graph resulting from outside-in isolated TDD  will
 often look like this, with only as many layers of delegators as are necessary to
 identify single-purpose units to implement domain logic:
 
@@ -174,6 +174,36 @@ work work as single-purpose units. This approach is typified by tree-shaped
 designs that branch from the program's entry point into a set of delegators and
 a larger number of implementation objects as leaf nods—many of them behaving as
 pure functions.
+
+## Level of Abstraction
+
+The phrase "level of abstraction" is both ironically and inherently amorphous,
+because it refers to a conceptual [layer of
+concepts](https://en.wikipedia.org/wiki/Abstraction_layer). The term is most
+often used in the context of the exhortation "don't mix levels of abstraction",
+which is even harder to pin down a meaning to.
+
+To clarify the term for the purpose of a discussion of [isolated unit
+testing](#isolated-unit-testing), consider a level of abstraction as "the
+classification of things a unit of code interacts with". For example, imagine
+units of code as interacting with one or more of these "levels" of abstraction:
+
+1. Primitive booleans, strings, numbers
+2. Collections of multiple primitives
+3. Value objects containing primitives and collections
+4. Implementers of domain logic that operate on value objects
+5. [Delegators](#delegator) of implementers of domain logic
+
+When practicing outside-in test-driven development, testing
+[subjects](#subject-under-test) operating on that 5th level of abstraction is
+the only layer for which mocking out dependencies has a clear, valuable purpose.
+Moreover, if such a subject _also_ interacts significantly with layers 1-4, the
+test will generally be painful to write, because the [test double](#test-double)
+configuration will be more complicated. As a result, practicing outside-in TDD
+and responding to testing pain by adjusting the design of the production code
+will often result in delegator objects that do nothing but delegate their work
+up to other units that implement domain logic as opposed to _mixing levels
+of abstraction_ in their implementation.
 
 ## Mock
 

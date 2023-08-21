@@ -92,7 +92,9 @@ To illustrate, a dependency graph of a organized outside-in with delegators will
 often look like this, with only as many layers of delegators as are necessary to
 identify single-purpose units to implement domain logic:
 
-![a tree of dependencies with "logic" as the leaf nodes](../img/delegator_tree.png)
+<p align="center" width="100%">
+  <img src="../img/delegator_tree.png" width="320" alt="a tree of dependencies with logic as the leaf nodes">
+</p>
 
 ## Demonstration
 

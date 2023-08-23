@@ -304,7 +304,7 @@ end
 
 And we're passing again.
 
-That's it! The "Act" phase is ideally a one line invocation, because ideally the
+That's it! The "Act" phase is usually a one line invocation, because ideally the
 subject should be able to do its job being told only once.
 
 ## Assert: verifying our interactions
@@ -313,10 +313,27 @@ Now that we've completed the Arrange and Act, we can deal with the
 [Assert](support/glossary.md#arrange-act-assert) phase of our test.
 
 But how should we assert that the sliced fruit gets stored? None of the code
-exists yet, so the approach we decide for our test will influence the resulting
-API. To illustrate, we're going to show two different ways to finish writing
-this test and how they might impact the contract between our subject and its
-dependencies.
+exists yet, so the assertion we encode into our test will specify the API of the
+class responsible for storing fruit. This can make some folks feel a little
+queasy, because in the context of traditional TDD, the subject should be a black
+box—meaning tests _should not_ be aware of, much less determine the subject's
+implementation details. But isolated TDD flips things inside-out: the test
+becomes a sounding board for iterating rapidly on the public APIs of not only
+the subject, but of the layer of dependencies beneath it. This gives the test
+author the opportunity to play with a new API contract (name, parameters, and
+return value) via a lightweight
+[demonstration](support/glossary.md#demonstration) of a method that doesn't even
+exist yet, which means every new method is created through _actual, necessary
+use_ instead of typed into a blank page class listing. It makes mistakes cheap
+to fix as a result: if a method doesn't feel right, reconfiguring the stubbing
+in place doesn't require switching files, renaming references, or moving
+parameters around. If refactoring is the third step in classical TDD's
+"red-green-refactor", it's the first step in isolated TDD. (Prefactoring?)
+
+To illustrate how the assertions we choose can impact the API of our subject and
+its dependencies, we're going to show two different ways to finish writing this
+test, starting with an approach that verifies a call occurred and finishing with
+assertions of a return value from the subject.
 
 ### Approach 1: verifying the method was called
 

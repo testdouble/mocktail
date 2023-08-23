@@ -1,32 +1,35 @@
 # An example test with Mocktail
 
 As discussed elsewhere, Mocktail's intended use is to facilitate [test-driven development](tdd.md) of [isolated unit tests](support/glossary.md#isolated-unit-testing) by making it trivially easy to achieve isolation
-between a [subject under test](support/glossary.md#subject-under-test) and its [dependencies](support/glossary.md#dependency)
+between a [subject under test](support/glossary.md#subject-under-test) and its [dependencies](support/glossary.md#dependency).
 
 ## A small example problem: slicing fruit
 
-In order to walk through an example test, we need to think of a unit of code
-that is real-world enough to make some kind of sense. And to do that, it's
-useful context to consider what is typically found in a codebase that was
-primarily developed with outside-in test-driven development:
+In order to walk through an example test, we need to dream up a class and method
+to implement that is simple enough to condense into example code but realistic
+enough to show off the workflow Mocktail was designed to facilitate. And to do
+that, it's useful context to start with the end in mind. In a codebase that
+was primarily developed with outside-in test-driven development, it's typical
+to see the following:
 
-* The average number of dependencies for a
-[delegator](support/glossary.md#delegator) is between 3 and 4
+* The average
+[delegator](support/glossary.md#delegator) has 3 dependencies that implement
+logic
 * Delegators are typically the only units of code whose tests use [test
 doubles](support/glossary.md#test-double), and they tend to simplify their usage
 by _only_ delegating as opposed to performing any logic, thereby avoiding [mixed
 levels of abstraction](support/glossary.md#level-of-abstraction)
 * Because most real-world applications don't exist in a vacuum, a given
 entrypoint for a unit of work will typically shake out into a tree of
-dependencies that (left-to-right) resemble an [extract, transform,
+dependencies that resembles an [extract, transform,
 load](https://en.wikipedia.org/wiki/Extract,_transform,_load) process
 
-As an example that exemplifies the above, let's write a test of a delegator
-that does bar prep: getting fruits from the fridge, slicing them, and storing
-them in a prep station.
+With that in mind, let's write a test of a delegator that assists in the prep
+work before a bar opens: getting fruits from the fridge, slicing them, and
+storing them in a prep station.
 
-One way to identify the jobs to be done is to distill that text down to a list
-of activities:
+One way to identify the jobs to be done is to translate a narrative summary of a feature into a list of discrete responsibilities or activities. A class that
+manages fruit prep would:
 
 1. Fetch fruits from the stock room
 2. Slice each fruit
@@ -53,7 +56,7 @@ practitioner's patience and discipline to remember to refactor.
 To make this a little clearer, let's illustrate the ordered list above into imagined dependencies that a delegator might need to accomplish the work:
 
 <p align="center" width="100%">
-  <img src="../img/example_test.png" width="320" alt="an example tree of dependencies that do the above work">
+  <img src="img/example_test.png" width="320" alt="an example tree of dependencies that do the above work">
 </p>
 
 Additionally, if we look at the above graph through the assumptions above, we
@@ -65,7 +68,7 @@ and something to put the result somewhere.
 To visualize:
 
 <p align="center" width="100%">
-  <img src="../img/extract_transform_load.png" width="320" alt="illustrating the tree as an ETL process">
+  <img src="img/extract_transform_load.png" width="320" alt="illustrating the tree as an ETL process">
 </p>
 
 ## Initial test setup

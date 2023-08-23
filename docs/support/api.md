@@ -61,7 +61,7 @@ shoe.to_s # => #<Mocktail of Shoe:0x00000001343b57b0>"
 
 ### Mocktail.of_next
 
-`Mocktail.of_next(klass, [count: 1])` takes a class and returns one mock (the
+`Mocktail.of_next(SomeClass)` takes a class and returns one mock (the
 default) or an array of multiple mocks. It also effectively overrides the
 behavior of that class's constructor to return those mock(s) in order and
 finally restoring its previous behavior.

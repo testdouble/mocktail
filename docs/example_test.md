@@ -12,9 +12,8 @@ that, it's useful context to start with the end in mind. In a codebase that
 was primarily developed with outside-in test-driven development, it's typical
 to see the following:
 
-* The average
-[delegator](support/glossary.md#delegator) has 3 dependencies that implement
-logic
+* The average [delegator](support/glossary.md#delegator) has 3 dependencies that
+implement logic
 * Delegators are typically the only units of code whose tests use [test
 doubles](support/glossary.md#test-double), and they tend to simplify their usage
 by _only_ delegating as opposed to performing any logic, thereby avoiding [mixed
@@ -59,17 +58,25 @@ To make this a little clearer, let's illustrate the ordered list above into imag
   <img src="img/example_test.png" width="480" alt="an example tree of dependencies that do the above work">
 </p>
 
-Additionally, if we look at the above graph through the assumptions above, we
-end up with 3 dependencies, a subject with nothing to do but to delegate its
-responsibility, and a dependency shape that results in an extract-transform-load
-shape: something to fetch data based on a request, something to perform logic,
-and something to put the result somewhere.
+The diagram matches the assumptions of a typical delegator described above: a
+subject with 3 dependencies, that does nothing but delegate its responsibility,
+and a tree that resembles an extract-transform-load process: something to fetch
+data based on a request, something to perform logic, and something to put the
+result somewhere.
 
-To visualize:
+To visualize what we mean by ETL:
 
 <p align="center" width="100%">
   <img src="img/extract_transform_load.png" width="480" alt="illustrating the tree as an ETL process">
 </p>
+
+If you're new to isolated TDD, the focus on these heuristics may appear like
+arbitrary strictures but in reality are just observations of patterns that
+emerge over time when your practice and tools pushes you to the extreme end of
+breaking down problems into small, single-purpose functions and methods. The
+reason ETL emerges as a common pattern is because a huge proportion of software
+features entails getting data via I/O, doing something interesting with that
+data, and then putting that data somewhere.
 
 ## Initial test setup
 
@@ -106,9 +113,9 @@ NameError: uninitialized constant PrepsFruitsTest::FetchesFruits
     example.rb:5:in `setup'
 ```
 
-As they say, the goal of each action in TDD is to "make the test pass or change
-the message", so let's rapidly iterate to overcome each of these errors until
-the empty `test_prep` method exits cleanly:
+As they say, the goal of each action in TDD is to "either make the test pass or
+change the message", so let's rapidly iterate to overcome each of these errors
+until the empty `test_prep` method exits cleanly:
 
 ```ruby
 class FetchesFruits
@@ -119,13 +126,8 @@ Fails with `uninitialized constant PrepsFruitsTest::SlicesFruit` until we:
 
 ```ruby
 class SlicesFruit
-end
-```
+end #=> message is now: `uninitialized constant PrepsFruitsTest::StoresFruit`
 
-Changes the message to `uninitialized constant PrepsFruitsTest::StoresFruit`
-and:
-
-```ruby
 class StoresFruit
 end #=> message is now: `uninitialized constant PrepsFruitsTest::PrepsFruits`
 
@@ -150,9 +152,8 @@ making a change, and changing the message. After you get in the flow, driving
 the design of a system with outside-in test-driven development starts to feel
 like [paint by number](https://en.wikipedia.org/wiki/Paint_by_number).
 
-First, we'll stub the first interaction to fetch the fruit. This will require
-us to specify some value objects (fruits) we hadn't yet, so the stubbing can
-have something to return to the subject.
+We'll start by stubbing the first interaction to fetch the fruit. This will
+require us to specify some value objects (fruits) we haven't created yet.
 
 ```ruby
 def test_prep
@@ -176,9 +177,9 @@ class Pineapple
 end
 ```
 
-After defining `Pineapple`, the next message is interesting!
+After defining `Pineapple`, the next message becomes more interesting!
 
-```ruby
+```
 No method `FetchesFruits#fetch' exists for call:
 
   fetch([:lime, :mango, :pineapple])
@@ -200,11 +201,8 @@ class FetchesFruits
 end
 ```
 
-And now we're back to passing! Let's move onto the next stubbing. This time,
-we'll do something fancy and return a stubbing value that wraps the value passed
-in by introspecting the optional [Call](/src/mocktail/value/call.rb) block param
-of `with` that represents the actual call to a satisfied stub invocation:
-
+And now we're back to passing! Let's move onto the next stubbing. This one is
+much fancier, so look closely:
 
 ```ruby
 def test_prep
@@ -217,8 +215,26 @@ def test_prep
 end
 ```
 
-This will raise a few new errors for us to clear, starting with `uninitialized
-constant PrepsFruitsTest::Fruit`. Let's clear it:
+This stubbing is taking advantage of two advanced features in Mocktail:
+
+* **Argument matchers -** the [m.is_a](support/api.md#mis_a) matcher allows the
+stubbing to do triple-duty and results in the stub being satisfied any time
+a `Fruit` instance is passed to `@slices_fruit.slice`
+* **Call introspection -** `with` receives an optional
+[Call](/src/mocktail/value/call.rb) block param that represents an actual call
+of the mocked method by the subject whenever it satisfies the stub configuration
+
+If you're not used to reading Mocktail's API yet, these two stubbings can be
+combined to facilitate production code like this:
+
+```ruby
+@fetches_fruits.fetch([:lime, :mango, :pineapple]).map { |fruit|
+  @slices_fruit.slice(fruit)
+} #=> returns [SlicedFruit(Lime), SlicedFruit(Mango), SlicedFruit(Pineapple)]
+```
+
+But initially, this will raise a few new errors for us to clear, starting with
+`uninitialized constant PrepsFruitsTest::Fruit`. Let's clear it:
 
 ```ruby
 class Fruit
@@ -236,7 +252,7 @@ end
 
 Here's the next error:
 
-```ruby
+```
 No method `SlicesFruit#slice' exists for call:
 
   slice(is_a(Fruit))
@@ -276,7 +292,8 @@ end
 ```
 
 As you might expect, the test is telling us to create the method we're here to
-implement: `undefined method 'prep' for #<PrepsFruits:0x0000000105008060>`.
+implement: `undefined method 'prep' for #<PrepsFruits:0x0000000105008060>`, so
+let's make it:
 
 ```ruby
 class PrepsFruits
@@ -287,6 +304,9 @@ end
 
 And we're passing again.
 
+That's it! The "Act" phase is ideally a one line invocation, because ideally the
+subject should be able to do its job being told only once.
+
 ## Assert: verifying our interactions
 
 Now that we've completed the Arrange and Act, we can deal with the
@@ -294,13 +314,13 @@ Now that we've completed the Arrange and Act, we can deal with the
 
 But how should we assert that the sliced fruit gets stored? None of the code
 exists yet, so the approach we decide for our test will influence the resulting
-API.　To illustrate, we're going to show two different ways to finish writing
+API. To illustrate, we're going to show two different ways to finish writing
 this test and how they might impact the contract between our subject and its
 dependencies.
 
 ### Approach 1: verifying the method was called
 
-One approach would be to verifying that `StoresFruit#store` is invoked for each
+One approach would be to verify that `StoresFruit#store` is invoked for each
 `SlicedFruit` instance using [verify](support/api.md#mocktailverify). Let's play
 that out here.
 
@@ -447,7 +467,7 @@ verify { |m|
 Running the test again, we get an error that tells us that the code is doing
 exactly what we want… yay!
 
-```ruby
+```
 Mocktail::VerificationError: Expected mocktail of `StoresFruit#store' to be called like:
 
   store(that {…})

@@ -316,7 +316,7 @@ But how should we assert that the sliced fruit gets stored? None of the code
 exists yet, so the assertion we encode into our test will specify the API of the
 class responsible for storing fruit. This can make some folks feel a little
 queasy, because in the context of traditional TDD, the subject should be a black
-box—meaning tests _should not_ be aware of, much less determine the subject's
+box—meaning tests should not be aware of, much less determine the subject's
 implementation details. But isolated TDD flips things inside-out: the test
 becomes a sounding board for iterating rapidly on the public APIs of not only
 the subject, but of the layer of dependencies beneath it. This gives the test
@@ -324,11 +324,14 @@ author the opportunity to play with a new API contract (name, parameters, and
 return value) via a lightweight
 [demonstration](support/glossary.md#demonstration) of a method that doesn't even
 exist yet, which means every new method is created through _actual, necessary
-use_ instead of typed into a blank page class listing. It makes mistakes cheap
-to fix as a result: if a method doesn't feel right, reconfiguring the stubbing
-in place doesn't require switching files, renaming references, or moving
-parameters around. If refactoring is the third step in classical TDD's
-"red-green-refactor", it's the first step in isolated TDD. (Prefactoring?)
+use_ instead of being typed into a blank class listing. Letting usage determine
+the API confers the same benefits as [readme-driven
+development](https://tom.preston-werner.com/2010/08/23/readme-driven-development.html)
+by working outside-in and making mistakes cheap to fix. If a method doesn't feel
+right, reconfiguring the stubbing in place doesn't require switching files,
+renaming references, or moving parameters around. Put differently, if
+refactoring is the third step in classical TDD's "red-green-refactor", it's the
+_first_ step when practicing isolated TDD. (Prefactoring?)
 
 To illustrate how the assertions we choose can impact the API of our subject and
 its dependencies, we're going to show two different ways to finish writing this
@@ -363,42 +366,20 @@ def test_prep
 end
 ```
 
-Above, we're using another matcher, [m.that](support/api.md#mthat) to simply
-ensure that each `store` was called with one of each type of fruit. There
-are decisions we could have made differently, but they're not especially
-consequential.
+Above, we're using another matcher, [m.that](support/api.md#mthat), to ensure
+that each `store` was called with one of each type of fruit. (`m.that` takes a
+block parameter that receives the actual argument it stands in for, passing the
+verification when it returns truthy and failing it otherwise.)
 
-One decision worth calling out explicitly is that given the simplicity of this
-example, we're intentionally using more advanced Mocktail features like
-[matchers](support/api.md#matching-arguments-dynamically) and dynamically
-creating values in a stubbing (i.e. `with { |call| … }`) than the situation
-necessarily calls for, simply to demonstrate their use in practice. We could
-have simplified our usage of Mocktail by creating each `SlicedFruit` instance in
-the test and stubbing & verifying it by reference.  This would have added
-another set of variables to track, but would eliminate the need for using any
-`m` argument matchers.
+We could have implemented this verification more simply by assigning
+`SlicedFruit` instances in the test and stubbing & verifying them by reference.
+This would have added another set of variables to track, but would eliminate the
+need for using any `m` argument matchers. (The purpose of these docs is to teach
+Mocktail's API, so it errs on the side of leaning harder into the library's
+features.)
 
-Had we taken that simpler route, the test might look like this:
-
-```ruby
-def test_prep
-  fruits = [Lime.new, Mango.new, Pineapple.new]
-  sliced_fruits = fruits.map { |fruit| SlicedFruit.new(fruit) }
-  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
-  stubs { @slices_fruit.slice(fruits[0]) }.with { sliced_fruits[0] }
-  stubs { @slices_fruit.slice(fruits[1]) }.with { sliced_fruits[1] }
-  stubs { @slices_fruit.slice(fruits[2]) }.with { sliced_fruits[2] }
-
-  @subject.prep([:lime, :mango, :pineapple])
-
-  verify { @stores_fruit.store(sliced_fruits[0]) }
-  verify { @stores_fruit.store(sliced_fruits[1]) }
-  verify { @stores_fruit.store(sliced_fruits[2]) }
-end
-```
-
-Sticking to the first example relying on the matchers, running our test yields
-our next error `No method `StoresFruit#store' exists`. We can fix that:
+Running our test yields our next error `No method 'StoresFruit#store' exists`.
+We can fix that:
 
 ```ruby
 class StoresFruit
@@ -417,10 +398,11 @@ Mocktail::VerificationError: Expected mocktail of `StoresFruit#store' to be call
 But it was never called.
 ```
 
-That means it's time to start implementing the subject method based on
-all the decisions driven out by our test so far. We can write most of
-these interactions in one fell-swoop, because the test setup already forced
-us to make most of the decisions of consequence to the code itself.
+This is a big deal! It means it's _finally_ time to start implementing the
+subject method based on all the decisions driven out by our test so far. We can
+write most of these interactions in one fell swoop, because the test setup
+already forced us to make most of the decisions of consequence about the code
+itself.
 
 Here's how the `PrepsFruit` class might shake out:
 
@@ -442,10 +424,10 @@ end
 ```
 
 This may feel like a lot of code to write in one go, but it was all preordained
-by the test, there's not a lot of uncertainty.
+by the test, so it kind of just writes itself.
 
 Does it work? No! But it changed the message to something we might not have
-realized we never created: `uninitialized constant
+realized we hadn't created yet: `uninitialized constant
 PrepsFruitsTest::SlicedFruit`.
 
 This is actually good news! Because `SlicedFruit.new` is only refrenced inside
@@ -473,7 +455,7 @@ and the implementation passes the test!
 
 That said, _never trust a test you haven't seen fail_. To be sure the test's
 passing isn't an indication of a faulty assertion, let's jiggle the handle by
-tweaking one of those verify calls:
+tweaking one of those `verify` calls:
 
 ```ruby
 verify { |m|
@@ -510,14 +492,14 @@ block, whatever it's doing must be a side effect. And since side effects are
 generally less desirable than returning values, it's worth pausing and asking if
 there was a different approach we could have taken.
 
-It turns out, there is! Even though Mocktail offers a `verify` functionality,
+It turns out, there is! Even though Mocktail offers a robust `verify` method,
 it should be used sparingly, because—like `each`—its only real utility is to
 specify interactions that don't return a value. Methods that return values are
 generally more useful, so let's rewind the clock, delete the production code
 we just wrote, and set up our assertions to interrogate a return value instead
 of verifying calls to `StoresFruit#store`.
 
-Here's where the test stood at the end of our setup:
+Here's where the test stood after completing the Act phase:
 
 ```ruby
 def test_prep
@@ -561,13 +543,14 @@ In the reimagined test above, we decided that instead of being a fire-and-forget
 call, a value representing a stored fruit with a unique ID could be returned
 from `StoresFruit.store`. Of course, the stubbing _could_ have mutated the
 `SlicedFruit` passed to it (just as `SlicedFruit#slice` could have mutated the
-`Fruit` it received), but because starting with a test that forces the spelling
-out of each dependency interaction is akin to "measure twice, cut once", you may
-find yourself more often returning new values instead of mutating existing ones.
+`Fruit` it received), but if we're going to go to great lengths to return values
+instead of have side effects, we may as well go the extra mile and avoid
+mutating those values.
 
-After clearing out `PrepsFruit#prep`, the above test will initially error with
-`undefined method 'size' for nil:NilClass`. Let's try our hand at a new
-implementation that will pass the test:
+After clearing out `PrepsFruit#prep`, the test will error with `undefined method
+'size' for nil:NilClass`, since it's not returning anything.
+
+Let's try our hand at a new implementation that should pass the test:
 
 ```ruby
 def prep(fruit_types)
@@ -578,9 +561,9 @@ def prep(fruit_types)
 end
 ```
 
-Now we have a new error, because the `StoredFruit` value hasn't been created
-yet. Let's clear the `uninitialized constant PrepsFruitsTest::StoredFruit`
-message by implementing it as a `Struct`:
+But it errors! The `StoredFruit` value hasn't been created yet. Let's clear the
+`uninitialized constant PrepsFruitsTest::StoredFruit` message by implementing it
+as a `Struct`:
 
 ```ruby
 StoredFruit = Struct.new(:id, :fruit)
@@ -600,4 +583,12 @@ assert_equal "ID for Zebras", result[2].id
 ```
 
 And that's the kind of failure that we'd expect to see if everything was working
-as we expected.
+as we expected. Great job!
+
+There are a few places you could explore next:
+
+**Run the [test code for this tutorial yourself](support/example_test.rb).**
+
+**Learn about Mocktail's [debugging and introspection APIs](support/api.md#debugging).**
+
+**Check out an advanced feature not covered in this guide: [argument captors](support/api.md#mocktailcaptor).**

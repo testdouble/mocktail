@@ -46,7 +46,7 @@ indirectly through the original subject.
 Outside-in test driven development flips the order of operations: once we know
 what the subject needs to do, we imagine new subordinate units to delegate the
 work to and use our test to specify the relationship between the subject and its
-dependencies. We would continue this process until we were left with a number of
+dependencies. We would repeat this process until we were left with a number of
 irreducibly simple, single-responsibility units of domain logic that could
 largely be implemented via straightforward tests (without mocks), often as pure
 functions. This way, simplicity is baked into the process instead of an
@@ -56,7 +56,7 @@ practitioner's patience and discipline to remember to refactor.
 To make this a little clearer, let's illustrate the ordered list above into imagined dependencies that a delegator might need to accomplish the work:
 
 <p align="center" width="100%">
-  <img src="img/example_test.png" width="320" alt="an example tree of dependencies that do the above work">
+  <img src="img/example_test.png" width="480" alt="an example tree of dependencies that do the above work">
 </p>
 
 Additionally, if we look at the above graph through the assumptions above, we
@@ -68,7 +68,7 @@ and something to put the result somewhere.
 To visualize:
 
 <p align="center" width="100%">
-  <img src="img/extract_transform_load.png" width="320" alt="illustrating the tree as an ETL process">
+  <img src="img/extract_transform_load.png" width="480" alt="illustrating the tree as an ETL process">
 </p>
 
 ## Initial test setup

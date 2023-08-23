@@ -1,3 +1,7 @@
+# 1.2.3
+
+* Don't class extend Struct.new
+
 # 1.2.2
 
 * As promised in 1.2.1, there were bugs. [#19](https://github.com/testdouble/mocktail/pull/19)

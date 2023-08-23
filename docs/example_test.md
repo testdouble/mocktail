@@ -273,7 +273,7 @@ end
 ```
 
 As you might expect, the test is telling us to create the method we're here to
-implement: `undefined method `prep' for #<PrepsFruits:0x0000000105008060>`.
+implement: `undefined method 'prep' for #<PrepsFruits:0x0000000105008060>`.
 
 ```ruby
 class PrepsFruits
@@ -477,7 +477,87 @@ generally more useful, so let's rewind the clock, delete the production code
 we just wrote, and set up our assertions to interrogate a return value instead
 of verifying calls to `StoresFruit#store`.
 
-
+Here's where the test stood at the end of our setup:
 
 ```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { |m| @slices_fruit.slice(m.is_a(Fruit)) }.with { |call|
+    SlicedFruit.new(call.args.first)
+  }
+
+  result = @subject.prep([:lime, :mango, :pineapple])
+end
 ```
+
+And here's an alternate assertion we might have written, this time stubbing
+`StoresFruit#store` and asserting the return value:
+
+```ruby
+def test_prep
+  fruits = [Lime.new, Mango.new, Pineapple.new]
+  stubs { @fetches_fruits.fetch([:lime, :mango, :pineapple]) }.with { fruits }
+  stubs { |m| @slices_fruit.slice(m.is_a(Fruit)) }.with { |call|
+    SlicedFruit.new(call.args.first)
+  }
+  stubs { |m| @stores_fruit.store(m.is_a(SlicedFruit)) }.with { |call|
+    StoredFruit.new("ID for #{call.args.first.type}", call.args.first)
+  }
+
+  result = @subject.prep([:lime, :mango, :pineapple])
+
+  assert_equal 3, result.size
+  assert_equal "ID for Lime", result[0].id
+  assert_equal Lime, result[0].fruit.type
+  assert_equal "ID for Mango", result[1].id
+  assert_equal Mango, result[1].fruit.type
+  assert_equal "ID for Pineapple", result[2].id
+  assert_equal Pineapple, result[2].fruit.type
+end
+```
+
+In the reimagined test above, we decided that instead of being a fire-and-forget
+call, a value representing a stored fruit with a unique ID could be returned
+from `StoresFruit.store`. Of course, the stubbing _could_ have mutated the
+`SlicedFruit` passed to it (just as `SlicedFruit#slice` could have mutated the
+`Fruit` it received), but because starting with a test that forces the spelling
+out of each dependency interaction is akin to "measure twice, cut once", you may
+find yourself more often returning new values instead of mutating existing ones.
+
+After clearing out `PrepsFruit#prep`, the above test will initially error with
+`undefined method 'size' for nil:NilClass`. Let's try our hand at a new
+implementation that will pass the test:
+
+```ruby
+def prep(fruit_types)
+  @fetches_fruits.fetch(fruit_types).map { |fruit|
+    fruit = @slices_fruit.slice(fruit)
+    @stores_fruit.store(fruit)
+  }
+end
+```
+
+Now we have a new error, because the `StoredFruit` value hasn't been created
+yet. Let's clear the `uninitialized constant PrepsFruitsTest::StoredFruit`
+message by implementing it as a `Struct`:
+
+```ruby
+StoredFruit = Struct.new(:id, :fruit)
+```
+
+And now things are passing!
+
+If we're paranoid, we can quickly check that everything's working by changing
+out one of the test's final assertions to see the failure it produces:
+
+```ruby
+assert_equal "ID for Zebras", result[2].id
+#=>
+# PrepsFruitsTest#test_prep [example.rb:29]:
+# Expected: "ID for Zebras"
+#   Actual: "ID for Pineapple"
+```
+
+And that's the kind of failure that we'd expect to see if everything was working
+as we expected.

@@ -12,7 +12,7 @@ module Mocktail
       @imitates_type = T.let(ImitatesType.new, ImitatesType)
     end
 
-    sig { params(type: T::Class[T.anything], args: T::Array[T.anything], kwargs: T::Hash[Symbol, T.anything], block: T.nilable(Proc)).returns(T.anything) }
+    sig { params(type: T::Class[T.all(T, Object)], args: T::Array[T.anything], kwargs: T::Hash[Symbol, T.anything], block: T.nilable(Proc)).returns(T.anything) }
     def handle(type, args, kwargs, block)
       @validates_arguments.validate(Call.new(
         original_method: type.instance_method(:initialize),

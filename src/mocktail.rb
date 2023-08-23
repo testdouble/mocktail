@@ -46,8 +46,8 @@ module Mocktail
   # Returns an instance of `type` whose implementation is mocked out
   sig {
     type_parameters(:T)
-      .params(type: T::Class[T.type_parameter(:T)])
-      .returns(T.type_parameter(:T))
+      .params(type: T::Class[T.all(T.type_parameter(:T), Object)])
+      .returns(T.all(T.type_parameter(:T), Object))
   }
   def self.of(type)
     ImitatesType.new.imitate(type)

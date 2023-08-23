@@ -1,1 +1,9 @@
 ruby_version: 3.0
+
+plugins:
+  - standard-sorbet
+
+ignore:
+  - "{docs,lib,sub_projects/untyped_user}/**/*.rb":
+    - Sorbet/FalseSigil
+

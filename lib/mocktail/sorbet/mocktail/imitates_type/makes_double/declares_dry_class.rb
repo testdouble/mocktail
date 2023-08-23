@@ -18,7 +18,7 @@ module Mocktail
 
     sig {
       type_parameters(:T)
-        .params(type: T.all(T.type_parameter(:T), T::Class[T.anything]), instance_methods: T::Array[Symbol]).returns(T.type_parameter(:T))
+        .params(type: T.all(T.type_parameter(:T), T::Class[Object]), instance_methods: T::Array[Symbol]).returns(T.type_parameter(:T))
     }
     def declare(type, instance_methods)
       dry_class = Class.new(Object) {

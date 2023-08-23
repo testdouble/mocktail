@@ -59,7 +59,12 @@ module Mocktail
     # Returns an instance of `type` whose implementation is mocked out
     #
     # source://mocktail//lib/mocktail/sorbet/mocktail.rb#52
-    sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
+    sig do
+      type_parameters(:T)
+        .params(
+          type: T::Class[T.all(::Object, T.type_parameter(:T))]
+        ).returns(T.all(::Object, T.type_parameter(:T)))
+    end
     def of(type); end
 
     # Returns an instance of `klass` whose implementation is mocked out AND
@@ -182,7 +187,7 @@ end
 # source://mocktail//lib/mocktail/sorbet/mocktail/value/call.rb#4
 class Mocktail::Call < ::T::Struct
   const :singleton, T.nilable(T::Boolean)
-  const :double, T.untyped, default: T.unsafe(nil)
+  const :double, ::Object, default: T.unsafe(nil)
   const :original_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :dry_type, T.nilable(T.any(::Module, T::Class[T.anything]))
   const :method, T.nilable(::Symbol)
@@ -302,7 +307,7 @@ class Mocktail::DeclaresDryClass
   sig do
     type_parameters(:T)
       .params(
-        type: T.all(T.type_parameter(:T), T::Class[T.anything]),
+        type: T.all(T.type_parameter(:T), T::Class[::Object]),
         instance_methods: T::Array[::Symbol]
       ).returns(T.type_parameter(:T))
   end
@@ -436,7 +441,7 @@ end
 class Mocktail::Double < ::T::Struct
   const :original_type, T.any(::Module, T::Class[T.anything])
   const :dry_type, T::Class[T.anything]
-  const :dry_instance, T.untyped
+  const :dry_instance, ::Object
   const :dry_methods, T::Array[::Symbol]
 
   class << self
@@ -450,7 +455,7 @@ class Mocktail::DoubleData < ::T::Struct
   include ::Mocktail::ExplanationData
 
   const :type, T.any(::Module, T::Class[T.anything])
-  const :double, T.untyped
+  const :double, ::Object
   const :calls, T::Array[::Mocktail::Call]
   const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
@@ -708,7 +713,7 @@ class Mocktail::HandlesDryNewCall
   # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#16
   sig do
     params(
-      type: T::Class[T.anything],
+      type: T::Class[T.all(::Object, ::T)],
       args: T::Array[T.anything],
       kwargs: T::Hash[::Symbol, T.anything],
       block: T.nilable(::Proc)
@@ -724,7 +729,12 @@ class Mocktail::ImitatesType
   def initialize; end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/imitates_type.rb#22
-  sig { type_parameters(:T).params(type: T::Class[T.type_parameter(:T)]).returns(T.type_parameter(:T)) }
+  sig do
+    type_parameters(:T)
+      .params(
+        type: T::Class[T.all(::Object, T.type_parameter(:T))]
+      ).returns(T.all(::Object, T.type_parameter(:T)))
+  end
   def imitate(type); end
 end
 
@@ -752,7 +762,7 @@ class Mocktail::MakesDouble
   def initialize; end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/imitates_type/makes_double.rb#17
-  sig { params(type: T::Class[T.anything]).returns(::Mocktail::Double) }
+  sig { params(type: T::Class[::Object]).returns(::Mocktail::Double) }
   def make(type); end
 end
 
@@ -1114,7 +1124,7 @@ end
 class Mocktail::NoExplanationData < ::T::Struct
   include ::Mocktail::ExplanationData
 
-  const :thing, T.untyped
+  const :thing, ::Object
 
   # @raise [Error]
   #

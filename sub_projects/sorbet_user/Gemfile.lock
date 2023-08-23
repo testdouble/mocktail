@@ -53,6 +53,8 @@ GEM
     rubocop-performance (1.19.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
+    rubocop-sorbet (0.7.3)
+      rubocop (>= 0.90.0)
     ruby-progressbar (1.13.0)
     sorbet (0.5.10983)
       sorbet-static (= 0.5.10983)
@@ -79,6 +81,9 @@ GEM
     standard-performance (1.2.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.19.0)
+    standard-sorbet (0.0.2)
+      lint_roller (~> 1.1)
+      rubocop-sorbet (~> 0.7.0)
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     tapioca (0.11.8)
@@ -111,6 +116,7 @@ DEPENDENCIES
   sorbet
   sorbet-runtime
   standard
+  standard-sorbet
   tapioca
 
 BUNDLED WITH

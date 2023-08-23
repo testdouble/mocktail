@@ -5,7 +5,7 @@ module Mocktail
     extend T::Sig
 
     const :singleton, T.nilable(T::Boolean)
-    const :double, T.untyped, default: nil
+    const :double, Object, default: nil
     const :original_type, T.nilable(T.any(T::Class[T.anything], Module))
     const :dry_type, T.nilable(T.any(T::Class[T.anything], Module))
     const :method, T.nilable(Symbol), without_accessors: true

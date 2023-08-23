@@ -5,7 +5,7 @@ module Mocktail
     extend T::Sig
     include ExplanationData
 
-    const :thing, T.untyped
+    const :thing, Object
 
     sig { override.returns(T::Array[Mocktail::Call]) }
     def calls

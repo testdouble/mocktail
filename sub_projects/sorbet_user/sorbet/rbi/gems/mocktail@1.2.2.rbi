@@ -207,6 +207,7 @@ class Mocktail::Call < ::T::Struct
   def hash; end
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -368,6 +369,7 @@ class Mocktail::DemoConfig < ::T::Struct
   const :times, T.nilable(::Integer), default: T.unsafe(nil)
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -442,6 +444,7 @@ class Mocktail::Double < ::T::Struct
   const :dry_methods, T::Array[::Symbol]
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -458,6 +461,7 @@ class Mocktail::DoubleData < ::T::Struct
   const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -591,6 +595,7 @@ class Mocktail::FakeMethodData < ::T::Struct
   const :stubbings, T::Array[Mocktail::Stubbing[T.anything]]
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -794,6 +799,8 @@ class Mocktail::MatcherPresentation
   sig { params(pattern: T.any(String, Regexp)).returns(String) }
   def matches(pattern); end
 
+  # standard:disable Style/ArgumentsForwarding
+  #
   # source://mocktail//lib/mocktail/sorbet/mocktail/matcher_presentation.rb#13
   sig { params(name: ::Symbol, args: T.anything, kwargs: T.anything, blk: T.nilable(::Proc)).returns(T.anything) }
   def method_missing(name, *args, **kwargs, &blk); end
@@ -1132,6 +1139,7 @@ class Mocktail::NoExplanationData < ::T::Struct
   def stubbings; end
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1154,6 +1162,7 @@ class Mocktail::Params < ::T::Struct
   def rest?; end
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1493,6 +1502,7 @@ class Mocktail::Signature < ::T::Struct
   const :block_arg, T.nilable(::Proc), default: T.unsafe(nil)
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1617,6 +1627,7 @@ class Mocktail::Stubbing < ::T::Struct
   def with(&block); end
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1719,6 +1730,7 @@ class Mocktail::TypeReplacement < ::T::Struct
   prop :replacement_new, T.nilable(::Method)
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1739,6 +1751,7 @@ class Mocktail::TypeReplacementData < ::T::Struct
   def double; end
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
@@ -1755,6 +1768,7 @@ class Mocktail::UnsatisfyingCall < ::T::Struct
   const :backtrace, T::Array[::String]
 
   class << self
+    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
     # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end

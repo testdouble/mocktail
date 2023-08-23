@@ -14,25 +14,25 @@ class RuboCop::CommentConfig
   # source://standard//lib/standard/rubocop/ext.rb#20
   def initialize(processed_source); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#63
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#63
   def comment_only_line?(line_number); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def config(*args, **_arg1, &block); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#51
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#51
   def cop_disabled_line_ranges; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#39
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#39
   def cop_enabled_at_line?(cop, line_number); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#47
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#47
   def cop_opted_in?(cop); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#55
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#55
   def extra_enabled_comments; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#30
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#30
   def processed_source; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -40,49 +40,49 @@ class RuboCop::CommentConfig
 
   private
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#96
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#96
   def analyze; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#124
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#124
   def analyze_cop(analysis, directive); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#144
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#144
   def analyze_disabled(analysis, directive); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#155
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#155
   def analyze_rest(analysis, directive); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#135
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#135
   def analyze_single_line(analysis, directive); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#164
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#164
   def cop_line_ranges(analysis); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#170
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#170
   def each_directive; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#69
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#69
   def extra_enabled_comments_with_names(extras:, names:); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#190
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#190
   def handle_enable_all(directive, names, extras); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#204
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#204
   def handle_switch(directive, names, extras); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#115
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#115
   def inject_disabled_cops_directives(analyses); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#183
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#183
   def non_comment_token_line_numbers; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#34
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#34
   def old_initialize(processed_source); end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#83
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#83
   def opt_in_cops; end
 
-  # source://rubocop/1.52.1/lib/rubocop/comment_config.rb#179
+  # source://rubocop/1.56.1/lib/rubocop/comment_config.rb#179
   def qualified_cop_name(cop_name); end
 end
 
@@ -94,114 +94,114 @@ class RuboCop::Cop::Lint::AssignmentInCondition < ::RuboCop::Cop::Base
   # source://standard//lib/standard/rubocop/ext.rb#4
   def message(_); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
   def on_if(node); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
   def on_until(node); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#55
   def on_while(node); end
 
   private
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#82
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#82
   def allowed_construct?(asgn_node); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#86
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#86
   def conditional_assignment?(asgn_node); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#90
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#90
   def skip_children?(asgn_node); end
 
-  # source://rubocop/1.52.1/lib/rubocop/cop/lint/assignment_in_condition.rb#96
+  # source://rubocop/1.56.1/lib/rubocop/cop/lint/assignment_in_condition.rb#96
   def traverse_node(node, &block); end
 end
 
 # source://standard//lib/standard/rubocop/ext.rb#9
 class RuboCop::DirectiveComment
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#30
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#30
   def initialize(comment, cop_registry = T.unsafe(nil)); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#80
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#80
   def all_cops?; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#28
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#28
   def comment; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#85
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#85
   def cop_names; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#28
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#28
   def cop_registry; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#28
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#28
   def cops; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#91
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#91
   def department_names; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#105
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#105
   def directive_count; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#60
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#60
   def disabled?; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#75
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#75
   def disabled_all?; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#65
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#65
   def enabled?; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#70
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#70
   def enabled_all?; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#96
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#96
   def in_directive_department?(cop); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#110
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#110
   def line_number; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#42
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#42
   def match?(cop_names); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#55
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#55
   def match_captures; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#28
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#28
   def mode; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#101
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#101
   def overridden_by_department?(cop); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#46
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#46
   def range; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#37
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#37
   def single_line?; end
 
   private
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#130
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#130
   def all_cop_names; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#134
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#134
   def cop_names_for_department(department); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#126
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#126
   def department?(name); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#140
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#140
   def exclude_redundant_directive_cop(cops); end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#120
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#120
   def parsed_cop_names; end
 
-  # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#116
+  # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#116
   def splitted_cops_string; end
 
   class << self
-    # source://rubocop/1.52.1/lib/rubocop/directive_comment.rb#24
+    # source://rubocop/1.56.1/lib/rubocop/directive_comment.rb#24
     def before_comment(line); end
   end
 end

@@ -10,9 +10,9 @@ module Mocktail
     end
 
     sig { params(name: Symbol, args: T.anything, kwargs: T.anything, blk: T.nilable(Proc)).returns(T.anything) }
-    def method_missing(name, *args, **kwargs, &blk)
+    def method_missing(name, *args, **kwargs, &blk) # standard:disable Style/ArgumentsForwarding
       if (matcher = MatcherRegistry.instance.get(name))
-        T.unsafe(matcher).new(*args, **kwargs, &blk)
+        T.unsafe(matcher).new(*args, **kwargs, &blk) # standard:disable Style/ArgumentsForwarding
       else
         super
       end

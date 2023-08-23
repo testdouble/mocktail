@@ -10,7 +10,7 @@ GEM
   specs:
     minitest (5.19.0)
     sorbet-eraser (0.3.1)
-    sorbet-runtime (0.5.10957)
+    sorbet-runtime (0.5.10983)
 
 PLATFORMS
   arm64-darwin-22

@@ -8,6 +8,11 @@ abuses that lead to brittle and confusing tests.
 
 Your first choice is a consequential one: how do you want your Mocktail?
 
-**If you want to try the relaxing tonic of type safety, turn to [Mocktail with Sorbet](/docs/installation_sorbet.md).**
-
-**If you're looking for a modern twist on a classic, reach for [untyped Mocktail](/docs/installation_untyped.md).**
+<p align="center" width="100%">
+  <a href="/docs/installation_untyped.md">
+    <img src="docs/img/mocktail_untyped.jpg" width="45%" alt="Try Mocktail without type checking">
+  </a>
+  <a href="/docs/installation_sorbet.md">
+    <img src="docs/img/mocktail_sorbet.jpg" width="45%" alt="Try Mocktail with Sorbet type checking">
+  </a>
+</p>

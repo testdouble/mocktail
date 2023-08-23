@@ -208,8 +208,6 @@ class Mocktail::Call < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -370,8 +368,6 @@ class Mocktail::DemoConfig < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -445,8 +441,6 @@ class Mocktail::Double < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -462,8 +456,6 @@ class Mocktail::DoubleData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -596,8 +588,6 @@ class Mocktail::FakeMethodData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1140,8 +1130,6 @@ class Mocktail::NoExplanationData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1163,8 +1151,6 @@ class Mocktail::Params < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1503,8 +1489,6 @@ class Mocktail::Signature < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1628,8 +1612,6 @@ class Mocktail::Stubbing < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1731,8 +1713,6 @@ class Mocktail::TypeReplacement < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1752,8 +1732,6 @@ class Mocktail::TypeReplacementData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1769,8 +1747,6 @@ class Mocktail::UnsatisfyingCall < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10957/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10911/lib/types/struct.rb#13
     def inherited(s); end
   end
 end

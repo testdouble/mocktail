@@ -6,7 +6,7 @@ _only one_ with first-class support for type checking with
 development in Ruby and is designed to prevent common problems that lead to
 brittle and confusing tests.
 
-Your first choice is a consequential one: how do you want your Mocktail?
+Your first choice is a consequential one: **how do you want your Mocktail?**
 
 <p align="center" width="100%">
   <a href="/docs/installation_untyped.md">

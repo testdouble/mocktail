@@ -12,18 +12,18 @@ First thing's first, add this to your Gemfile:
 gem "mocktail", group: :test, require: "mocktail"
 ```
 
-(That redundant `require` option is just a garnish and won't cause any harm; it
-may help future readers discern that you're expressly _not_ using
+(That redundant `require` option is just a garnish and won't cause any harm;
+it's there to signal to future readers that you're _not_ using
 `mocktail/sorbet`.)
 
-Wherever necessary, you can require Mocktail like you would expect:
+Once installed, you can require Mocktail like you might expect:
 
 ```ruby
 require "mocktail"
 ```
 
-Next step, it's time to configure Mocktail with your test runner.
+Next step: it's time to configure Mocktail with your test runner!
 
-**If you're here to keep things classy, maybe [you use Minitest](configuring_minitest.md).**
+**If you like to keep things classy, maybe [you use Minitest](configuring_minitest.md).**
 
-**If you're about expressing intent as you build your nest, [RSpec works too](configuring_rspec.md).**
+**Or maybe you'd rather express your intent [to use RSpec](configuring_rspec.md).**

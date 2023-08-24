@@ -13,7 +13,7 @@ class Minitest::Test
 end
 ```
 
-Finally, the real (fake) work can begin.
+Finally, the real work of faking things can begin.
 
 **Incorporate Mocktail into your [test-driven development workflow](tdd.md).**
 

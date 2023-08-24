@@ -2,6 +2,8 @@ require_relative "bind"
 
 module Mocktail
   class DeterminesMatchingCalls
+    extend T::Sig
+
     def determine(real_call, demo_call, demo_config)
       Bind.call(real_call.double, :==, demo_call.double) &&
         real_call.method == demo_call.method &&
@@ -40,7 +42,7 @@ module Mocktail
     end
 
     def blocks_match?(real_block, demo_block, ignore_block)
-      ignore_block ||
+      !!(ignore_block ||
         (real_block.nil? && demo_block.nil?) ||
         (
           real_block && demo_block &&
@@ -48,7 +50,7 @@ module Mocktail
             demo_block == real_block ||
             demo_block.call(real_block)
           )
-        )
+        ))
     end
 
     def match?(real_arg, demo_arg)

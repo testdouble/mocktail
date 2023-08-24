@@ -1,13 +1,20 @@
+# typed: strict
+
 require "test_helper"
 
 class StubTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class Thing
+    extend T::Sig
+
+    sig { params(an_arg: T.untyped).returns(T.untyped) }
     def lol(an_arg)
     end
   end
 
+  sig { void }
   def test_thing
     thing = Mocktail.of(Thing)
 
@@ -15,10 +22,11 @@ class StubTest < Minitest::Test
 
     assert_equal [:r1, :r2], thing.lol(42)
     assert_nil thing.lol(41)
-    assert_raises(ArgumentError) { thing.lol }
-    assert_raises(ArgumentError) { thing.lol(4, 2) }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol(4, 2) }
   end
 
+  sig { void }
   def test_non_dsl_is_also_fine
     thing = Mocktail.of(Thing)
 
@@ -26,14 +34,15 @@ class StubTest < Minitest::Test
 
     assert_equal [:r1, :r2], thing.lol(42)
     assert_nil thing.lol(41)
-    assert_raises(ArgumentError) { thing.lol }
-    assert_raises(ArgumentError) { thing.lol(4, 2) }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol }
+    assert_raises(ArgumentError) { T.unsafe(thing).lol(4, 2) }
   end
 
   require "bigdecimal"
   class Reminder
   end
 
+  sig { void }
   def test_stub_with_matchers
     thing = Mocktail.of(Thing)
 
@@ -58,6 +67,7 @@ class StubTest < Minitest::Test
     assert_equal :g, thing.lol(43)
   end
 
+  sig { void }
   def test_stub_with_not_matcher
     thing = Mocktail.of(Thing)
 
@@ -68,11 +78,15 @@ class StubTest < Minitest::Test
   end
 
   class ArgyDoo
+    extend T::Sig
+
+    sig { params(a: T.untyped, b: T.untyped, c: T.untyped, blk: T.untyped).returns(T.untyped) }
     def boo(a = nil, b: nil, c: nil, &blk)
       raise "Boo!"
     end
   end
 
+  sig { void }
   def test_stub_with_lotsa_matchers
     doo = Mocktail.of(ArgyDoo)
 
@@ -91,6 +105,7 @@ class StubTest < Minitest::Test
     assert_equal :d, doo.boo("hmm 🤔", b: 5, c: 1)
   end
 
+  sig { void }
   def test_multiple_calls_per_stub
     thing = Mocktail.of(Thing)
 
@@ -108,16 +123,23 @@ class StubTest < Minitest::Test
   end
 
   class Fttp
+    extend T::Sig
+
+    sig { params(route: T.untyped, action: T.untyped).returns(T.untyped) }
     def get(route, &action)
       raise "real call made"
     end
   end
 
   class Fouter
+    extend T::Sig
+
+    sig { params(fttp: T.untyped).void }
     def initialize(fttp)
       @fttp = fttp
     end
 
+    sig { returns(T.untyped) }
     def draw
       routes = []
       routes << @fttp.get("/foo") do |req, res|
@@ -140,29 +162,39 @@ class StubTest < Minitest::Test
   end
 
   class Freq
+    extend T::Sig
+
+    sig { params(head_only: T.untyped).void }
     def initialize(head_only: false)
       @head_only = head_only
     end
 
+    sig { returns(T.untyped) }
     def head_only?
       @head_only
     end
   end
 
   class Fres
+    extend T::Sig
+
+    sig { void }
     def initialize
-      @written = []
+      @written = T.let([], T::Array[T.untyped])
     end
 
+    sig { params(content: T.untyped).returns(T.untyped) }
     def write(content)
       @written << content
     end
 
+    sig { returns(T.untyped) }
     def flush
       @written.join
     end
   end
 
+  sig { void }
   def test_block_stubbing
     fttp = Mocktail.of(Fttp)
     fouter = Fouter.new(fttp)
@@ -231,11 +263,12 @@ class StubTest < Minitest::Test
     assert_equal [:e, :h, :a, :b], result
   end
 
+  sig { void }
   def test_zero_calls_per_stub
     thing = Mocktail.of(Thing)
 
     e = assert_raises(Mocktail::MissingDemonstrationError) do
-      stubs { thing }.with { [:r1, :r2] }
+      stubs { thing }.with { thing }
     end
     assert_equal <<~MSG.tr("\n", " "), e.message
       `stubs` & `verify` expect an invocation of a mocked method by a passed
@@ -243,6 +276,7 @@ class StubTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_forlols_the_with
     thing = Mocktail.of(Thing)
 
@@ -252,38 +286,43 @@ class StubTest < Minitest::Test
   end
 
   class DoesTooMuch
+    extend T::Sig
+
+    sig { params(this: T.untyped, that: T.untyped, and: T.untyped, also: T.untyped, block: T.untyped).returns(T.untyped) }
     def do(this, that = nil, and:, also: "this", &block)
       raise "LOL"
     end
 
+    sig { params(a: T.untyped, this: T.untyped, b: T.untyped, that: T.untyped).returns(T.untyped) }
     def splats(a, *this, b:, **that)
     end
   end
 
+  sig { void }
   def test_param_checking
     does_too_much = Mocktail.of(DoesTooMuch)
 
-    assert_raises(ArgumentError) { does_too_much.do }
-    assert_raises(ArgumentError) { does_too_much.do { 1 } }
-    assert_raises(ArgumentError) { does_too_much.do(1) }
-    assert_raises(ArgumentError) { does_too_much.do(and: 1) }
-    assert_raises(ArgumentError) { does_too_much.do(and: 1) { 2 } }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2) }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) }
-    assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
-    assert_raises(ArgumentError) { does_too_much.do(1, also: 3) }
-    assert_raises(ArgumentError) { does_too_much.do(1, and: 2, fake_keyword: 4) }
-    assert_raises(ArgumentError) { does_too_much.splats(12) }
-    assert_raises(ArgumentError) { does_too_much.splats(b: 4) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do { 1 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(and: 1) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(and: 1) { 2 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) { 4 } }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, also: 3) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, and: 2, fake_keyword: 4) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).splats(12) }
+    assert_raises(ArgumentError) { T.unsafe(does_too_much).splats(b: 4) }
 
-    e = assert_raises(ArgumentError) { does_too_much.do(1, 2, also: 3) { 4 } }
+    e = assert_raises(ArgumentError) { T.unsafe(does_too_much).do(1, 2, also: 3) { 4 } }
     # Make sure the backtrace doesn't contain gem library paths
     refute e.backtrace.any? { |frame|
-      frame.include?("mocktail/lib")
+      frame.match?(/mocktail\/(src|lib)/)
     }, "Library paths should not appear in backtrace:\n#{e.backtrace.join("\n")}"
 
     # Make sure the message contains the call
-    assert_equal "missing keyword: :and [Mocktail call: `do(1, 2, also: 3) { Proc at test/safe/stub_test.rb:279 }']", e.message
+    assert_equal "missing keyword: :and [Mocktail call: `do(1, 2, also: 3) { Proc at test/safe/stub_test.rb:318 }']", e.message
 
     # Make sure it doesn't raise:
     does_too_much.do(1, and: 2)
@@ -298,6 +337,7 @@ class StubTest < Minitest::Test
     does_too_much.splats(2, 3, b: 4, c: 5)
   end
 
+  sig { void }
   def test_stub_with_is_passed_the_real_call_upon_satisfaction
     does_too_much = Mocktail.of(DoesTooMuch)
 
@@ -307,6 +347,7 @@ class StubTest < Minitest::Test
     assert_equal 25, does_too_much.do(12, and: true)
   end
 
+  sig { void }
   def test_stub_that_ignores_unspecified_blocks
     doo = Mocktail.of(ArgyDoo)
 
@@ -317,6 +358,7 @@ class StubTest < Minitest::Test
     assert_nil doo.boo("42")
   end
 
+  sig { void }
   def test_stub_that_ignores_unspecified_args
     doo = Mocktail.of(ArgyDoo)
 
@@ -330,6 +372,7 @@ class StubTest < Minitest::Test
     assert_nil doo.boo { "string" }
   end
 
+  sig { void }
   def test_stub_that_can_only_be_satisfied_so_many_times
     doo = Mocktail.of(ArgyDoo)
 
@@ -350,14 +393,16 @@ class StubTest < Minitest::Test
     3.times { |i| assert_equal :fallback, doo.boo(i) }
   end
 
+  sig { void }
   def test_stub_ignoring_arity_restrictions
     does_too_much = Mocktail.of(DoesTooMuch)
 
-    stubs(ignore_extra_args: true, ignore_arity: true) { does_too_much.do }.with { "yahtzee" }
+    stubs(ignore_extra_args: true, ignore_arity: true) { T.unsafe(does_too_much).do }.with { "yahtzee" }
 
     assert_equal "yahtzee", does_too_much.do(1, and: 2)
   end
 
+  sig { void }
   def test_stub_calls_a_stub_in_effect
     thing_1 = Mocktail.of(Thing)
     thing_2 = Mocktail.of(Thing)
@@ -372,10 +417,14 @@ class StubTest < Minitest::Test
   end
 
   class ThingThatDoesMethodMissingStuff
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def real_method?
       true
     end
 
+    sig { params(name: T.untyped, args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
     def method_missing(name, *args, **kwargs, &blk)
       {
         name: name,
@@ -385,11 +434,13 @@ class StubTest < Minitest::Test
       }
     end
 
+    sig { params(name: T.untyped, private_methods: T.untyped).returns(T.untyped) }
     def respond_to_missing?(name, private_methods = false)
       name.start_with?("a")
     end
   end
 
+  sig { void }
   def test_handling_thing_that_does_method_missing_stuff
     # see: https://github.com/ruby/ruby/blob/d92f09a5eea009fa28cd046e9d0eb698e3d94c5c/spec/ruby/language/def_spec.rb#L65
     # and: https://github.com/ruby/ruby/blob/eaeb0a008ba13ba0e531f3ccf589c44351cddbfe/vm_method.c#L776-L787
@@ -398,7 +449,7 @@ class StubTest < Minitest::Test
     stubs { |m| subject.send(:respond_to_missing?, m.any, m.any) }.with { |call|
       call.args[0].start_with?("b")
     }
-    stubs(ignore_extra_args: true, ignore_arity: true) { subject.method_missing }.with { |call|
+    stubs(ignore_extra_args: true, ignore_arity: true) { T.unsafe(subject).method_missing }.with { |call|
       "#{call.method}|#{call.args.map(&:inspect).join(", ")}|#{call.kwargs.map { |k, v| "#{k}: #{v}" }.join(", ")}"
     }
     stubs { subject.real_method? }.with { :lol }
@@ -408,9 +459,10 @@ class StubTest < Minitest::Test
     assert_equal true, subject.respond_to?(:beta)
     assert_equal false, subject.respond_to?(:charlie)
 
-    assert_equal "method_missing|:beta, :panda|cool: 4", subject.beta(:panda, cool: 4)
+    assert_equal "method_missing|:beta, :panda|cool: 4", T.unsafe(subject).beta(:panda, cool: 4)
   end
 
+  sig { void }
   def test_unsatisfied_stubbings_are_falsey_lol_whoops
     thing = Mocktail.of(Thing)
 
@@ -426,11 +478,12 @@ class StubTest < Minitest::Test
   class Methodless
   end
 
+  sig { void }
   def test_default_method_missing_warnings
     methodless = Mocktail.of(Methodless)
 
     e = assert_raises(NoMethodError) {
-      stubs { methodless.do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
+      stubs { T.unsafe(methodless).do_stuff(42, a: 4) { |blk| blk.call } }.with { :value! }
     }
     assert_match <<~MSG, e.message
       No method `StubTest::Methodless#do_stuff' exists for call:
@@ -446,16 +499,23 @@ class StubTest < Minitest::Test
   end
 
   class Checkable
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def check
       raise "unimplemented"
     end
   end
 
   class ValidatesThing
+    extend T::Sig
+
+    sig { params(checkable: T.untyped).void }
     def initialize(checkable)
       @checkable = checkable
     end
 
+    sig { params(thing: T.untyped).returns(T.untyped) }
     def validate(thing)
       @checkable.check { thing[:email].include?("@") }
     end
@@ -463,36 +523,45 @@ class StubTest < Minitest::Test
 
   # Methods that don't declare a block arg can still yield to a block, so
   # we need to make sure that our generated signatures don't break that.
+  sig { void }
   def test_implicit_block_arg
     checkable = Mocktail.of(Checkable)
     validates_thing = ValidatesThing.new(checkable)
 
-    stubs { checkable.check { |blk| blk.call == true } }.with { :valid }
+    stubs { T.unsafe(checkable).check { |blk| blk.call == true } }.with { :valid }
 
-    stubs { checkable.check { |blk| blk.call != true } }.with { :invalid }
+    stubs { T.unsafe(checkable).check { |blk| blk.call != true } }.with { :invalid }
 
     assert_equal validates_thing.validate({email: "foo@bar"}), :valid
     assert_equal validates_thing.validate({email: "foobar"}), :invalid
   end
 
   class ThingWithBadlyOrderedArgs
-    def positional(a, b = nil, c = nil, d, e) # standard:disable Style/OptionalArguments
-    end
+    extend T::Sig
+
+    # Have to dynamically add the method b/c sorbet sig{} will error with:
+    # "Required params after optional params are not supported in method declarations"
+    # sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped).returns(T.untyped) }
+    eval <<~RUBY, binding, __FILE__, __LINE__ + 1 # standard:disable Security/Eval
+      def positional(a, b = nil, c = nil, d, e)
+      end
+    RUBY
   end
 
+  sig { void }
   def test_out_of_order_args_work
     thing = Mocktail.of(ThingWithBadlyOrderedArgs)
 
-    stubs { thing.positional(:a, :d, :e) }.with { :weird }
-    stubs { thing.positional(:a, :b, :d, :e) }.with { :less_weird }
-    stubs { thing.positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
+    stubs { T.unsafe(thing).positional(:a, :d, :e) }.with { :weird }
+    stubs { T.unsafe(thing).positional(:a, :b, :d, :e) }.with { :less_weird }
+    stubs { T.unsafe(thing).positional(:a, :b, :c, :d, :e) }.with { :even_less_weird }
 
-    assert_equal :weird, thing.positional(:a, :d, :e)
-    assert_equal :less_weird, thing.positional(:a, :b, :d, :e)
-    assert_equal :even_less_weird, thing.positional(:a, :b, :c, :d, :e)
+    assert_equal :weird, T.unsafe(thing).positional(:a, :d, :e)
+    assert_equal :less_weird, T.unsafe(thing).positional(:a, :b, :d, :e)
+    assert_equal :even_less_weird, T.unsafe(thing).positional(:a, :b, :c, :d, :e)
 
-    assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0].args
-    assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1].args
-    assert_equal [:a, :b, :c, :d, :e], Mocktail.calls(thing, :positional)[2].args
+    assert_equal [:a, :d, :e], Mocktail.calls(thing, :positional)[0]&.args
+    assert_equal [:a, :b, :d, :e], Mocktail.calls(thing, :positional)[1]&.args
+    assert_equal [:a, :b, :c, :d, :e], Mocktail.calls(thing, :positional)[2]&.args
   end
 end

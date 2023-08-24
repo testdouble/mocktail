@@ -1,5 +1,7 @@
 module Mocktail
   class MatcherRegistry
+    extend T::Sig
+
     def self.instance
       @matcher_registry ||= new
     end

@@ -2,60 +2,72 @@ require_relative "declares_dry_class/reconstructs_call"
 
 module Mocktail
   class DeclaresDryClass
+    extend T::Sig
+
+    DEFAULT_ANCESTORS = Class.new(Object).ancestors[1..]
+
     def initialize
       @raises_neato_no_method_error = RaisesNeatoNoMethodError.new
       @transforms_params = TransformsParams.new
       @stringifies_method_signature = StringifiesMethodSignature.new
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
     end
 
     def declare(type, instance_methods)
       dry_class = Class.new(Object) {
-        include type if type.instance_of?(Module)
+        include type if type.is_a?(Module) && !type.is_a?(Class)
 
-        def initialize(*args, **kwargs, &blk)
+        define_method :initialize do |*args, **kwargs, &blk|
         end
 
-        define_method :is_a?, ->(thing) {
-          type.ancestors.include?(thing)
-        }
-        alias_method :kind_of?, :is_a?
+        [:is_a?, :kind_of?].each do |method_name|
+          define_method method_name, ->(thing) {
+            # Mocktails extend from Object, so share the same ancestors, plus the passed type
+            [type, *DEFAULT_ANCESTORS].include?(thing)
+          }
+        end
 
-        if type.instance_of?(Class)
+        if type.is_a?(Class)
           define_method :instance_of?, ->(thing) {
             type == thing
           }
         end
       }
 
-      # These have special implementations, but if the user defines
-      # any of them on the object itself, then they'll be replaced with normal
-      # mocked methods. YMMV
+      add_more_methods!(dry_class, type, instance_methods)
+
+      dry_class  # This is all fake! That's the whole point—it's not a real Foo, it's just some new class that quacks like a Foo
+    end
+
+    private
+
+    # These have special implementations, but if the user defines
+    # any of them on the object itself, then they'll be replaced with normal
+    # mocked methods. YMMV
+
+    def add_more_methods!(dry_class, type, instance_methods)
       add_stringify_methods!(dry_class, :to_s, type, instance_methods)
       add_stringify_methods!(dry_class, :inspect, type, instance_methods)
       define_method_missing_errors!(dry_class, type, instance_methods)
 
       define_double_methods!(dry_class, type, instance_methods)
-
-      dry_class
     end
 
-    private
-
     def define_double_methods!(dry_class, type, instance_methods)
-      instance_methods.each do |method|
-        dry_class.undef_method(method) if dry_class.method_defined?(method)
-        parameters = type.instance_method(method).parameters
+      instance_methods.each do |method_name|
+        dry_class.undef_method(method_name) if dry_class.method_defined?(method_name)
+        parameters = @grabs_original_method_parameters.grab(type.instance_method(method_name))
         signature = @transforms_params.transform(Call.new, params: parameters)
         method_signature = @stringifies_method_signature.stringify(signature)
         __mocktail_closure = {
           dry_class: dry_class,
           type: type,
-          method: method,
-          original_method: type.instance_method(method),
+          method: method_name,
+          original_method: type.instance_method(method_name),
           signature: signature
         }
 
-        dry_class.define_method method,
+        dry_class.define_method method_name,
           eval(<<-RUBBY, binding, __FILE__, __LINE__ + 1) # standard:disable Security/Eval
             ->#{method_signature} do
               ::Mocktail::Debug.guard_against_mocktail_accidentally_calling_mocks_if_debugging!

@@ -1,5 +1,7 @@
 module Mocktail::Matchers
   class That < Base
+    extend T::Sig
+
     def self.matcher_name
       :that
     end

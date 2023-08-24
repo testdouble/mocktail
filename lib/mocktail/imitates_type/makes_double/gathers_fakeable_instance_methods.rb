@@ -1,5 +1,7 @@
 module Mocktail
   class GathersFakeableInstanceMethods
+    extend T::Sig
+
     def gather(type)
       methods = type.instance_methods + [
         (:respond_to_missing? if type.private_method_defined?(:respond_to_missing?))

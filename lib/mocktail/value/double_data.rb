@@ -1,9 +1,13 @@
+require_relative "call"
+require_relative "stubbing"
+
 module Mocktail
-  DoubleData = Struct.new(
-    :type,
-    :double,
-    :calls,
-    :stubbings,
-    keyword_init: true
-  )
+  class DoubleData < T::Struct
+    include ExplanationData
+
+    const :type
+    const :double
+    const :calls
+    const :stubbings
+  end
 end

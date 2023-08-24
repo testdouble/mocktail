@@ -1,11 +1,14 @@
 module Mocktail
-  TypeReplacementData = Struct.new(
-    :type,
-    :replaced_method_names,
-    :calls,
-    :stubbings,
-    keyword_init: true
-  ) do
+  class TypeReplacementData < T::Struct
+    extend T::Sig
+
+    const :type
+    const :replaced_method_names
+    const :calls
+    const :stubbings
+
+    include ExplanationData
+
     def double
       type
     end

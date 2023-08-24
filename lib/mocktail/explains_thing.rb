@@ -3,6 +3,8 @@ require_relative "share/stringifies_call"
 
 module Mocktail
   class ExplainsThing
+    extend T::Sig
+
     def initialize
       @stringifies_method_name = StringifiesMethodName.new
       @stringifies_call = StringifiesCall.new
@@ -11,7 +13,8 @@ module Mocktail
     def explain(thing)
       if (double = Mocktail.cabinet.double_for_instance(thing))
         double_explanation(double)
-      elsif (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
+      elsif (thing.is_a?(Module) || thing.is_a?(Class)) &&
+          (type_replacement = TopShelf.instance.type_replacement_if_exists_for(thing))
         replaced_type_explanation(type_replacement)
       elsif (fake_method_explanation = fake_method_explanation_for(thing))
         fake_method_explanation
@@ -67,7 +70,7 @@ module Mocktail
     def data_for_type_replacement(type_replacement)
       TypeReplacementData.new(
         type: type_replacement.type,
-        replaced_method_names: type_replacement.replacement_methods.map(&:name).sort,
+        replaced_method_names: type_replacement.replacement_methods&.map(&:name)&.sort || [],
         calls: Mocktail.cabinet.calls.select { |call|
           call.double == type_replacement.type
         },
@@ -81,7 +84,7 @@ module Mocktail
       type_replacement_data = data_for_type_replacement(type_replacement)
 
       ReplacedTypeExplanation.new(type_replacement_data, <<~MSG)
-        `#{type_replacement.type}' is a #{type_replacement.type.class.to_s.downcase} that has had its singleton methods faked.
+        `#{type_replacement.type}' is a #{type_replacement.type.class.to_s.downcase} that has had its methods faked.
 
         It has these mocked methods:
         #{type_replacement_data.replaced_method_names.map { |method| "  - #{method}" }.join("\n")}
@@ -116,7 +119,7 @@ module Mocktail
     end
 
     def no_explanation(thing)
-      NoExplanation.new(thing,
+      NoExplanation.new(NoExplanationData.new(thing: thing),
         "Unfortunately, Mocktail doesn't know what this thing is: #{thing.inspect}")
     end
   end

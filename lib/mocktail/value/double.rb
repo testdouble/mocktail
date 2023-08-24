@@ -1,9 +1,8 @@
 module Mocktail
-  Double = Struct.new(
-    :original_type,
-    :dry_type,
-    :dry_instance,
-    :dry_methods,
-    keyword_init: true
-  )
+  class Double < T::Struct
+    const :original_type
+    const :dry_type
+    const :dry_instance
+    const :dry_methods
+  end
 end

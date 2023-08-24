@@ -1,7 +1,12 @@
+# typed: strict
+
 require "test_helper"
 
 module Mocktail::Matchers
   class ThatTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
     def test_basic_that
       subject = That.new { |arg| arg == 42 }
 
@@ -12,6 +17,7 @@ module Mocktail::Matchers
       refute subject.match?(43)
     end
 
+    sig { void }
     def test_blockless_that
       e = assert_raises(ArgumentError) { That.new }
       assert_equal "The `that` matcher must be passed a block (e.g. `that { |arg| … }`)", e.message

@@ -1,4 +1,8 @@
-require_relative "lib/mocktail/version"
+begin
+  require_relative "lib/mocktail/version"
+rescue LoadError
+  require_relative "src/mocktail/version"
+end
 
 Gem::Specification.new do |spec|
   spec.name = "mocktail"
@@ -24,8 +28,8 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "sorbet-runtime", "~> 0.5.9204"
+  spec.add_dependency "sorbet-eraser", "~> 0.3.1"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

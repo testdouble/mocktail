@@ -1,9 +1,15 @@
 module Mocktail
   class ReplacesNext
+    extend T::Sig
+
     def initialize
       @top_shelf = TopShelf.instance
       @redefines_new = RedefinesNew.new
       @imitates_type = ImitatesType.new
+    end
+
+    def replace_once(type)
+      replace(type, 1).fetch(0)
     end
 
     def replace(type, count)
@@ -30,7 +36,7 @@ module Mocktail
         }
       end
 
-      (mocktails.size == 1) ? mocktails.first : mocktails
+      mocktails
     end
   end
 end

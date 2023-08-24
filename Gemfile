@@ -6,6 +6,11 @@ gemspec
 gem "rake"
 gem "minitest"
 gem "standard"
-gem "pry"
+gem "standard-sorbet"
 gem "simplecov"
 gem "m"
+
+gem "sorbet-static"
+gem "tapioca"
+gem "spoom"
+gem "rubocop-sorbet"

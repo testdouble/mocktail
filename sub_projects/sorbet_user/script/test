@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+echo "-----> [Sorbet Example Project] Nuking and regenerating Mocktail RBI files"
+rm -rf sorbet/rbi/gems/mocktail*
+bin/tapioca gems
+
+echo "-----> [Sorbet Example Project] Type-checking"
+bundle exec srb tc
+
+echo "-----> [Sorbet Example Project] Running tests"
+bundle exec rake

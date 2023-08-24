@@ -13,7 +13,11 @@ module Mocktail::Matchers
   # See Mockito, which is the earliest implementation I know of:
   # https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Captor.html
   class Captor
+    extend T::Sig
+
     class Capture < Mocktail::Matchers::Base
+      extend T::Sig
+
       def self.matcher_name
         :capture
       end
@@ -40,7 +44,12 @@ module Mocktail::Matchers
       end
     end
 
+    # This T.untyped is intentional. Even though a Capture is surely returned,
+    # in order for a verification demonstration to pass its own type check,
+    # it needs to think it's being returned whatever parameter is expected
+
     attr_reader :capture
+
     def initialize
       @capture = Capture.new
     end

@@ -1,5 +1,7 @@
 module Mocktail
   class RecordsDemonstration
+    extend T::Sig
+
     def record(demonstration, demo_config)
       cabinet = Mocktail.cabinet
       prior_call_count = Mocktail.cabinet.calls.dup.size

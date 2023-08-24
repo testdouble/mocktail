@@ -1,7 +1,12 @@
+# typed: true
+
 require "test_helper"
 
 module Mocktail::Matchers
   class CaptorTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
     def test_basic_captor
       captor = Captor.new
 

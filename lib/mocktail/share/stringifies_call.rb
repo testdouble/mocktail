@@ -1,5 +1,7 @@
 module Mocktail
   class StringifiesCall
+    extend T::Sig
+
     def stringify(call, anonymous_blocks: false, always_parens: false)
       "#{call.method}#{args_to_s(call, parens: always_parens)}#{blockify(call.block, anonymous: anonymous_blocks)}"
     end
@@ -31,16 +33,18 @@ module Mocktail
         "(#{args_lists.join(", ")})"
       elsif parens
         "()"
+      else
+        ""
       end
     end
 
     def argify(args)
-      return unless args && !args.empty?
+      return unless !args.empty?
       args.map(&:inspect).join(", ")
     end
 
     def kwargify(kwargs)
-      return unless kwargs && !kwargs.empty?
+      return unless !kwargs.empty?
       kwargs.map { |key, val| "#{key}: #{val.inspect}" }.join(", ")
     end
 

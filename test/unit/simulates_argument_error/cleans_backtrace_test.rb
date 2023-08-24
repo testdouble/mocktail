@@ -1,11 +1,19 @@
+# typed: strict
+
 require "test_helper"
 
 module Mocktail
   class CleansBacktraceTest < Minitest::Test
-    def setup
-      @subject = CleansBacktrace.new
+    extend T::Sig
+
+    sig { params(name: String).void }
+    def initialize(name)
+      super
+
+      @subject = T.let(CleansBacktrace.new, CleansBacktrace)
     end
 
+    sig { void }
     def test_already_clean_backtrace
       error = make_error
       original = error.backtrace.dup
@@ -15,14 +23,15 @@ module Mocktail
       assert_equal original, error.backtrace
     end
 
+    sig { void }
     def test_one_prepended_frame
       internal_frames = [
-        "lib/mocktail/mocktail.rb:22:in `of'"
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail.rb:22:in `of'"
       ]
       error = make_error(
         prepend: internal_frames
       )
-      original = error.backtrace.dup
+      original = T.must(error.backtrace).dup
 
       @subject.clean(error)
 
@@ -33,19 +42,20 @@ module Mocktail
       }, error.backtrace
     end
 
+    sig { void }
     def test_only_removes_prepended_frames
       prepended_frames = [
-        "lib/mocktail/mocktail.rb:22:in `of'",
-        "lib/mocktail/mocktail/stuff.rb:425:in (run)",
-        "lib/mocktail/mocktail/things/and/cool.rb"
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail.rb:22:in `of'",
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail/stuff.rb:425:in (run)",
+        "#{Mocktail::BASE_PATH}/mocktail/mocktail/things/and/cool.rb"
       ]
       error = make_error(
         prepend: prepended_frames,
         append: [
-          "lib/mocktail/how/could/this/happen.rb:11:in `sure'"
+          "#{Mocktail::BASE_PATH}/mocktail/how/could/this/happen.rb:11:in `sure'"
         ]
       )
-      original = error.backtrace.dup
+      original = T.must(error.backtrace).dup
 
       @subject.clean(error)
 
@@ -58,14 +68,15 @@ module Mocktail
 
     private
 
+    sig { params(prepend: T::Array[String], append: T::Array[String]).returns(Mocktail::Error) }
     def make_error(prepend: [], append: [])
       raise Error.new
-    rescue => e
+    rescue Mocktail::Error => e
       e.tap do |e|
         e.set_backtrace(
-          prepend.map { |path| File.join(Dir.pwd, path) } +
+          prepend +
           e.backtrace +
-          append.map { |path| File.join(Dir.pwd, path) }
+          append
         )
       end
     end

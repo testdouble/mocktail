@@ -3,8 +3,10 @@ require_relative "imitates_type/makes_double"
 
 module Mocktail
   class ImitatesType
+    extend T::Sig
+    extend T::Generic
+
     def initialize
-      @top_shelf = TopShelf.instance
       @ensures_imitation_support = EnsuresImitationSupport.new
       @makes_double = MakesDouble.new
     end

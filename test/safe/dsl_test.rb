@@ -1,7 +1,17 @@
+# typed: strict
+
 require "test_helper"
 
 class DslTest < Minitest::Test
+  extend T::Sig
+
+  sig { void }
   def test_that_stubs_and_verifies_have_matching_options
-    assert_equal Mocktail.method(:stubs).parameters, Mocktail.method(:verify).parameters
+    assert_equal unwrap(Mocktail.method(:stubs)).parameters, unwrap(Mocktail.method(:verify)).parameters
+  end
+
+  sig { params(method: Method).returns(T.any(T::Private::Methods::Signature, Method)) }
+  def unwrap(method)
+    T::Private::Methods.signature_for_method(method) || method
   end
 end

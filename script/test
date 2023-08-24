@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+echo "-----> Running Mocktail's test against src"
+COVER=true bundle exec rake
+
+echo "-----> Type-checking Mocktail source"
+bundle exec srb tc
+
+echo "-----> Building src/mocktail into lib/mocktail and lib/mocktail/sorbet"
+./script/build
+
+echo "-----> Running Mocktail's test against lib"
+MOCKTAIL_TEST_SRC_DIRECTORY="lib" bundle exec rake
+
+echo "-----> Running Mocktail's test against lib/mocktail/sorbet"
+MOCKTAIL_TEST_SRC_DIRECTORY="lib/mocktail/sorbet" bundle exec rake
+
+echo "-----> Ensuring that double-requiring Mocktail produces the right warning and bails out of redefining constants"
+script/test_double_require_warnings
+
+echo "-----> Type-checking the copy of Mocktail in lib/mocktail/sorbet"
+bundle exec srb tc --ignore src/ --dir lib/mocktail/sorbet
+
+echo "-----> Running sample project tests"
+cd sub_projects/sorbet_user
+./script/test
+cd ../..
+
+cd sub_projects/untyped_user
+./script/test
+cd ../..

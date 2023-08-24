@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+echo "-----> Deleting lib/ and copying src/ to lib/"
+rm -rf lib
+cp -r src/ lib
+
+echo "-----> Erasing sorbet sigs from lib/ (for non-Sorbet users)"
+bundle exec sorbet-eraser "lib/**/*.rb"
+echo "-----> Overwriting Mocktail::TYPED constant for lib/"
+cat << RUBY > lib/mocktail/typed.rb
+module Mocktail
+  TYPED = false
+end
+RUBY
+
+echo "-----> Erasing sorbet 'typed: ' sigils from lib/mocktail"
+./script/strip_sigils
+
+echo "-----> Copying src/ to lib/mocktail/sorbet/ (for Sorbet users)"
+cp -r src/ lib/mocktail/sorbet
+
+echo "-----> Running Standard against all code"
+bundle exec rake standard:fix
+
+echo "-----> Generating RBIs to publish with the gems"
+
+echo "----------> ❶ Faking out mocktail.rb and pointing it to mocktail/sorbet"
+mv lib/mocktail.rb lib/mocktail.rb.nope
+cat << RUBY > lib/mocktail.rb
+require_relative "mocktail/sorbet"
+RUBY
+
+echo "----------> ❷ Generating sorbet sigs via tapioca in sub_projects/rbi_generator"
+cd sub_projects/rbi_generator
+rm -f rbi/mocktail-pregenerated.rbi
+rm -f sorbet/rbi/gems/mocktail@*.rbi
+bundle
+bundle exec tapioca gem --all --exclude=tapioca ast diff-lcs erubi netrc parser prettier_print racc rbi spoom syntax_tree thor unparser sorbet yard parallel yard-sorbet
+cd ../..
+
+echo "----------> ❸ Moving the generated RBI to rbi/mocktail-pregenerated.rbi"
+cp sub_projects/rbi_generator/sorbet/rbi/gems/mocktail@*.rbi rbi/mocktail-pregenerated.rbi
+mv lib/mocktail.rb.nope lib/mocktail.rb
+
+

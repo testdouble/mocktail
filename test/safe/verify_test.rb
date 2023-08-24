@@ -1,17 +1,25 @@
+# typed: strict
+
 require "test_helper"
 
 class VerifyTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
   class SendsEmail
+    extend T::Sig
+
+    sig { params(to: T.untyped, from: T.untyped, subject: T.untyped, body: T.untyped).returns(T.untyped) }
     def send(to:, from: "noreply@example.com", subject: "Yo", body: "yo")
       raise "woah real email watch out"
     end
 
+    sig { returns(T.untyped) }
     def dont_send!
     end
   end
 
+  sig { void }
   def test_sends_email
     sends_email = Mocktail.of(SendsEmail)
 
@@ -43,6 +51,7 @@ class VerifyTest < Minitest::Test
     }
   end
 
+  sig { void }
   def test_stub_and_verify_called_on_same_method
     sends_email = Mocktail.of(SendsEmail)
 
@@ -59,11 +68,15 @@ class VerifyTest < Minitest::Test
   end
 
   class Syn
+    extend T::Sig
+
+    sig { params(a: T.untyped, b: T.untyped, c: T.untyped).returns(T.untyped) }
     def ack(a = nil, b: nil, &c)
       raise "not real"
     end
   end
 
+  sig { void }
   def test_matchers_and_kwargs
     syn = Mocktail.of(Syn)
 
@@ -89,6 +102,7 @@ class VerifyTest < Minitest::Test
     MSG
   end
 
+  sig { void }
   def test_blocks
     syn = Mocktail.of(Syn)
 
@@ -106,17 +120,18 @@ class VerifyTest < Minitest::Test
     assert_equal <<~MSG, e.message
       Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:103 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:117 }
 
       It was called differently 2 times:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:95 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:109 }
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:96 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:110 }
 
     MSG
   end
 
+  sig { void }
   def test_block_is_literally_an_identical_reference
     syn = Mocktail.of(Syn)
     a_lambda = lambda { raise "lol" }
@@ -127,12 +142,13 @@ class VerifyTest < Minitest::Test
     verify { syn.ack(&a_lambda) }
   end
 
+  sig { void }
   def test_uses_a_captor_for_a_complex_arg
     syn = Mocktail.of(Syn)
     # imagine we don't care about b, c, or d
     complex_arg = {a: 1, b: 2, c: 3, d: 4}
 
-    syn.ack(complex_arg)
+    T.unsafe(syn).ack(complex_arg)
 
     captor = Mocktail.captor
     refute captor.captured?
@@ -141,6 +157,7 @@ class VerifyTest < Minitest::Test
     assert captor.captured?
   end
 
+  sig { void }
   def test_verify_that_ignores_unspecified_blocks
     syn = Mocktail.of(Syn)
 
@@ -158,11 +175,12 @@ class VerifyTest < Minitest::Test
 
       It was called differently 1 time:
 
-        ack(42) { Proc at test/safe/verify_test.rb:147 }
+        ack(42) { Proc at test/safe/verify_test.rb:164 }
 
     MSG
   end
 
+  sig { void }
   def test_verify_that_ignores_unspecified_args
     syn = Mocktail.of(Syn)
 
@@ -194,6 +212,7 @@ class VerifyTest < Minitest::Test
     verify(ignore_block: true, ignore_extra_args: true) { syn.ack }
   end
 
+  sig { void }
   def test_verify_is_called_exactly_n_times
     syn = Mocktail.of(Syn)
 
@@ -244,10 +263,14 @@ class VerifyTest < Minitest::Test
   end
 
   class EmailSender
+    extend T::Sig
+
+    sig { params(email: T.untyped).returns(T.untyped) }
     def self.send(email)
     end
   end
 
+  sig { void }
   def test_replacing_classes
     Mocktail.replace(EmailSender)
 
@@ -267,5 +290,27 @@ class VerifyTest < Minitest::Test
         send(:a_email)
 
     MSG
+  end
+
+  class Hmm
+    extend T::Sig
+
+    sig { params(idea: T.untyped).returns(T.untyped) }
+    def huh(idea)
+    end
+  end
+
+  sig { void }
+  def test_verify_arg_hack
+    hmm = Mocktail.of(Hmm)
+
+    hmm.huh(:a)
+    hmm.huh(:b)
+    hmm.huh(:c)
+
+    verify { |m| hmm.huh(:a) }
+    verify { |m| hmm.huh(:b) }
+    verify { |m| hmm.huh(:c) }
+    verify(ignore_arity: true, ignore_extra_args: true) { |m| T.unsafe(hmm).huh }
   end
 end

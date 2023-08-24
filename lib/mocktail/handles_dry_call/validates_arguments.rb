@@ -1,5 +1,7 @@
 module Mocktail
   class ValidatesArguments
+    extend T::Sig
+
     def self.disable!
       Thread.current[:mocktail_arity_validation_disabled] = true
     end
@@ -9,16 +11,16 @@ module Mocktail
     end
 
     def self.disabled?
-      Thread.current[:mocktail_arity_validation_disabled]
+      !!Thread.current[:mocktail_arity_validation_disabled]
     end
 
     def self.optional(disable, &blk)
       return blk.call unless disable
 
       disable!
-      blk.call.tap do
-        enable!
-      end
+      ret = blk.call
+      enable!
+      ret
     end
 
     def initialize

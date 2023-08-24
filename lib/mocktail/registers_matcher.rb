@@ -1,5 +1,11 @@
 module Mocktail
   class RegistersMatcher
+    extend T::Sig
+
+    def initialize
+      @grabs_original_method_parameters = GrabsOriginalMethodParameters.new
+    end
+
     def register(matcher_type)
       if invalid_type?(matcher_type)
         raise InvalidMatcherError.new <<~MSG.tr("\n", " ")
@@ -32,12 +38,11 @@ module Mocktail
       return true unless matcher_type.respond_to?(:matcher_name)
       name = matcher_type.matcher_name
 
-      !(name.is_a?(String) || name.is_a?(Symbol)) ||
-        name.to_sym.inspect.start_with?(":\"")
+      !name.respond_to?(:to_sym) || name.to_sym.inspect.start_with?(":\"")
     end
 
     def invalid_match?(matcher_type)
-      params = matcher_type.instance_method(:match?).parameters
+      params = @grabs_original_method_parameters.grab(matcher_type.instance_method(:match?))
       params.size > 1 || ![:req, :opt].include?(params.first[0])
     rescue NameError
       true

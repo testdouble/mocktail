@@ -1,5 +1,7 @@
 module Mocktail
   class ReconcilesArgsWithParams
+    extend T::Sig
+
     def reconcile(signature)
       args_match?(signature.positional_params, signature.positional_args) &&
         kwargs_match?(signature.keyword_params, signature.keyword_args)

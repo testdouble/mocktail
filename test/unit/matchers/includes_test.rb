@@ -1,7 +1,33 @@
+# typed: strict
+
 require "test_helper"
 
 module Mocktail::Matchers
   class IncludesTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
+    def test_includes_hash_is_an_alias
+      assert_includes IncludesHash.ancestors, Includes
+      assert_equal :includes_hash, IncludesHash.matcher_name
+      assert_equal IncludesHash.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
+    end
+
+    sig { void }
+    def test_includes_key_is_an_alias
+      assert_includes IncludesKey.ancestors, Includes
+      assert_equal :includes_key, IncludesKey.matcher_name
+      assert_equal IncludesKey.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
+    end
+
+    sig { void }
+    def test_includes_string_is_an_alias
+      assert_includes IncludesString.ancestors, Includes
+      assert_equal :includes_string, IncludesString.matcher_name
+      assert_equal IncludesString.instance_method(:match?).source_location, Includes.instance_method(:match?).source_location
+    end
+
+    sig { void }
     def test_basic_includesing
       subject = Includes.new("a")
 
@@ -13,6 +39,7 @@ module Mocktail::Matchers
       refute subject.match?("ripple")
     end
 
+    sig { void }
     def test_multiple_args
       subject = Includes.new("a", "b")
 
@@ -24,6 +51,7 @@ module Mocktail::Matchers
       assert subject.match?("bapple")
     end
 
+    sig { void }
     def test_hashes
       subject = Includes.new({a: 1, b: 2}, :d)
 

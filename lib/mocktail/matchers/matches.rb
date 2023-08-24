@@ -1,5 +1,7 @@
 module Mocktail::Matchers
   class Matches < Base
+    extend T::Sig
+
     def self.matcher_name
       :matches
     end

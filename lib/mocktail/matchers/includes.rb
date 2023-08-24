@@ -1,5 +1,7 @@
 module Mocktail::Matchers
   class Includes < Base
+    extend T::Sig
+
     def self.matcher_name
       :includes
     end

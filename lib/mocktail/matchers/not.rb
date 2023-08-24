@@ -1,5 +1,7 @@
 module Mocktail::Matchers
   class Not < Base
+    extend T::Sig
+
     def self.matcher_name
       :not
     end

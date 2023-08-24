@@ -3,6 +3,8 @@ require_relative "fulfills_stubbing/describes_unsatisfied_stubbing"
 
 module Mocktail
   class FulfillsStubbing
+    extend T::Sig
+
     def initialize
       @finds_satisfaction = FindsSatisfaction.new
       @describes_unsatisfied_stubbing = DescribesUnsatisfiedStubbing.new

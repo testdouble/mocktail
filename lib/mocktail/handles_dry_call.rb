@@ -4,6 +4,8 @@ require_relative "handles_dry_call/validates_arguments"
 
 module Mocktail
   class HandlesDryCall
+    extend T::Sig
+
     def initialize
       @validates_arguments = ValidatesArguments.new
       @logs_call = LogsCall.new

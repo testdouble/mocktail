@@ -1,5 +1,7 @@
 module Mocktail
   class HandlesDryNewCall
+    extend T::Sig
+
     def initialize
       @validates_arguments = ValidatesArguments.new
       @logs_call = LogsCall.new

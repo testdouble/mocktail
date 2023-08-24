@@ -1,5 +1,7 @@
 module Mocktail
   class StringifiesMethodSignature
+    extend T::Sig
+
     def stringify(signature)
       positional_params = positional(signature)
       keyword_params = keyword(signature)

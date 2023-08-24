@@ -4,6 +4,8 @@ require_relative "share/creates_identifier"
 
 module Mocktail
   class RaisesNeatoNoMethodError
+    extend T::Sig
+
     def initialize
       @stringifies_call = StringifiesCall.new
       @stringifies_method_name = StringifiesMethodName.new

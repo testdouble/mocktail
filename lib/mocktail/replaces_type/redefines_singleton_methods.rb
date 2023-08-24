@@ -1,5 +1,7 @@
 module Mocktail
   class RedefinesSingletonMethods
+    extend T::Sig
+
     def initialize
       @handles_dry_call = HandlesDryCall.new
     end
@@ -10,11 +12,11 @@ module Mocktail
 
       type_replacement.original_methods = type.singleton_methods.map { |name|
         type.method(name)
-      } - [type_replacement.replacement_new]
+      }.reject { |method| sorbet_method_hook?(method) } - [type_replacement.replacement_new]
 
       declare_singleton_method_missing_errors!(type)
       handles_dry_call = @handles_dry_call
-      type_replacement.replacement_methods = type_replacement.original_methods.map { |original_method|
+      type_replacement.replacement_methods = type_replacement.original_methods&.map { |original_method|
         type.singleton_class.send(:undef_method, original_method.name)
         type.define_singleton_method original_method.name, ->(*args, **kwargs, &block) {
           if TopShelf.instance.singleton_methods_replaced?(type)
@@ -57,6 +59,16 @@ module Mocktail
             )
           )
         }
+    end
+
+    private
+
+    def sorbet_method_hook?(method)
+      [
+        T::Sig,
+        T::Private::Methods::MethodHooks,
+        T::Private::Methods::SingletonMethodHooks
+      ].include?(method.owner)
     end
   end
 end

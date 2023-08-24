@@ -1,6 +1,10 @@
 module Mocktail
   class Explanation
-    attr_reader :reference, :message
+    extend T::Sig
+
+    attr_reader :reference
+
+    attr_reader :message
 
     def initialize(reference, message)
       @reference = reference
@@ -13,17 +17,38 @@ module Mocktail
   end
 
   class NoExplanation < Explanation
-  end
+    attr_reader :reference
 
-  class UnsatisfyingCallExplanation < Explanation
+    def initialize(reference, message)
+      @reference = reference
+      @message = message
+    end
   end
 
   class DoubleExplanation < Explanation
+    attr_reader :reference
+
+    def initialize(reference, message)
+      @reference = reference
+      @message = message
+    end
   end
 
   class ReplacedTypeExplanation < Explanation
+    attr_reader :reference
+
+    def initialize(reference, message)
+      @reference = reference
+      @message = message
+    end
   end
 
   class FakeMethodExplanation < Explanation
+    attr_reader :reference
+
+    def initialize(reference, message)
+      @reference = reference
+      @message = message
+    end
   end
 end

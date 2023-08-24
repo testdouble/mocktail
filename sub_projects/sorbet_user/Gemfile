@@ -1,0 +1,13 @@
+source "https://rubygems.org"
+
+gem "mocktail", path: "../..", require: "mocktail/sorbet"
+
+gem "standard"
+gem "standard-sorbet"
+gem "minitest"
+gem "rake"
+gem "m"
+
+gem "sorbet"
+gem "sorbet-runtime"
+gem "tapioca"

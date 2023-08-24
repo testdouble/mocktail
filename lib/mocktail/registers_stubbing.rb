@@ -2,6 +2,8 @@ require_relative "records_demonstration"
 
 module Mocktail
   class RegistersStubbing
+    extend T::Sig
+
     def initialize
       @records_demonstration = RecordsDemonstration.new
     end

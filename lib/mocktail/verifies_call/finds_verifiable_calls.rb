@@ -2,6 +2,8 @@ require_relative "../share/determines_matching_calls"
 
 module Mocktail
   class FindsVerifiableCalls
+    extend T::Sig
+
     def initialize
       @determines_matching_calls = DeterminesMatchingCalls.new
     end

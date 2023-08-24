@@ -1,16 +1,14 @@
 module Mocktail
-  Stubbing = Struct.new(
-    :demonstration,
-    :demo_config,
-    :satisfaction_count,
-    :recording,
-    :effect,
-    keyword_init: true
-  ) do
-    def initialize(**kwargs)
-      super
-      self.satisfaction_count ||= 0
-    end
+  class Stubbing < T::Struct
+    extend T::Sig
+    extend T::Generic
+    MethodReturnType = type_member
+
+    const :demonstration
+    const :demo_config
+    prop :satisfaction_count, default: 0
+    const :recording
+    prop :effect
 
     def satisfied!
       self.satisfaction_count += 1
@@ -18,6 +16,7 @@ module Mocktail
 
     def with(&block)
       self.effect = block
+      nil
     end
   end
 end

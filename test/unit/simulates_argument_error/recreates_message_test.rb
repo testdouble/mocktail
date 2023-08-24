@@ -1,14 +1,22 @@
+# typed: strict
+
 require "test_helper"
 
 module Mocktail
   class RecreatesMessageTest < Minitest::Test
-    def setup
-      @subject = RecreatesMessage.new
+    extend T::Sig
+
+    sig { params(name: String).void }
+    def initialize(name)
+      super
+
+      @subject = T.let(RecreatesMessage.new, RecreatesMessage)
     end
 
     # We don't have to cover everything (for example, cases where no error
     # message is necessary), because this method is only ever invoked once we've
     # deemed an argument error to have taken place
+    sig { void }
     def test_no_arg_case
       assert_equal "wrong number of arguments (given 1, expected 0)",
         @subject.recreate(Signature.new(
@@ -26,6 +34,7 @@ module Mocktail
         ))
     end
 
+    sig { void }
     def test_one_arg_case
       assert_equal "wrong number of arguments (given 0, expected 1)",
         @subject.recreate(Signature.new(
@@ -50,6 +59,7 @@ module Mocktail
         ))
     end
 
+    sig { void }
     def test_two_arg_case
       assert_equal "wrong number of arguments (given 0, expected 2)",
         @subject.recreate(Signature.new(
@@ -81,6 +91,7 @@ module Mocktail
         ))
     end
 
+    sig { void }
     def test_args_with_kwargs
       assert_equal "wrong number of arguments (given 0, expected 1; required keywords: a, b)",
         @subject.recreate(Signature.new(
@@ -112,6 +123,7 @@ module Mocktail
         ))
     end
 
+    sig { void }
     def test_only_kwarg_case
       assert_equal "missing keyword: :a",
         @subject.recreate(Signature.new(
@@ -150,6 +162,7 @@ module Mocktail
         ))
     end
 
+    sig { void }
     def test_rest
       assert_equal "wrong number of arguments (given 0, expected 1+)",
         @subject.recreate(Signature.new(
@@ -176,6 +189,7 @@ module Mocktail
 
     # This happening is almost certainly a bug in Mocktail
     # (thinking a call is bad but not knowing why)
+    sig { void }
     def test_unknown_cause
       assert_equal "unknown cause (this is probably a bug in Mocktail)",
         @subject.recreate(Signature.new(

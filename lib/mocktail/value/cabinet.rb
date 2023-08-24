@@ -4,8 +4,15 @@ require_relative "../share/bind"
 # is guaranteed by Mocktail to be local to the currently-running thread
 module Mocktail
   class Cabinet
+    extend T::Sig
+
     attr_writer :demonstration_in_progress
-    attr_reader :calls, :stubbings, :unsatisfying_calls
+
+    attr_reader :calls
+
+    attr_reader :stubbings
+
+    attr_reader :unsatisfying_calls
 
     def initialize
       @doubles = []

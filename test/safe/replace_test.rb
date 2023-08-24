@@ -1,40 +1,54 @@
+# typed: strict
+
 require "test_helper"
 
 class ReplaceTest < Minitest::Test
   include Mocktail::DSL
+  extend T::Sig
 
+  sig { void }
   def teardown
     Mocktail.reset
   end
 
   class Building
+    extend T::Sig
+
+    sig { params(uom: T.untyped).returns(T.untyped) }
     def self.size(uom:)
       raise "Unimplemented"
     end
   end
 
   class House < Building
+    extend T::Sig
+
+    sig { params(room_name: T.untyped).returns(T.untyped) }
     def self.room(room_name)
       raise "Unimplemented"
     end
 
+    sig { params(title: T.untyped, features: T.untyped, tap: T.untyped).returns(T.untyped) }
     def self.summarize(title = nil, features: [], &tap)
       raise "Unimplemented"
     end
 
+    sig { params(location: T.untyped).void }
     def initialize(location)
       raise "Unimplemented"
     end
 
+    sig { returns(T.untyped) }
     def id
       raise "Unimplemented"
     end
   end
 
+  sig { void }
   def test_replace_class
     return_value = Mocktail.replace(House)
 
-    assert_nil return_value
+    assert_nil_or_void return_value
 
     # None of these call through, so none blow up
     House.room("living")
@@ -43,8 +57,8 @@ class ReplaceTest < Minitest::Test
 
     # Argument errors still propogate
     assert_raises(ArgumentError) { House.room(wrong: :arg) }
-    assert_raises(ArgumentError) { House.size }
-    assert_raises(ArgumentError) { House.summarize("title", "wups") }
+    assert_raises(ArgumentError) { T.unsafe(House).size }
+    assert_raises(ArgumentError) { T.unsafe(House).summarize("title", "wups") }
 
     # verification works
     verify { House.room("living") }
@@ -61,7 +75,7 @@ class ReplaceTest < Minitest::Test
     assert_equal "😶", House.summarize
 
     # new() does require proper params and can be verified
-    assert_raises(ArgumentError) { House.new }
+    assert_raises(ArgumentError) { T.unsafe(House).new }
     house = House.new(:some_latlong)
 
     verify { House.new(:some_latlong) }
@@ -75,7 +89,7 @@ class ReplaceTest < Minitest::Test
     assert_equal 4, house.id
     assert_equal 8, other_house.id
 
-    stubs { House.new(:lol) }.with { :wat }
+    stubs { T.unsafe(House).new(:lol) }.with { :wat }
 
     assert_equal :wat, House.new(:lol)
 
@@ -84,21 +98,26 @@ class ReplaceTest < Minitest::Test
       assert_equal "Unimplemented", e.message
     }.tap { |t| t.abort_on_exception = true }.join
 
-    error = assert_raises(NoMethodError) { House.color }
+    error = assert_raises(NoMethodError) { T.unsafe(House).color }
     assert_match(/No method `ReplaceTest::House\.color'/, error.message)
     assert_match(/def self.color\n  end/, error.message)
   end
 
   module Home
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def self.is_cozy?
       raise "Nope"
     end
 
+    sig { params(family: T.untyped).returns(T.untyped) }
     def self.family=(family)
       raise "unimplemented"
     end
   end
 
+  sig { void }
   def test_replace_module
     Mocktail.replace(Home)
 
@@ -109,6 +128,7 @@ class ReplaceTest < Minitest::Test
     verify { |m| Home.family = m.is_a(Array) }
   end
 
+  sig { void }
   def test_multiple_threads
     [
       thread do
@@ -147,8 +167,11 @@ class ReplaceTest < Minitest::Test
     ].flatten.shuffle.each(&:join)
   end
 
+  sig { void }
   def test_not_a_module_or_a_class
-    e = assert_raises(Mocktail::UnsupportedMocktail) { Mocktail.replace(42) }
+    e = SorbetOverride.disable_call_validation_checks do
+      assert_raises(Mocktail::UnsupportedMocktail) { T.unsafe(Mocktail).replace(42) }
+    end
     assert_equal <<~MSG.chomp, e.message
       Mocktail.replace() only supports classes and modules
     MSG

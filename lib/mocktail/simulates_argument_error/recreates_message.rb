@@ -1,5 +1,7 @@
 module Mocktail
   class RecreatesMessage
+    extend T::Sig
+
     def recreate(signature)
       req_args = signature.positional_params.required.size
       allowed_args = signature.positional_params.allowed.size

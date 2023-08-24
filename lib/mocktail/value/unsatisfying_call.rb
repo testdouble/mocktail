@@ -1,8 +1,7 @@
 module Mocktail
-  UnsatisfyingCall = Struct.new(
-    :call,
-    :other_stubbings,
-    :backtrace,
-    keyword_init: true
-  )
+  class UnsatisfyingCall < T::Struct
+    const :call
+    const :other_stubbings
+    const :backtrace
+  end
 end

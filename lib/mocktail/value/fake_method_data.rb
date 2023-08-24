@@ -1,8 +1,9 @@
 module Mocktail
-  FakeMethodData = Struct.new(
-    :receiver,
-    :calls,
-    :stubbings,
-    keyword_init: true
-  )
+  class FakeMethodData < T::Struct
+    include ExplanationData
+
+    const :receiver
+    const :calls
+    const :stubbings
+  end
 end

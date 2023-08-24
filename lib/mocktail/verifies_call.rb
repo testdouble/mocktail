@@ -4,6 +4,8 @@ require_relative "verifies_call/raises_verification_error"
 
 module Mocktail
   class VerifiesCall
+    extend T::Sig
+
     def initialize
       @records_demonstration = RecordsDemonstration.new
       @finds_verifiable_calls = FindsVerifiableCalls.new
@@ -17,6 +19,7 @@ module Mocktail
       unless verification_satisfied?(verifiable_calls.size, demo_config)
         @raises_verification_error.raise(recording, verifiable_calls, demo_config)
       end
+      nil
     end
 
     private

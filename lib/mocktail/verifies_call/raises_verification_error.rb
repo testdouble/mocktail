@@ -4,6 +4,8 @@ require_relative "../share/stringifies_call"
 
 module Mocktail
   class RaisesVerificationError
+    extend T::Sig
+
     def initialize
       @gathers_calls_of_method = GathersCallsOfMethod.new
       @stringifies_method_name = StringifiesMethodName.new

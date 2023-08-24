@@ -3,6 +3,8 @@ require_relative "share/stringifies_call"
 
 module Mocktail
   class ExplainsNils
+    extend T::Sig
+
     def initialize
       @stringifies_method_name = StringifiesMethodName.new
       @stringifies_call = StringifiesCall.new

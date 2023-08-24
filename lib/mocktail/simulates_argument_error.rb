@@ -6,6 +6,8 @@ require_relative "share/stringifies_call"
 
 module Mocktail
   class SimulatesArgumentError
+    extend T::Sig
+
     def initialize
       @transforms_params = TransformsParams.new
       @reconciles_args_with_params = ReconcilesArgsWithParams.new

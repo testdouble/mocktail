@@ -1,5 +1,7 @@
 module Mocktail
   class RedefinesNew
+    extend T::Sig
+
     def initialize
       @handles_dry_new_call = HandlesDryNewCall.new
     end
@@ -13,7 +15,7 @@ module Mocktail
         handles_dry_new_call = @handles_dry_new_call
         type.define_singleton_method :new, ->(*args, **kwargs, &block) {
           if TopShelf.instance.new_replaced?(type) ||
-              TopShelf.instance.of_next_registered?(type)
+              (type.is_a?(Class) && TopShelf.instance.of_next_registered?(type))
             handles_dry_new_call.handle(type, args, kwargs, block)
           else
             type_replacement.original_new.call(*args, **kwargs, &block)

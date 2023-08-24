@@ -1,32 +1,11 @@
 module Mocktail
-  Signature = Struct.new(
-    :positional_params,
-    :positional_args,
-    :keyword_params,
-    :keyword_args,
-    :block_param,
-    :block_arg,
-    keyword_init: true
-  )
-  class Signature
-    DEFAULT_REST_ARGS = "args"
-    DEFAULT_REST_KWARGS = "kwargs"
-    DEFAULT_BLOCK_PARAM = "blk"
-  end
+  class Params < T::Struct
+    extend T::Sig
 
-  Params = Struct.new(
-    :all,
-    :required,
-    :optional,
-    :rest,
-    keyword_init: true
-  ) do
-    def initialize(**params)
-      super
-      self.all ||= []
-      self.required ||= []
-      self.optional ||= []
-    end
+    prop :all, default: []
+    prop :required, default: []
+    prop :optional, default: []
+    prop :rest
 
     def allowed
       all.select { |name| required.include?(name) || optional.include?(name) }
@@ -35,5 +14,18 @@ module Mocktail
     def rest?
       !!rest
     end
+  end
+
+  class Signature < T::Struct
+    const :positional_params
+    const :positional_args
+    const :keyword_params
+    const :keyword_args
+    const :block_param
+    const :block_arg, default: nil
+
+    DEFAULT_REST_ARGS = "args"
+    DEFAULT_REST_KWARGS = "kwargs"
+    DEFAULT_BLOCK_PARAM = "blk"
   end
 end

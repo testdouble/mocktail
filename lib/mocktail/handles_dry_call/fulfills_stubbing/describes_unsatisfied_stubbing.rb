@@ -3,6 +3,8 @@ require_relative "../../share/bind"
 
 module Mocktail
   class DescribesUnsatisfiedStubbing
+    extend T::Sig
+
     def initialize
       @cleans_backtrace = CleansBacktrace.new
     end
@@ -14,7 +16,7 @@ module Mocktail
           Bind.call(dry_call.double, :==, stubbing.recording.double) &&
             dry_call.method == stubbing.recording.method
         },
-        backtrace: @cleans_backtrace.clean(Error.new).backtrace
+        backtrace: @cleans_backtrace.clean(Error.new).backtrace || []
       )
     end
   end

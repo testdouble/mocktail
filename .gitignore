@@ -1,3 +1,6 @@
+# Generated RBI that will be moved into rbi/
+/sub_projects/rbi_generator/sorbet/rbi/gems/*.rbi
+
 /.bundle/
 /.yardoc
 /_yardoc/

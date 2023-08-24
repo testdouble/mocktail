@@ -1,24 +1,38 @@
+# typed: strict
+
 require "test_helper"
 
 module Mocktail::Matchers
   class GoodMatch
+    extend T::Sig
+
+    sig { params(other: T.untyped).returns(T.untyped) }
     def match?(other)
       true
     end
   end
 
   class BadMatch
+    extend T::Sig
+
+    sig { params(args: T.untyped).returns(T.untyped) }
     def match?(*args)
       raise "💥"
     end
   end
 
   class WrongMatch
+    extend T::Sig
+
+    sig { returns(T.untyped) }
     def match?
     end
   end
 
   class MatchesTest < Minitest::Test
+    extend T::Sig
+
+    sig { void }
     def test_some_matches
       assert_equal "matches(\"name\")", Matches.new("name").inspect
 

@@ -1,5 +1,7 @@
 module Mocktail
   class GathersCallsOfMethod
+    extend T::Sig
+
     def gather(dry_call)
       Mocktail.cabinet.calls.select { |call|
         call.double == dry_call.double &&

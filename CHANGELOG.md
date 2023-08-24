@@ -1,5 +1,6 @@
-# Unreleased
+# 2.0.0
 
+* Add first-class support for [Sorbet](https://sorbet.org) type checking [#22](https://github.com/testdouble/mocktail/pull/22)
 * **Breaking change (you probably won't care about)** - When an unknown object
   is passed to `Mocktail.explain`, the returned object's `reference` will now be
   set to a `NoExplanationData` instead of the thing that was passed. To access

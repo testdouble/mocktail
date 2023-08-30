@@ -84,8 +84,8 @@ It probably won't be a surprise to have to add `sig` to each test case when
 using `typed: strict`, but the `T.let` in the initializer is a definite bummer.
 This could probably be worked around with memoized helpers, but that's outside
 the scope of Mocktail for now, especially considering [Sorbet may obviate the
-need for explicit declaration of instance variables in the
-future](https://sorbet-ruby.slack.com/archives/CHN2L03NH/p1687362667489589?thread_ts=1687357401.417039&cid=CHN2L03NH).
+need for explicit declaration of certain instance variables in the
+future](https://github.com/sorbet/sorbet/issues/3513).
 
 ## Configuring your test runner
 

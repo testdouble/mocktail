@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class StringifiesCallTest < Minitest::Test
+  class StringifiesCallTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(StringifiesCall.new, StringifiesCall)
     end
 
@@ -43,11 +39,11 @@ module Mocktail
       assert_equal "hi(d: {:e=>4}, f: [:g, {:h=>5}])", invoke(kwargs: {d: {e: 4}, f: [:g, {h: 5}]})
 
       # Blocks & Procs
-      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:46 }", invoke {}
-      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:47])", invoke(&lambda {})
+      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:42 }", invoke {}
+      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:43])", invoke(&lambda {})
 
       # Mix & Match
-      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:50 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
+      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:46 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
     end
 
     private

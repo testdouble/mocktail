@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class DslTest < Minitest::Test
+class DslTest < TLDR
   extend T::Sig
 
   sig { void }

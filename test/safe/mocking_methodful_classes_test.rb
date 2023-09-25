@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class MockingMethodfulClassesTest < Minitest::Test
+class MockingMethodfulClassesTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 

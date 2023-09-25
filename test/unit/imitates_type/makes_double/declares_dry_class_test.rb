@@ -1,16 +1,12 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class DeclaresDryClassTest < Minitest::Test
+  class DeclaresDryClassTest < TLDR
     include Mocktail::DSL
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(DeclaresDryClass.new, DeclaresDryClass)
     end
 

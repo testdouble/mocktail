@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class ExplainTest < Minitest::Test
+class ExplainTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 
@@ -41,7 +39,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:25:in `test_explain_stub_returned_nil'
+        #{__FILE__}:23:in `test_explain_stub_returned_nil'
 
       No stubbings were configured on this method.
 
@@ -75,7 +73,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:56:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:54:in `test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 

@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class CallCountTest < Minitest::Test
+class CallCountTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 

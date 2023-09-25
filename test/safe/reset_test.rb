@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class ResetTest < Minitest::Test
+class ResetTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 

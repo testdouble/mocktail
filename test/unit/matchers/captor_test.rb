@@ -1,9 +1,7 @@
 # typed: true
 
-require "test_helper"
-
 module Mocktail::Matchers
-  class CaptorTest < Minitest::Test
+  class CaptorTest < TLDR
     extend T::Sig
 
     sig { void }

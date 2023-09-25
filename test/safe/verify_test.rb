@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class VerifyTest < Minitest::Test
+class VerifyTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 
@@ -120,13 +118,13 @@ class VerifyTest < Minitest::Test
     assert_equal <<~MSG, e.message
       Expected mocktail of `VerifyTest::Syn#ack' to be called like:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:117 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:115 }
 
       It was called differently 2 times:
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:109 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:107 }
 
-        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:110 }
+        ack(:apple, b: :banana) { Proc at test/safe/verify_test.rb:108 }
 
     MSG
   end
@@ -175,7 +173,7 @@ class VerifyTest < Minitest::Test
 
       It was called differently 1 time:
 
-        ack(42) { Proc at test/safe/verify_test.rb:164 }
+        ack(42) { Proc at test/safe/verify_test.rb:162 }
 
     MSG
   end

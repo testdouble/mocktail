@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class MocktailTest < Minitest::Test
+class MocktailTest < TLDR
   extend T::Sig
 
   sig { void }

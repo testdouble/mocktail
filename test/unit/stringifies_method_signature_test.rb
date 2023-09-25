@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class StringifiesMethodSignatureTest < Minitest::Test
+  class StringifiesMethodSignatureTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(StringifiesMethodSignature.new, StringifiesMethodSignature)
     end
 

@@ -2,8 +2,11 @@
 
 set -xeuo pipefail
 
+echo "-----> Running Standard Ruby"
+bundle exec rake standard:fix
+
 echo "-----> Running Mocktail's test against src"
-COVER=true bundle exec rake
+COVER=true bundle exec tldr
 
 echo "-----> Type-checking Mocktail source"
 bundle exec srb tc
@@ -12,10 +15,10 @@ echo "-----> Building src/mocktail into lib/mocktail and lib/mocktail/sorbet"
 ./script/build
 
 echo "-----> Running Mocktail's test against lib"
-MOCKTAIL_TEST_SRC_DIRECTORY="lib" bundle exec rake
+MOCKTAIL_TEST_SRC_DIRECTORY="lib" bundle exec tldr
 
 echo "-----> Running Mocktail's test against lib/mocktail/sorbet"
-MOCKTAIL_TEST_SRC_DIRECTORY="lib/mocktail/sorbet" bundle exec rake
+MOCKTAIL_TEST_SRC_DIRECTORY="lib/mocktail/sorbet" bundle exec tldr
 
 echo "-----> Ensuring that double-requiring Mocktail produces the right warning and bails out of redefining constants"
 script/test_double_require_warnings

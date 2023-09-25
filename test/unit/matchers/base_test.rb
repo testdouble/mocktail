@@ -1,9 +1,7 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail::Matchers
-  class BaseTest < Minitest::Test
+  class BaseTest < TLDR
     extend T::Sig
 
     sig { void }

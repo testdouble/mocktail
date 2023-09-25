@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class RaisesNeatoNoMethodErrorTest < Minitest::Test
+  class RaisesNeatoNoMethodErrorTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(RaisesNeatoNoMethodError.new, RaisesNeatoNoMethodError)
     end
 

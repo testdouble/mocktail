@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class RecreatesMessageTest < Minitest::Test
+  class RecreatesMessageTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(RecreatesMessage.new, RecreatesMessage)
     end
 

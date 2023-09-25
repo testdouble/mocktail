@@ -1,9 +1,7 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class BindTest < Minitest::Test
+  class BindTest < TLDR
     extend T::Sig
 
     class FortyTwo

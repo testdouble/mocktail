@@ -4,11 +4,10 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake"
-gem "minitest"
+gem "tldr", github: "tenderlove/tldr"
 gem "standard"
 gem "standard-sorbet"
 gem "simplecov"
-gem "m"
 
 gem "sorbet-static"
 gem "tapioca"

@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class CreatesIdentifierTest < Minitest::Test
+  class CreatesIdentifierTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(CreatesIdentifier.new, CreatesIdentifier)
     end
 

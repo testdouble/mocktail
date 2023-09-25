@@ -1,15 +1,11 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail
-  class CleansBacktraceTest < Minitest::Test
+  class CleansBacktraceTest < TLDR
     extend T::Sig
 
-    sig { params(name: String).void }
-    def initialize(name)
-      super
-
+    sig { void }
+    def initialize
       @subject = T.let(CleansBacktrace.new, CleansBacktrace)
     end
 

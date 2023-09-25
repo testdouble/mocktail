@@ -1,7 +1,5 @@
 # typed: strict
 
-require "test_helper"
-
 module Mocktail::Matchers
   class GoodMatch
     extend T::Sig
@@ -29,7 +27,7 @@ module Mocktail::Matchers
     end
   end
 
-  class MatchesTest < Minitest::Test
+  class MatchesTest < TLDR
     extend T::Sig
 
     sig { void }

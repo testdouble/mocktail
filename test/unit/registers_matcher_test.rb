@@ -1,12 +1,10 @@
 # typed: strict
 
-require "test_helper"
-
-class RegistersMatcherTest < Minitest::Test
+class RegistersMatcherTest < TLDR
   extend T::Sig
 
-  sig { params(name: String).void }
-  def initialize(name)
+  sig { void }
+  def initialize
     super
 
     @subject = T.let(Mocktail::RegistersMatcher.new, Mocktail::RegistersMatcher)

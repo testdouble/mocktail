@@ -11,7 +11,6 @@ ENV["MOCKTAIL_DEBUG_ACCIDENTAL_INTERNAL_MOCK_CALLS"] = "true"
 
 $LOAD_PATH.unshift File.expand_path("../#{ENV["MOCKTAIL_TEST_SRC_DIRECTORY"] || "src"}", __dir__)
 require "mocktail"
-require "minitest/autorun"
 
 # T is not defined yet, so we can't use T.unsafe to pass typechecking
 if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
@@ -19,13 +18,13 @@ if eval("Mocktail::TYPED", binding, __FILE__, __LINE__)
 else
   require_relative "support/sorbet_stubs"
 end
+require "tldr"
 
-class Minitest::Test
+class TLDR
   extend T::Sig
+  include TLDR::Assertions::MinitestCompatibility
 
   protected
-
-  make_my_diffs_pretty!
 
   sig { params(blk: T.proc.void).returns(Thread) }
   def thread(&blk)

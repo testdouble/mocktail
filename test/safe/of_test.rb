@@ -1,8 +1,6 @@
 # typed: strict
 
-require "test_helper"
-
-class OfTest < Minitest::Test
+class OfTest < TLDR
   include Mocktail::DSL
   extend T::Sig
 

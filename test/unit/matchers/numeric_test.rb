@@ -1,10 +1,9 @@
 # typed: strict
 
-require "test_helper"
 require "bigdecimal"
 
 module Mocktail::Matchers
-  class NumericTest < Minitest::Test
+  class NumericTest < TLDR
     extend T::Sig
 
     sig { void }

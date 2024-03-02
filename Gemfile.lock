@@ -130,7 +130,6 @@ DEPENDENCIES
   minitest
   mocktail!
   rake
-  rubocop-sorbet
   simplecov
   sorbet-static
   spoom

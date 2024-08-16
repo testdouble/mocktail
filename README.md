@@ -16,3 +16,5 @@ Your first choice is a consequential one: **how do you want your Mocktail?**
     <img src="docs/img/mocktail_sorbet.jpg" width="45%" alt="Try Mocktail with Sorbet type checking">
   </a>
 </p>
+
+You can also skip all the fun stuff and dive straight into the [full API documentation](/docs/support/api.md).

@@ -1,10 +1,12 @@
 # typed: strict
 
 require "test_helper"
+require "support/version_helper"
 
 module Mocktail
   class StringifiesCallTest < Minitest::Test
     extend T::Sig
+    include VersionHelper
 
     sig { params(name: String).void }
     def initialize(name)
@@ -33,21 +35,32 @@ module Mocktail
       assert_equal "hi([], [1], [[2]], [[3, 4], [5, 6]])", invoke(args: [
         [], [1], [[2]], [[3, 4], [5, 6]]
       ])
-      assert_equal "hi({}, {:a=>1}, {:b=>2, :c=>3}, {:d=>[4, {:e=>5}]})", invoke(args: [
-        {}, {a: 1}, {b: 2, c: 3}, {d: [4, {e: 5}]}
-      ])
+
+      if at_least_ruby_3_4?
+        assert_equal "hi({}, {a: 1}, {b: 2, c: 3}, {d: [4, {e: 5}]})", invoke(args: [
+          {}, {a: 1}, {b: 2, c: 3}, {d: [4, {e: 5}]}
+        ])
+      else
+        assert_equal "hi({}, {:a=>1}, {:b=>2, :c=>3}, {:d=>[4, {:e=>5}]})", invoke(args: [
+          {}, {a: 1}, {b: 2, c: 3}, {d: [4, {e: 5}]}
+        ])
+      end
 
       # Kwargs
       assert_equal "hi(a: 1)", invoke(kwargs: {a: 1})
       assert_equal "hi(c: 2, b: 3)", invoke(kwargs: {c: 2, b: 3})
-      assert_equal "hi(d: {:e=>4}, f: [:g, {:h=>5}])", invoke(kwargs: {d: {e: 4}, f: [:g, {h: 5}]})
+      if at_least_ruby_3_4?
+        assert_equal "hi(d: {e: 4}, f: [:g, {h: 5}])", invoke(kwargs: {d: {e: 4}, f: [:g, {h: 5}]})
+      else
+        assert_equal "hi(d: {:e=>4}, f: [:g, {:h=>5}])", invoke(kwargs: {d: {e: 4}, f: [:g, {h: 5}]})
+      end
 
       # Blocks & Procs
-      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:46 }", invoke {}
-      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:47])", invoke(&lambda {})
+      assert_equal "hi { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:59 }", invoke {}
+      assert_equal "hi(&lambda[test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:60])", invoke(&lambda {})
 
       # Mix & Match
-      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:50 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
+      assert_equal "hi(:a, 1, b: 2) { Proc at test/unit/verifies_call/raises_verification_error/stringifies_call_test.rb:63 }", invoke(args: [:a, 1], kwargs: {b: 2}) { |c| 3 }
     end
 
     private

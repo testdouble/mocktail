@@ -28,7 +28,7 @@ module Mocktail
         positional_args: dry_call.args,
 
         keyword_params: Params.new(
-          all: params.select { |type, _|
+          all: params.select { |type, _| # standard:disable Style/HashSlice
             [:keyreq, :key, :keyrest].include?(type)
           }.map { |pair| pair.fetch(1) },
           required: params.select { |t, _| Bind.call(t, :==, :keyreq) }.map { |pair| pair.fetch(1) },
@@ -48,7 +48,7 @@ module Mocktail
     def name_unnamed_params(params)
       params.map.with_index { |param, i|
         if param.size == 1
-          param + ["unnamed_arg_#{i + 1}".to_sym]
+          param + [:"unnamed_arg_#{i + 1}"]
         else
           param
         end

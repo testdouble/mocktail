@@ -32,7 +32,7 @@ module Mocktail
           :singleton, :double, :original_type, :dry_type,
           :method, :original_method, :args, :kwargs, :block
         ].all? { |attr|
-          instance_variable_get("@#{attr}") == other.send(attr)
+          instance_variable_get(:"@#{attr}") == other.send(attr)
         }
       else
         false

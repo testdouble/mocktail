@@ -12,7 +12,6 @@ module Mocktail
     sig { params(calls: T::Array[Call], nonzero_message: String, zero_message: String, anonymous_blocks: T::Boolean, always_parens: T::Boolean).returns(String) }
     def stringify_multiple(calls, nonzero_message:, zero_message:,
       anonymous_blocks: false, always_parens: false)
-
       if calls.empty?
         "#{zero_message}.\n"
       else

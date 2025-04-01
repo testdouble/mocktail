@@ -13,3 +13,5 @@ gem "m"
 gem "sorbet-static"
 gem "tapioca"
 gem "spoom"
+
+gem "bigdecimal"

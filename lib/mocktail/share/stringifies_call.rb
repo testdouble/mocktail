@@ -8,7 +8,6 @@ module Mocktail
 
     def stringify_multiple(calls, nonzero_message:, zero_message:,
       anonymous_blocks: false, always_parens: false)
-
       if calls.empty?
         "#{zero_message}.\n"
       else

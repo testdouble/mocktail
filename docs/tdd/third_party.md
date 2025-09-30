@@ -200,7 +200,7 @@ without logical branching—then it's usually sufficient to rely on your
 end-to-end testing to test your wrappers, as they would surely fail if things
 didn't work. Testing them on their own in earnest often veers towards [testing
 the
-framework](https://bignerdranch.com/blog/what-does-dont-test-the-framework-mean/).
+framework](https://web.archive.org/web/20210124184231/https://bignerdranch.com/blog/what-does-dont-test-the-framework-mean/).
 
 ## Also, mocking gems doesn't always work
 

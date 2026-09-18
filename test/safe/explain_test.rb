@@ -41,7 +41,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:25:in `test_explain_stub_returned_nil'
+        #{__FILE__}:25:in #{call_site_method("ExplainTest#test_explain_stub_returned_nil")}
 
       No stubbings were configured on this method.
 
@@ -75,7 +75,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:56:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:56:in #{call_site_method("ExplainTest#test_explain_stub_returned_nil_with_stubbings")}
 
       Stubbings configured prior to this call but not satisfied by it:
 
@@ -247,6 +247,18 @@ class ExplainTest < Minitest::Test
     ref = result.reference
     if ref.is_a?(Mocktail::FakeMethodData)
       assert_equal Training, ref.receiver
+    end
+  end
+
+  private
+
+  # Ruby 3.4 changed backtrace lines from `` `method' `` to `` 'Class#method' ``.
+  sig { params(qualified_method: String).returns(String) }
+  def call_site_method(qualified_method)
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.4")
+      "`#{qualified_method.split("#").last}'"
+    else
+      "'#{qualified_method}'"
     end
   end
 end

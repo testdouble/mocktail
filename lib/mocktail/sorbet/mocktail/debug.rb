@@ -24,11 +24,12 @@ module Mocktail
       base_path = Pathname.new(__FILE__).dirname.to_s
       backtrace_minus_this_and_whoever_called_this = e.backtrace&.[](2..)
       internal_call_sites = backtrace_minus_this_and_whoever_called_this&.take_while { |call_site|
-        # the "in `block" is very confusing but necessary to include lines after
+        # the "in `block"/"in 'block" (Ruby 3.4+ uses a single quote instead of a
+        # backtick) is very confusing but necessary to include lines after
         # a stubs { blah.foo }.with { … } call, since that's when most of the
         # good stuff happens
-        call_site.start_with?(base_path) || call_site.include?("in `block")
-      }&.reject { |call_site| call_site.include?("in `block") } || []
+        call_site.start_with?(base_path) || call_site.match?(/in [`']block/)
+      }&.reject { |call_site| call_site.match?(/in [`']block/) } || []
 
       approved_call_sites = [
         /fulfills_stubbing.rb:(16|20)/,

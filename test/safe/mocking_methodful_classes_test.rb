@@ -33,7 +33,7 @@ class MockingMethodfulClassesTest < Minitest::Test
     extend T::Sig
 
     # puts instance_methods.map { |m| ":#{m}," }.join("\n")
-    (instance_methods - [:__send__, :object_id, :nil?, :is_a?]).each do |method|
+    (instance_methods - [:__send__, :__id__, :object_id, :nil?, :is_a?]).each do |method|
       define_method method, ->(*args, **kwargs, &block) {
         T.unsafe(self).super
       }

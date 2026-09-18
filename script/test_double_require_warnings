@@ -4,7 +4,12 @@ require "open3"
 
 def assert_warning(command:, warning:)
   stdout, stderr, status = Open3.capture3(command)
-  if stderr != warning
+  # Ignore incidental Ruby/RubyGems/Bundler runtime warnings (e.g. from a
+  # Ruby version shipping a newer RubyGems than an older pinned Bundler
+  # expects) -- they always follow Ruby's "path:line: warning: message"
+  # format, unlike Mocktail's own warning below.
+  relevant_stderr = stderr.lines.reject { |line| line.match?(/\A\S+:\d+: warning: /) }.join
+  if relevant_stderr != warning
     fail <<~MSG
       Expected the correct error message on STDERR but it was wrong"
 

@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake"
-gem "minitest"
+gem "minitest", "~> 5.26" # 6.0+ requires Ruby >= 3.2, dropping support for Ruby 3.1
 gem "standard"
 gem "standard-sorbet"
 gem "simplecov"

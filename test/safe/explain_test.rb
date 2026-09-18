@@ -1,10 +1,12 @@
 # typed: strict
 
 require "test_helper"
+require "support/version_helper"
 
 class ExplainTest < Minitest::Test
   include Mocktail::DSL
   extend T::Sig
+  include VersionHelper
 
   class Thing
     extend T::Sig
@@ -41,7 +43,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:25:in `test_explain_stub_returned_nil'
+        #{__FILE__}:27:in #{at_least_ruby_3_4? ? "'ExplainTest#" : "`"}test_explain_stub_returned_nil'
 
       No stubbings were configured on this method.
 
@@ -75,7 +77,7 @@ class ExplainTest < Minitest::Test
 
       The call site:
 
-        #{__FILE__}:56:in `test_explain_stub_returned_nil_with_stubbings'
+        #{__FILE__}:58:in #{at_least_ruby_3_4? ? "'ExplainTest#" : "`"}test_explain_stub_returned_nil_with_stubbings'
 
       Stubbings configured prior to this call but not satisfied by it:
 

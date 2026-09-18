@@ -45,7 +45,7 @@ GEM
       thor (>= 1.2.0)
       yard-sorbet
     thor (1.3.2)
-    yard (0.9.37)
+    yard (0.9.45)
     yard-sorbet (0.9.0)
       sorbet-runtime
       yard

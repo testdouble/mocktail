@@ -1,3 +1,8 @@
+# 3.0.0
+
+* **Breaking change** - Drop support for Ruby 3.0, which is EOL
+* Add support for Ruby 3.4 and 4.0
+
 # 2.0.0
 
 * Add first-class support for [Sorbet](https://sorbet.org) type checking [#22](https://github.com/testdouble/mocktail/pull/22)

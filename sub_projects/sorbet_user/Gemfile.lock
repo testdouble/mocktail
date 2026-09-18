@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    mocktail (2.0.0)
+    mocktail (3.0.0)
       sorbet-eraser (~> 0.3.1)
       sorbet-runtime (~> 0.5.9204)
 

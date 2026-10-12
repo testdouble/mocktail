@@ -221,7 +221,6 @@ class Mocktail::Call < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -392,7 +391,6 @@ class Mocktail::DemoConfig < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -466,7 +464,6 @@ class Mocktail::Double < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -482,7 +479,6 @@ class Mocktail::DoubleData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -615,7 +611,6 @@ class Mocktail::FakeMethodData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -652,6 +647,32 @@ class Mocktail::FindsVerifiableCalls
   sig { params(recording: ::Mocktail::Call, demo_config: ::Mocktail::DemoConfig).returns(T::Array[::Mocktail::Call]) }
   def find(recording, demo_config); end
 end
+
+# source://mocktail//lib/mocktail/sorbet/mocktail/share/folds_keywords_into_options_hash.rb#4
+class Mocktail::FoldsKeywordsIntoOptionsHash
+  # source://mocktail//lib/mocktail/sorbet/mocktail/share/folds_keywords_into_options_hash.rb#10
+  sig { void }
+  def initialize; end
+
+  # Ruby 3 passes keywords to a method with no keyword params as a trailing
+  # positional hash, but our generic (*args, **kwargs) lambdas always split
+  # them out, so fold them back in to match what the real method would see
+  #
+  # source://mocktail//lib/mocktail/sorbet/mocktail/share/folds_keywords_into_options_hash.rb#18
+  # Ruby 3 passes keywords to a method with no keyword params as a trailing
+  # positional hash, but our generic (*args, **kwargs) lambdas always split
+  sig do
+    params(
+      original_method: T.nilable(T.any(::Method, ::UnboundMethod)),
+      args: T::Array[T.anything],
+      kwargs: T::Hash[::Symbol, T.anything]
+    ).returns([T::Array[T.anything], T::Hash[::Symbol, T.anything]])
+  end
+  def fold(original_method, args, kwargs); end
+end
+
+# source://mocktail//lib/mocktail/sorbet/mocktail/share/folds_keywords_into_options_hash.rb#7
+Mocktail::FoldsKeywordsIntoOptionsHash::KEYWORD_PARAM_TYPES = T.let(T.unsafe(nil), Array)
 
 # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/fulfills_stubbing.rb#7
 class Mocktail::FulfillsStubbing
@@ -731,13 +752,13 @@ class Mocktail::HandlesDryCall
   def handle(dry_call); end
 end
 
-# source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#4
+# source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#6
 class Mocktail::HandlesDryNewCall
-  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#8
+  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#10
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#16
+  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_new_call.rb#19
   sig do
     params(
       type: T::Class[T.all(::Object, ::T)],
@@ -1170,7 +1191,6 @@ class Mocktail::NoExplanationData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1192,7 +1212,6 @@ class Mocktail::Params < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1370,23 +1389,23 @@ class Mocktail::RedefinesNew
   def redefine(type); end
 end
 
-# source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#4
+# source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#6
 class Mocktail::RedefinesSingletonMethods
-  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#8
+  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#10
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#47
+  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#52
   sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def declare_singleton_method_missing_errors!(type); end
 
-  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#13
+  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#16
   sig { params(type: T.any(::Module, T::Class[T.anything])).void }
   def redefine(type); end
 
   private
 
-  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#72
+  # source://mocktail//lib/mocktail/sorbet/mocktail/replaces_type/redefines_singleton_methods.rb#77
   sig { params(method: ::Method).returns(T::Boolean) }
   def sorbet_method_hook?(method); end
 end
@@ -1545,7 +1564,6 @@ class Mocktail::Signature < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1591,37 +1609,30 @@ class Mocktail::StringifiesCall
   private
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#46
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#47
   sig { params(args: T::Array[::Object]).returns(T.nilable(::String)) }
   def argify(args); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#29
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#30
   sig { params(call: ::Mocktail::Call, parens: T::Boolean).returns(T.nilable(::String)) }
   def args_to_s(call, parens: T.unsafe(nil)); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#64
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#65
   sig { params(block: T.nilable(::Proc), anonymous: T::Boolean).returns(T.nilable(::String)) }
   def blockify(block, anonymous:); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#52
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#53
   sig { params(kwargs: T::Hash[::Symbol, ::Object]).returns(T.nilable(::String)) }
   def kwargify(kwargs); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#58
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#59
   sig { params(block: T.nilable(::Proc)).returns(T.nilable(::String)) }
   def lambdafy(block); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#75
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#76
   sig { params(block: ::Proc).returns(::String) }
   def source_locationify(block); end
 
   # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#80
-  # source://mocktail//lib/mocktail/sorbet/mocktail/share/stringifies_call.rb#81
   sig { params(path: ::String).returns(::String) }
   def strip_pwd(path); end
 end
@@ -1676,7 +1687,6 @@ class Mocktail::Stubbing < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1778,7 +1788,6 @@ class Mocktail::TypeReplacement < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1798,7 +1807,6 @@ class Mocktail::TypeReplacementData < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1814,7 +1822,6 @@ class Mocktail::UnsatisfyingCall < ::T::Struct
 
   class << self
     # source://sorbet-runtime/0.5.11971/lib/types/struct.rb#13
-    # source://sorbet-runtime/0.5.10983/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1846,11 +1853,11 @@ Mocktail::VERSION = T.let(T.unsafe(nil), String)
 
 # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/validates_arguments.rb#4
 class Mocktail::ValidatesArguments
-  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/validates_arguments.rb#32
+  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/validates_arguments.rb#35
   sig { void }
   def initialize; end
 
-  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/validates_arguments.rb#37
+  # source://mocktail//lib/mocktail/sorbet/mocktail/handles_dry_call/validates_arguments.rb#40
   sig { params(dry_call: ::Mocktail::Call).returns(::NilClass) }
   def validate(dry_call); end
 

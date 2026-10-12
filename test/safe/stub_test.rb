@@ -403,6 +403,15 @@ class StubTest < Minitest::Test
   end
 
   sig { void }
+  def test_raising_ignore_arity_demonstration_does_not_disable_arity_validation
+    thing = Mocktail.of(Thing)
+
+    assert_raises(RuntimeError) { stubs(ignore_arity: true) { raise "boom" } }
+
+    assert_raises(ArgumentError) { T.unsafe(thing).lol }
+  end
+
+  sig { void }
   def test_stub_calls_a_stub_in_effect
     thing_1 = Mocktail.of(Thing)
     thing_2 = Mocktail.of(Thing)

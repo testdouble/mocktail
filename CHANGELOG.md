@@ -1,3 +1,8 @@
+# Unreleased
+
+* Fix arity validation staying disabled after a `stubs` or `verify` block with
+  `ignore_arity: true` raises
+
 # 3.0.0
 
 * **Breaking change** - Drop support for Ruby 3.0, which is EOL

@@ -17,10 +17,13 @@ module Mocktail
     def self.optional(disable, &blk)
       return blk.call unless disable
 
+      previous = disabled?
       disable!
-      ret = blk.call
-      enable!
-      ret
+      begin
+        blk.call
+      ensure
+        Thread.current[:mocktail_arity_validation_disabled] = previous
+      end
     end
 
     def initialize

@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative "../share/folds_keywords_into_options_hash"
+
 module Mocktail
   class RedefinesSingletonMethods
     extend T::Sig
@@ -7,6 +9,7 @@ module Mocktail
     sig { void }
     def initialize
       @handles_dry_call = T.let(HandlesDryCall.new, HandlesDryCall)
+      @folds_keywords_into_options_hash = T.let(FoldsKeywordsIntoOptionsHash.new, FoldsKeywordsIntoOptionsHash)
     end
 
     sig { params(type: T.any(T::Class[T.anything], Module)).void }
@@ -20,10 +23,12 @@ module Mocktail
 
       declare_singleton_method_missing_errors!(type)
       handles_dry_call = @handles_dry_call
+      folds_keywords_into_options_hash = @folds_keywords_into_options_hash
       type_replacement.replacement_methods = type_replacement.original_methods&.map { |original_method|
         type.singleton_class.send(:undef_method, original_method.name)
         type.define_singleton_method original_method.name, ->(*args, **kwargs, &block) {
           if TopShelf.instance.singleton_methods_replaced?(type)
+            args, kwargs = folds_keywords_into_options_hash.fold(original_method, args, kwargs)
             handles_dry_call.handle(Call.new(
               singleton: true,
               double: type,

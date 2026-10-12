@@ -56,9 +56,12 @@ class ReplaceTest < Minitest::Test
     House.summarize("Madiera", features: [:walls, :floor]) { "🆒" }
 
     # Argument errors still propogate
-    assert_raises(ArgumentError) { House.room(wrong: :arg) }
+    assert_raises(ArgumentError) { T.unsafe(House).room }
     assert_raises(ArgumentError) { T.unsafe(House).size }
     assert_raises(ArgumentError) { T.unsafe(House).summarize("title", "wups") }
+
+    # Keywords passed to a method without keyword params become a positional hash, as in Ruby
+    House.room(wrong: :arg)
 
     # verification works
     verify { House.room("living") }
@@ -101,6 +104,54 @@ class ReplaceTest < Minitest::Test
     error = assert_raises(NoMethodError) { T.unsafe(House).color }
     assert_match(/No method `ReplaceTest::House\.color'/, error.message)
     assert_match(/def self.color\n  end/, error.message)
+  end
+
+  class Settings
+    extend T::Sig
+
+    sig { params(opts: T.untyped).void }
+    def initialize(opts = {})
+      raise "Unimplemented"
+    end
+
+    sig { params(opts: T.untyped).returns(T.untyped) }
+    def self.configure(opts = {})
+      raise "Unimplemented"
+    end
+  end
+
+  sig { void }
+  def test_replace_class_whose_new_takes_an_options_hash
+    Mocktail.replace(Settings)
+
+    stubs { T.unsafe(Settings).new(item: "hello") }.with { :stubbed }
+
+    assert_equal :stubbed, Settings.new(item: "hello")
+    assert_equal :stubbed, Settings.new({item: "hello"})
+    verify(times: 2) { Settings.new(item: "hello") }
+  end
+
+  sig { void }
+  def test_replace_class_whose_class_method_takes_an_options_hash
+    Mocktail.replace(Settings)
+
+    stubs { Settings.configure(item: "hello") }.with { :configured }
+
+    assert_equal :configured, Settings.configure(item: "hello")
+    assert_equal :configured, Settings.configure({item: "hello"})
+    verify(times: 2) { Settings.configure(item: "hello") }
+  end
+
+  class AcceptsNoKeywords
+    # sorbet-runtime can't build a sig for `**nil`, so skip the sig wrapper
+    define_method :initialize, ->(a, b = {}, **nil) { raise "Unimplemented" }
+  end
+
+  sig { void }
+  def test_replace_class_whose_new_accepts_no_keywords
+    Mocktail.replace(AcceptsNoKeywords)
+
+    assert_raises(ArgumentError) { T.unsafe(AcceptsNoKeywords).new(1, x: 1) }
   end
 
   module Home

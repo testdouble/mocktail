@@ -313,4 +313,13 @@ class VerifyTest < Minitest::Test
     verify { |m| hmm.huh(:c) }
     verify(ignore_arity: true, ignore_extra_args: true) { |m| T.unsafe(hmm).huh }
   end
+
+  sig { void }
+  def test_raising_ignore_arity_verification_does_not_disable_arity_validation
+    hmm = Mocktail.of(Hmm)
+
+    assert_raises(RuntimeError) { verify(ignore_arity: true) { raise "boom" } }
+
+    assert_raises(ArgumentError) { T.unsafe(hmm).huh }
+  end
 end

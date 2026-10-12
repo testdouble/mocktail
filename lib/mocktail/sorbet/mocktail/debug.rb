@@ -34,7 +34,7 @@ module Mocktail
       approved_call_sites = [
         /fulfills_stubbing.rb:(16|20)/,
         /validates_arguments.rb:(18|23)/,
-        /validates_arguments.rb:(21|26)/
+        /validates_arguments.rb:(23|28)/
       ]
       if internal_call_sites.any? && approved_call_sites.none? { |approved_call_site|
         internal_call_sites.first&.match?(approved_call_site)

@@ -1,4 +1,4 @@
-# Unreleased
+# 3.0.1
 
 * Fix arity validation staying disabled after a `stubs` or `verify` block with
   `ignore_arity: true` raises

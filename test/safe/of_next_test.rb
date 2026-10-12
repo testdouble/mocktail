@@ -29,6 +29,29 @@ class OfNextTest < Minitest::Test
     end
   end
 
+  class OptionsHash
+    extend T::Sig
+
+    sig { params(opts: T.untyped).void }
+    def initialize(opts = {})
+      raise "options hash required!"
+    end
+  end
+
+  sig { void }
+  def test_of_next_with_options_hash_initializer
+    options_hash = Mocktail.of_next(OptionsHash)
+
+    assert_same options_hash, OptionsHash.new(item: "hello")
+  end
+
+  sig { void }
+  def test_of_next_with_braced_options_hash_initializer
+    options_hash = Mocktail.of_next(OptionsHash)
+
+    assert_same options_hash, OptionsHash.new({item: "hello"})
+  end
+
   sig { void }
   def test_of_next
     neato_mocktail = Mocktail.of_next(Neato)

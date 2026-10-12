@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative "share/folds_keywords_into_options_hash"
+
 module Mocktail
   class HandlesDryNewCall
     extend T::Sig
@@ -10,10 +12,13 @@ module Mocktail
       @logs_call = T.let(LogsCall.new, LogsCall)
       @fulfills_stubbing = T.let(FulfillsStubbing.new, FulfillsStubbing)
       @imitates_type = T.let(ImitatesType.new, ImitatesType)
+      @folds_keywords_into_options_hash = T.let(FoldsKeywordsIntoOptionsHash.new, FoldsKeywordsIntoOptionsHash)
     end
 
     sig { params(type: T::Class[T.all(T, Object)], args: T::Array[T.anything], kwargs: T::Hash[Symbol, T.anything], block: T.nilable(Proc)).returns(T.anything) }
     def handle(type, args, kwargs, block)
+      args, kwargs = @folds_keywords_into_options_hash.fold(type.instance_method(:initialize), args, kwargs)
+
       @validates_arguments.validate(Call.new(
         original_method: type.instance_method(:initialize),
         args: args,

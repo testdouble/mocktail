@@ -2,6 +2,12 @@
 
 * Fix arity validation staying disabled after a `stubs` or `verify` block with
   `ignore_arity: true` raises
+* Fix `ArgumentError: unknown keyword` when a replaced class's `new` or class
+  method takes an options hash and is called with brace-less keywords
+  [#20](https://github.com/testdouble/mocktail/pull/20)
+* Replaced `new` and class methods with no keyword parameters now accept
+  keyword-style calls as a trailing hash, as real Ruby does, instead of raising
+  `ArgumentError`
 
 # 3.0.0
 
